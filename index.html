@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#141234">
 <title>Cultural Night — Coming Soon · Asian Society, Trakia University</title>
-<meta name="description" content="A cultural dress-up night is coming in early October at Trakia University. Best dressed competition, prizes, games, new people. Register your interest — free — and get a discount on tickets.">
+<meta name="description" content="A cultural dress-up night is coming in early October at Trakia University. Best dressed competition, prizes, games, new people. Register your interest — free — and get exclusive early bird tickets first.">
 <meta property="og:title" content="Cultural Night — Coming Soon">
-<meta property="og:description" content="Dress up in your cultural clothes! Register your interest — free — and get a discount on tickets.">
-<meta property="og:image" content="Images/linkpreview.png">
+<meta property="og:description" content="Dress up in your cultural clothes! Register your interest — free — and get exclusive early bird tickets first.">
+<meta property="og:image" content="https://YOUR-USERNAME.github.io/YOUR-REPO/Images/linkpreview.png">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%AE%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,7 +66,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 
 .hero__content{position:relative;z-index:8;margin:auto;max-width:480px;
   display:flex;flex-direction:column;align-items:center;text-align:center;
-  padding:clamp(120px,17vh,170px) 24px clamp(150px,26vh,230px)}
+  padding:clamp(110px,15vh,160px) 24px clamp(140px,24vh,220px)}
 
 .kicker{font:800 10.5px 'Karla';letter-spacing:.24em;color:var(--gold-soft);margin-bottom:14px}
 .title{font-family:'Fraunces',serif;font-optical-sizing:auto;line-height:1.04}
@@ -93,9 +93,25 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .cta:hover,.cta:focus-visible{transform:scale(1.06);
   box-shadow:0 16px 36px rgba(200,55,25,.5),inset 0 1px 0 rgba(255,255,255,.25)}
 .cta:active{transform:scale(.96)}
-.fine{margin-top:16px;font-size:12.5px;line-height:1.55;color:var(--cream-dim);max-width:34ch}
+
+/* ═══ THE EARLY BIRD BANNER — the big reason to register ═══ */
+.earlybird{position:relative;margin-top:24px;max-width:340px;width:100%;
+  padding:14px 20px 15px;border-radius:14px;
+  background:linear-gradient(160deg,rgba(216,162,74,.16),rgba(216,162,74,.05));
+  border:1px solid rgba(216,162,74,.45);
+  box-shadow:0 0 26px rgba(216,162,74,.14),inset 0 1px 0 rgba(255,207,126,.18)}
+.earlybird::before,.earlybird::after{content:"✦";position:absolute;top:-8px;font-size:13px;
+  color:var(--gold-hi);text-shadow:0 0 8px rgba(255,207,126,.8)}
+.earlybird::before{left:14px}
+.earlybird::after{right:14px}
+.earlybird__label{font:800 9px 'Karla';letter-spacing:.3em;color:var(--gold-soft)}
+.earlybird__line{margin-top:5px;font-family:'Fraunces',serif;font-weight:700;
+  font-size:clamp(18px,5.4vw,24px);line-height:1.15;letter-spacing:.005em;
+  color:#ffe4ac;text-shadow:0 0 18px rgba(255,207,126,.35)}
+.earlybird__line em{font-style:italic;color:var(--gold-hi)}
+.fine{margin-top:14px;font-size:12.5px;line-height:1.55;color:var(--cream-dim);max-width:34ch}
 .fine b{color:var(--gold-soft);font-weight:800}
-.cue{margin-top:22px;color:rgba(233,200,135,.75)}
+.cue{margin-top:20px;color:rgba(233,200,135,.75)}
 .cue__i{width:20px;height:12px;animation:cueb 2.2s ease-in-out infinite}
 @keyframes cueb{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 
@@ -387,8 +403,15 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
       <a class="cta pop" style="--d:1.32s" href="#join">REGISTER INTEREST
         <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l7 7 7-7"/></svg>
       </a>
-      <p class="fine up" style="--d:1.5s"><b>IT'S FREE TO REGISTER</b> — and everyone on the list gets a discount on tickets.</p>
-      <a class="cue fade" style="--d:1.7s" href="#onnight" aria-label="See what's on the night">
+
+      <!-- the big reason to register -->
+      <div class="earlybird pop" style="--d:1.44s" role="note">
+        <p class="earlybird__label">WHY REGISTER?</p>
+        <p class="earlybird__line">Get <em>exclusive early bird</em> tickets first!</p>
+      </div>
+
+      <p class="fine up" style="--d:1.58s"><b>IT'S FREE TO REGISTER</b> — everyone on the list hears about tickets before anyone else.</p>
+      <a class="cue fade" style="--d:1.72s" href="#onnight" aria-label="See what's on the night">
         <svg class="cue__i" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l8 8 8-8"/></svg>
       </a>
     </div>
@@ -437,7 +460,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
               <span class="perk__float" style="--fd:-3.3s"><span class="perk__orb">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5h16a8 8 0 0 1-4.3 6.6 8.2 8.2 0 0 1-7.4 0A8 8 0 0 1 4 12.5z"/><path d="M9.5 9c-.9-1.1.9-2.1 0-3.3M14.5 9c-.9-1.1.9-2.1 0-3.3"/></svg>
               </span></span>
-              <span class="perk__txt">Potential Dinner? <span class="peek">👀</span></span>
+              <span class="perk__txt">Potential food? <span class="peek">👀</span></span>
             </button>
           </li>
         </ul>
@@ -460,7 +483,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
           </svg>
           <div>
             <h2 class="card__t">Register interest</h2>
-            <p class="card__s">FREE · 30 SECONDS · DISCOUNT LOCKED IN</p>
+            <p class="card__s">FREE · 30 SECONDS · EARLY BIRD TICKETS FIRST</p>
           </div>
         </div>
 
@@ -507,8 +530,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
           </svg>
           <h2 class="done__t">You're on the list!</h2>
           <p class="done__c">Thanks, <b id="dName"></b> — your interest is registered, completely
-            free, and your discount is locked in for when tickets open. We'll email
-            <b id="dEmail"></b> the moment the exact date and tickets drop.</p>
+            free, and you're first in line for <b>exclusive early bird tickets</b> the moment they
+            drop. We'll email <b id="dEmail"></b> as soon as the exact date is confirmed.</p>
           <button class="linkbtn" id="againBtn" type="button">Register someone else</button>
         </div>
 
