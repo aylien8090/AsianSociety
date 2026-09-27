@@ -31,6 +31,7 @@ body{background:#0a0920;font-family:'Karla',sans-serif;color:var(--cream);
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
   display:flex;justify-content:center;overflow-x:hidden}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px dashed var(--gold);outline-offset:3px}
 ::selection{background:var(--red);color:var(--cream)}
 
@@ -516,7 +517,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
             <label for="fBackground">Background<span class="opt">optional</span></label>
             <div class="ctl"><input id="fBackground" name="background" type="text" autocomplete="off" placeholder="e.g. Desi, Mideast, Türk, Bulgarian…"></div>
           </div>
-          <button class="send" type="submit" id="sendBtn">Count me in — it's free</button>
+          <button class="send" type="submit" id="sendBtn">Get my early bird ticket</button>
         </form>
 
         <div class="done" id="done" hidden>
@@ -654,24 +655,34 @@ document.querySelectorAll('.rv').forEach(function(el){
   if(io)io.observe(el);else el.classList.add('in');
 });
 
-/* ---------- little star particles ---------- */
+/* ---------- little star particles ----------
+   Each particle gets its own scope (the wrapped function below),
+   its own cleanup handler, stays faded-out after finishing
+   (fill:'forwards'), AND a hard 2.4s removal timer as a final
+   safety net — so no spark can ever get stuck on screen.      */
 function sparks(x,y,n,colors){
   if(reduced)return;
   for(var i=0;i<n;i++){
-    var p=document.createElement('i');
-    p.className='spark';
-    var sz=6+Math.random()*9;
-    p.style.width=sz+'px';p.style.height=sz+'px';
-    p.style.left=x+'px';p.style.top=y+'px';
-    p.style.background=colors[i%colors.length];
-    document.body.appendChild(p);
-    if(!p.animate){p.remove();continue}
-    var ang=Math.random()*Math.PI*2,d=26+Math.random()*46;
-    var dx=Math.cos(ang)*d,dy=Math.sin(ang)*d*.7-30;
-    p.animate([
-      {transform:'translate(-50%,-50%) scale(.3) rotate(0deg)',opacity:1},
-      {transform:'translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px)) scale(1) rotate('+(Math.random()*180-90)+'deg)',opacity:0}
-    ],{duration:650+Math.random()*550,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=function(){p.remove()};
+    (function(idx){
+      var p=document.createElement('i');
+      p.className='spark';
+      var sz=6+Math.random()*9;
+      p.style.width=sz+'px';p.style.height=sz+'px';
+      p.style.left=x+'px';p.style.top=y+'px';
+      p.style.background=colors[idx%colors.length];
+      document.body.appendChild(p);
+      var kill=function(){if(p.parentNode)p.parentNode.removeChild(p)};
+      setTimeout(kill,2400); /* guaranteed cleanup no matter what */
+      if(!p.animate)return;
+      var ang=Math.random()*Math.PI*2,d=26+Math.random()*46;
+      var dx=Math.cos(ang)*d,dy=Math.sin(ang)*d*.7-30;
+      var anim=p.animate([
+        {transform:'translate(-50%,-50%) scale(.3) rotate(0deg)',opacity:1},
+        {transform:'translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px)) scale(1) rotate('+(Math.random()*180-90)+'deg)',opacity:0}
+      ],{duration:650+Math.random()*550,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
+      anim.onfinish=kill;
+      anim.oncancel=kill;
+    })(i);
   }
 }
 
