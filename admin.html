@@ -387,8 +387,9 @@ $('#list').onclick = async e => {
   } else if (b.dataset.do === 'del') {
     if (confirm(`Permanently delete ${code} (${t.name})?\nThis cannot be undone.`)) {
       const r = await api('/api/admin/tickets/' + encodeURIComponent(code), { method: 'DELETE' });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok) toast(d.error || 'Could not delete.', true); else { toast('Deleted ' + code); await load(); }
+      const raw = await r.text();
+      let d = {}; try { d = JSON.parse(raw); } catch (x) {}
+      if (!r.ok) toast(`Could not delete (error ${r.status}): ${d.error || raw.slice(0, 120) || 'no details'}`, true); else { toast('Deleted ' + code); await load(); }
     }
   }
   b.disabled = false;
