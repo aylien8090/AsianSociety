@@ -8,7 +8,7 @@
 <title>Cultural Event — 17 October · Asian Society, Trakia University</title>
 <meta name="description" content="Cultural Night, 17 October in Stara Zagora. Dress up in your cultural clothes! Best dressed competition, prizes, games, food and snacks, free henna. Early bird tickets on sale now — limited spots.">
 <meta property="og:title" content="Cultural Event — 17 October · Tickets on sale now">
-<meta property="og:description" content="Dress up in your cultural clothes! Early bird tickets are 20% off. Limited spots.">
+<meta property="og:description" content="Dress up in your cultural clothes! Early bird tickets are 20% off, only until 9th October. Limited spots.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://asiansociety.pages.dev/">
 <meta property="og:image" content="https://asiansociety.pages.dev/Images/linkpreview.jpg">
@@ -119,6 +119,20 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   transition:transform .25s cubic-bezier(.2,1.6,.4,1),background .25s,border-color .25s}
 .hlink:hover,.hlink:focus-visible{transform:scale(1.04);background:rgba(216,162,74,.18);border-color:var(--gold-hi);color:var(--gold-hi)}
 .fine s{opacity:.7}
+.dl{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:22px;padding:12px 26px 11px;
+  border-radius:18px;background:linear-gradient(180deg,#d63a1c,#a82a12);color:#fff7ea;
+  border:2px solid var(--gold-hi);box-shadow:0 10px 28px rgba(200,55,25,.45),0 0 0 4px rgba(255,207,126,.12)}
+.dl__top{font:800 12px 'Karla';letter-spacing:.2em}
+.dl__date{font:900 clamp(26px,8vw,36px)/1.05 'Fraunces',serif;letter-spacing:.02em;color:#fff}
+.dl__left{font:800 12.5px 'Karla';letter-spacing:.08em;color:#ffe2a8}
+.dl + .cta{margin-top:18px}
+.cd:empty{display:none}
+.dlbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 12px;margin-top:18px;padding:12px 14px;
+  border-radius:14px;background:linear-gradient(180deg,#d63a1c,#a82a12);color:#fff7ea;border:1.5px solid var(--gold-hi);
+  font-size:15px;text-align:center}
+.dlbar b{font:900 17px 'Karla'}
+.dlbar .cd{font:800 12.5px 'Karla';letter-spacing:.06em;color:#ffe2a8}
+.dlbar--card{margin-top:16px}
 .cue{margin-top:22px;color:rgba(233,200,135,.75)}
 .cue__i{width:20px;height:12px;animation:cueb 2.2s ease-in-out infinite}
 @keyframes cueb{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
@@ -548,6 +562,11 @@ a.tag:hover{border-style:solid}
         </span>
       </a>
       <p class="chip up" style="--d:1.25s">TICKETS ON SALE NOW · LIMITED SPOTS</p>
+      <div class="dl pop" style="--d:1.3s">
+        <span class="dl__top">⏰ EARLY BIRD ENDS</span>
+        <span class="dl__date">9TH OCTOBER</span>
+        <span class="dl__left cd"></span>
+      </div>
       <a class="cta pop" style="--d:1.35s" href="#join">GET YOUR TICKETS NOW!
         <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l7 7 7-7"/></svg>
       </a>
@@ -614,12 +633,13 @@ a.tag:hover{border-style:solid}
     <!-- ═══════════ TICKET PRICES ═══════════ -->
     <section class="tickets" id="prices">
       <h2 class="tickets__h rv">TICKETS</h2>
+      <div class="dlbar rv" style="--d:.05s"><b>⏰ Early bird ends 9th October!</b><span class="cd"></span></div>
       <div class="tiers rv" style="--d:.1s">
         <div class="tier old"><div><p class="tier__n">Normal price</p><p class="tier__d">What tickets cost after the early bird</p></div><p class="tier__p">€10</p></div>
-        <div class="tier now" id="tierEarly"><div><p class="tier__n">Early bird<span class="tier__tag">ON NOW</span></p><p class="tier__d">Limited spots</p></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">20% OFF</span></p><p class="tier__p">€8</p></div></div>
+        <div class="tier now" id="tierEarly"><div><p class="tier__n">Early bird<span class="tier__tag">ON NOW</span></p><p class="tier__d">Only until 9th October! Limited spots</p></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">20% OFF</span></p><p class="tier__p">€8</p></div></div>
         <a class="tier first" id="tierFirst" href="#join" data-prereg><div><p class="tier__n">First release<span class="tier__tag" hidden>YOURS</span></p><p class="tier__d">Only for people who pre-registered</p><span class="tier__go">Pre-registered? Tap here →</span></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">30% OFF</span></p><p class="tier__p">€7</p></div></a>
       </div>
-      <p class="tickets__note rv" style="--d:.15s">Normal tickets are <b>€10</b>. Early bird tickets are <b>20% off</b>, just <b>€8</b>. Our first release was <b>30% off</b> (<b>€7</b>) and was for everyone who pre-registered. If that's you, tap <b>“First release”</b> above to get it. Spots are limited and early bird ends when they're gone.</p>
+      <p class="tickets__note rv" style="--d:.15s">Normal tickets are <b>€10</b>. Early bird tickets are <b>20% off</b>, just <b>€8</b>, and <b>only until 9th October</b>. Our first release was <b>30% off</b> (<b>€7</b>) and was for everyone who pre-registered. If that's you, tap <b>“First release”</b> above to get it. Spots are limited and early bird ends when they're gone.</p>
     </section>
 
     <!-- ═══════════ GET A TICKET ═══════════ -->
@@ -643,9 +663,10 @@ a.tag:hover{border-style:solid}
         </div>
 
         <div id="formTop">
+          <div class="dlbar dlbar--card"><b>⏰ Early bird ends 9th October!</b><span class="cd"></span></div>
           <div class="priceline" id="priceLine">
             <span class="priceline__now" id="plNow">€8</span>
-            <span class="priceline__txt"><b id="plLabel">Early bird</b> <s id="plOld">€10</s><br><span id="plSub">Limited spots. Early bird ends when they're gone.</span></span>
+            <span class="priceline__txt"><b id="plLabel">Early bird</b> <s id="plOld">€10</s><br><span id="plSub">Early bird tickets are only until 9th October! Limited spots.</span></span>
           </div>
           <button class="preg" id="pregBtn" type="button" aria-pressed="false">Already pre-registered? <u>Click here</u> to get your €7 ticket</button>
           <p class="preg__note" id="pregNote" hidden>Enter the <b>same email you pre-registered with</b> below and we'll give you the €7 first-release price.</p>
@@ -947,6 +968,20 @@ if(hs){
   });
 }
 
+/* ---------- early-bird countdown (ends end of 9 Oct, Bulgarian time) ---------- */
+(function(){
+  var END=new Date('2026-10-09T23:59:59+03:00').getTime();
+  function tick(){
+    var ms=END-Date.now(),txt='';
+    if(ms>0){
+      var d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);
+      txt=d>1?d+' days left':d===1?'1 day left':h>0?h+' hours left':'last hour!';
+    }
+    document.querySelectorAll('.cd').forEach(function(el){el.textContent=txt});
+  }
+  tick();setInterval(tick,6e4);
+})();
+
 /* ---------- helpers ---------- */
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function rememberEmail(e){try{localStorage.setItem('asoc_email',e)}catch(x){}}
@@ -1016,7 +1051,7 @@ function updatePriceLine(){
   $('#tierEarly .tier__tag').hidden=preMode;
   $('#tierFirst .tier__tag').hidden=!preMode;
   $('#plOld').textContent='€10';
-  $('#plSub').textContent=preMode?'For pre-registered people. We check your email when you tap Pay.':'Limited spots. Early bird ends when they\'re gone.';
+  $('#plSub').textContent=preMode?'For pre-registered people. We check your email when you tap Pay.':'Early bird tickets are only until 9th October! Limited spots.';
   $('#pregBtn').setAttribute('aria-pressed',preMode?'true':'false');
   $('#pregBtn').innerHTML=preMode?'Pre-registered: <u>30% off</u> applied. Tap to switch back':'Already pre-registered? <u>Click here</u> for 30% off (€7)';
   $('#pregNote').hidden=!preMode;
