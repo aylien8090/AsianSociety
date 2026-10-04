@@ -209,6 +209,17 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
     <div class="list" id="list"></div>
   </div>
 </main>
+<dialog id="preDlg">
+  <h3>Pre-registered emails</h3>
+  <p class="hint">Paste the emails below, one per line. Only the email matters. These people get the 30% off (€7) first-release price, once each.</p>
+  <textarea id="preText" placeholder="name@example.com&#10;another@example.com"></textarea>
+  <p class="hint" id="preCount" style="margin:8px 0 0"></p>
+  <div class="dlg-btns">
+    <button class="ghost" id="preCancel" type="button">Cancel</button>
+    <button class="ghost" id="preLoadFile" type="button" onclick="document.getElementById('preFile').click()">Or choose a file</button>
+    <button class="primary" id="preGo" type="button">Import</button>
+  </div>
+</dialog>
 <dialog id="msgDlg">
   <h3 id="msgTitle">Message</h3>
   <p class="hint">This shows on their ticket page when they check with their email. You can also email it to them.</p>
@@ -455,26 +466,33 @@ async function loadPreCount() {
     if (r.ok) $('#preBtn').textContent = `⬆ Pre-reg list (${d.count})`;
   } catch (x) {}
 }
-function parseCsvRows(text) {
-  const rows = [];
-  text.split(/\r?\n/).forEach(line => {
-    const cells = (line.match(/("([^"]|"")*"|[^,]*)(,|$)/g) || []).map(c => c.replace(/,$/, '').replace(/^"|"$/g, '').replace(/""/g, '"').trim());
-    const i = cells.findIndex(c => /^\S+@\S+\.\S+$/.test(c));
-    if (i >= 0) rows.push({ email: cells[i], name: cells[i + 1] || '' });
-  });
-  return rows;
-}
-$('#preBtn').onclick = () => $('#preFile').click();
+// Pulls every email address out of whatever was pasted (one per line, a CSV, anything).
+const findEmails = text => [...new Set((text.match(/[^\s,;"'<>()]+@[^\s,;"'<>()]+\.[^\s,;"'<>()]+/g) || []).map(e => e.toLowerCase()))];
+const preDlg = $('#preDlg');
+$('#preBtn').onclick = () => { $('#preText').value = ''; $('#preCount').textContent = ''; preDlg.showModal(); };
+$('#preText').oninput = () => { const n = findEmails($('#preText').value).length; $('#preCount').textContent = n ? `${n} email${n === 1 ? '' : 's'} found` : ''; };
 $('#preFile').onchange = async e => {
   const f = e.target.files[0]; e.target.value = '';
-  if (!f) return;
-  const rows = parseCsvRows(await f.text());
-  if (!rows.length) { toast('No emails found in that file.', true); return; }
-  const r = await api('/api/admin/prereg', { method: 'POST', body: JSON.stringify({ rows }) });
-  const d = await r.json().catch(() => ({}));
-  if (!r.ok) { toast(d.error || 'Could not import.', true); return; }
-  toast(`Imported ${d.imported} emails. ${d.count} on the pre-reg list.`);
-  loadPreCount();
+  if (f) { $('#preText').value = await f.text(); $('#preText').oninput(); }
+};
+$('#preCancel').onclick = () => preDlg.close();
+$('#preGo').onclick = async () => {
+  const rows = findEmails($('#preText').value).map(email => ({ email, name: '' }));
+  if (!rows.length) { toast('No emails found. Paste one per line.', true); return; }
+  const b = $('#preGo'); b.disabled = true;
+  try {
+    const r = await api('/api/admin/prereg', { method: 'POST', body: JSON.stringify({ rows }) });
+    const raw = await r.text();
+    let d = {}; try { d = JSON.parse(raw); } catch (x) {}
+    if (!r.ok) {
+      const hint = r.status === 404 || r.status === 405 ? ' (the file functions/api/admin/prereg.js is not on GitHub yet)' : '';
+      toast(`Could not import (error ${r.status}): ${d.error || 'no details'}${hint}`, true);
+    } else {
+      toast(`Imported ${d.imported} emails. ${d.count} on the pre-reg list.`);
+      preDlg.close(); loadPreCount();
+    }
+  } catch (x) { toast('Could not reach the server.', true); }
+  b.disabled = false;
 };
 
 $('#list').onclick = async e => {
