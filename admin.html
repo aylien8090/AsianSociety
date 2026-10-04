@@ -1,5 +1,410 @@
-<!doctype html><html lang="en"><head><script>if (location.hostname.endsWith('github.io')) location.replace('https://asiansociety.pages.dev' + location.pathname.replace(/^\/AsianSociety/, '') + location.search + location.hash);</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Asian Society — ticket desk</title><style>
-:root{--night:#141234;--card:#2e2546;--cream:#f4e9d4;--muted:#c9bdd8;--gold:#e0ac55;--green:#82d3a4;--blue:#a8c7ff;--red:#ff9c8b}*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#100e28,#23183c);color:var(--cream);font:15px/1.45 system-ui,sans-serif;min-height:100vh}main{max-width:1180px;margin:auto;padding:30px 20px 60px}.brand{display:flex;align-items:center;gap:14px;margin-bottom:25px}.lantern{font-size:30px}.brand h1{font:700 28px Georgia,serif;margin:0}.brand p{margin:2px 0;color:var(--muted)}.login,.panel{background:rgba(46,37,70,.92);border:1px solid rgba(224,172,85,.32);border-radius:18px;box-shadow:0 18px 45px #08061266;padding:22px}.login{max-width:480px}.login label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);font-weight:800;margin:0 0 7px}.password-row{display:flex;gap:8px}.password-row input{min-width:0;flex:1}.check,.sound{display:flex;align-items:center;gap:7px;margin:12px 0;color:var(--muted);font-size:13px}.check input,.sound input{accent-color:var(--gold)}input,select,button{font:inherit;border-radius:9px;border:1px solid #66567d}input,select{background:#19142c;color:var(--cream);padding:10px}button{padding:10px 13px;background:var(--gold);border:0;color:#241a38;font-weight:800;cursor:pointer}button:hover{filter:brightness(1.08)}button:disabled{opacity:.55;cursor:wait}.danger{background:transparent;color:var(--red);border:1px solid #9c5970}.message{min-height:22px;color:var(--muted);margin:14px 0 0}.topline{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}.topline h2{margin:0;font:700 23px Georgia,serif}.topline p{margin:4px 0;color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}.metric,.breakdown{background:#211a35;border:1px solid #4d3e66;border-radius:13px;padding:15px}.metric span{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.09em}.metric strong{display:block;color:var(--gold);font-size:29px;margin-top:2px}.metric.green strong{color:var(--green)}.metric.blue strong{color:var(--blue)}.breakdowns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}.breakdown h3{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin:0 0 10px}.chips,.actions{display:flex;flex-wrap:wrap;gap:7px}.chip{background:#493a60;border-radius:99px;padding:5px 9px;font-size:13px}.empty{color:var(--muted);font-size:13px}.table-wrap{overflow:auto;border:1px solid #4d3e66;border-radius:13px}table{border-collapse:collapse;width:100%;min-width:850px;background:#211a35}th,td{padding:12px;text-align:left;border-bottom:1px solid #403252;vertical-align:top}th{color:var(--gold);font-size:11px;letter-spacing:.1em;text-transform:uppercase}small{color:var(--muted)}.status{font-weight:800;text-transform:capitalize}.pending{color:var(--gold)}.paid{color:var(--green)}.emailed{color:var(--blue)}.actions button,.actions select{font-size:12px;padding:7px 9px}.notice{margin:12px 0;padding:10px 12px;background:#3d314f;border-left:3px solid var(--gold);border-radius:7px;color:var(--muted);font-size:13px}@media(max-width:760px){main{padding:20px 12px}.cards{grid-template-columns:1fr 1fr}.breakdowns{grid-template-columns:1fr}.topline{display:block}.sound{margin-top:12px}}
-</style></head><body><main><header class="brand"><span class="lantern">🏮</span><div><h1>Asian Society ticket desk</h1><p>Payment check-in and confirmed-attendee overview</p></div></header><section class="login" id="login"><label for="password">Organiser password</label><div class="password-row"><input id="password" type="password" autocomplete="current-password" placeholder="Enter password"><button id="load">Open dashboard</button></div><label class="check"><input id="show-password" type="checkbox"> Show password</label><p class="message" id="message" role="status"></p></section><section class="panel" id="panel" hidden><div class="topline"><div><h2>Tonight’s list</h2><p id="summary">Loading registrations…</p></div><label class="sound"><input id="sound-on" type="checkbox" checked> Ping when a new registration arrives</label></div><div class="notice">Confirmed stats include people marked <strong>Paid</strong> or <strong>Sent</strong>. Use the status dropdown to undo an accidental action. Deleting is permanent.</div><div class="cards"><div class="metric"><span>Registered</span><strong id="total">0</strong></div><div class="metric"><span>Pending payment</span><strong id="pending">0</strong></div><div class="metric green"><span>Confirmed paid</span><strong id="confirmed">0</strong></div><div class="metric blue"><span>Email sent</span><strong id="sent">0</strong></div></div><div class="breakdowns"><section class="breakdown"><h3>Confirmed by year</h3><div class="chips" id="years"></div></section><section class="breakdown"><h3>Confirmed by background</h3><div class="chips" id="backgrounds"></div></section></div><div class="table-wrap"><table><thead><tr><th>Ticket</th><th>Person</th><th>Details</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div></section></main><script>
-const $=s=>document.querySelector(s),password=$('#password'),message=$('#message'),login=$('#login'),panel=$('#panel'),rows=$('#rows');let tickets=[],knownCodes=new Set(),firstLoad=true,audio;const api=(url,options={})=>fetch(url,{...options,cache:'no-store',headers:{Authorization:'Bearer '+password.value,'content-type':'application/json',...(options.headers||{})}});function esc(v){let e=document.createElement('div');e.textContent=v||'—';return e.innerHTML}function ping(){if(!$('#sound-on').checked)return;try{audio||=new AudioContext();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=880;g.gain.setValueAtTime(.07,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.25);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+.25)}catch(e){}}function count(values){let r={};values.forEach(v=>{v=(v||'Not provided').trim()||'Not provided';r[v]=(r[v]||0)+1});return r}function chips(target,values){let data=Object.entries(count(values)).sort((a,b)=>b[1]-a[1]);target.innerHTML=data.length?data.map(([a,b])=>`<span class="chip">${esc(a)} · <strong>${b}</strong></span>`).join(''):'<span class="empty">No confirmed entries yet</span>'}function render(){let pending=tickets.filter(t=>t.status==='pending'),confirmed=tickets.filter(t=>t.status!=='pending'),sent=tickets.filter(t=>t.status==='emailed');$('#total').textContent=tickets.length;$('#pending').textContent=pending.length;$('#confirmed').textContent=confirmed.length;$('#sent').textContent=sent.length;$('#summary').textContent=`${tickets.length} registration${tickets.length===1?'':'s'} · refreshed ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;chips($('#years'),confirmed.map(t=>t.year));chips($('#backgrounds'),confirmed.map(t=>t.background));rows.innerHTML=tickets.map(t=>`<tr><td><strong>${esc(t.code)}</strong></td><td>${esc(t.name)}<br><small>${esc(t.email)}</small></td><td><small>${esc(t.year)}<br>${esc(t.background)}</small></td><td><small>${new Date(t.created_at+'Z').toLocaleString()}</small></td><td><span class="status ${t.status}">${esc(t.status)}</span></td><td><div class="actions">${t.status==='pending'?`<button data-code="${esc(t.code)}" data-action="mark_paid">Mark paid</button>`:''}${t.status==='paid'?`<button data-code="${esc(t.code)}" data-action="email_ticket">Email in Gmail</button>`:''}<select data-code="${esc(t.code)}" class="status-select"><option value="">Change status…</option><option value="pending">Pending</option><option value="paid">Paid</option><option value="emailed">Sent</option></select><button class="danger" data-code="${esc(t.code)}" data-action="delete">Delete</button></div></td></tr>`).join('')}async function load(){message.textContent='Loading…';let r=await api('/api/admin/tickets'),d=await r.json();if(!r.ok){message.textContent=d.error||'Could not load registrations.';return}let fresh=d.tickets.filter(t=>!knownCodes.has(t.code));if(!firstLoad&&fresh.length)ping();tickets=d.tickets;knownCodes=new Set(tickets.map(t=>t.code));firstLoad=false;render();login.hidden=true;panel.hidden=false;message.textContent=''}async function update(code,action,status){let r=await api('/api/admin/tickets/'+encodeURIComponent(code),{method:'PATCH',body:JSON.stringify({action,status})}),d=await r.json();if(!r.ok){alert(d.error||'Could not update ticket.');return}await load()}function gmail(t){let sub='Your Cultural Night ticket – '+t.code,body='Hi '+t.name+',\n\nYour payment has been confirmed.\n\nYour ticket reference: '+t.code+'\n\nPlease keep this email for entry.\n\nSee you there!\nAsian Society';return 'https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(t.email)+'&su='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body)}$('#show-password').onchange=e=>password.type=e.target.checked?'text':'password';$('#load').onclick=()=>{try{audio||=new AudioContext();audio.resume()}catch(e){}load()};password.onkeydown=e=>{if(e.key==='Enter')$('#load').click()};rows.onclick=async e=>{let b=e.target.closest('button');if(!b)return;let code=b.dataset.code,t=tickets.find(x=>x.code===code);if(b.dataset.action==='email_ticket'){window.open(gmail(t),'_blank','noopener');await update(code,'mark_emailed');return}if(b.dataset.action==='delete'){if(confirm(`Delete ${code} (${t.name})? This cannot be undone.`)){let r=await api('/api/admin/tickets/'+encodeURIComponent(code),{method:'DELETE'}),d=await r.json();if(!r.ok)alert(d.error||'Could not delete ticket.');else await load()}return}await update(code,b.dataset.action)};rows.onchange=e=>{let s=e.target.closest('.status-select');if(s&&s.value){update(s.dataset.code,'set_status',s.value);s.value=''}};setInterval(()=>{if(!panel.hidden)load().catch(()=>{})},15000);
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<script>if (location.hostname.endsWith('github.io')) location.replace('https://asiansociety.pages.dev' + location.pathname.replace(/^\/AsianSociety/, '') + location.search + location.hash);</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Asian Society — Ticket Desk</title>
+<style>
+:root{
+  --bg:#0f0d24;--bg2:#1b1233;--surface:#251d3d;--surface2:#2e2549;--line:#40335e;
+  --cream:#f6ecd8;--muted:#b9acd0;--gold:#e8b45f;--gold-ink:#2a1d0a;
+  --green:#7fd8a2;--blue:#9cc2ff;--red:#ff9a8a;--amber:#f2c36b;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;color:var(--cream);
+  font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:
+    radial-gradient(900px 500px at 85% -10%,rgba(232,180,95,.14),transparent 60%),
+    radial-gradient(700px 500px at -10% 10%,rgba(140,100,220,.18),transparent 60%),
+    linear-gradient(160deg,var(--bg),var(--bg2));
+  background-attachment:fixed;
+}
+main{max-width:1100px;margin:0 auto;padding:28px 18px 80px}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;border-radius:10px;padding:10px 16px;font-weight:700;transition:transform .08s,filter .15s,background .15s}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.5;cursor:wait}
+input,select{background:#17122b;border:1px solid var(--line);border-radius:10px;padding:11px 13px;min-width:0}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:26px;background:linear-gradient(135deg,#f2c36b,#c9822f);box-shadow:0 8px 24px rgba(232,180,95,.3)}
+.brand h1{font-size:26px;line-height:1.1}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.top-actions{display:flex;gap:8px;align-items:center}
+.ghost{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--cream);padding:9px 13px;font-weight:600;font-size:13px}
+.ghost:hover{background:rgba(255,255,255,.12)}
+.live{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(127,216,162,.7);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(127,216,162,0)}100%{box-shadow:0 0 0 0 rgba(127,216,162,0)}}
+
+/* login */
+.login{max-width:440px;margin:9vh auto 0;text-align:center;padding:34px 28px;background:rgba(37,29,61,.85);border:1px solid rgba(232,180,95,.3);border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.login .logo{margin:0 auto 14px;width:62px;height:62px;font-size:34px;border-radius:18px}
+.login h1{font-size:28px}
+.login p.sub{color:var(--muted);margin:6px 0 22px}
+.login form{display:grid;gap:12px}
+.pw{position:relative}
+.pw input{width:100%;padding-right:64px;text-align:center;font-size:16px}
+.pw button{position:absolute;right:6px;top:6px;bottom:6px;padding:0 12px;background:transparent;color:var(--muted);font-size:12px;font-weight:600}
+.primary{background:linear-gradient(135deg,#f2c36b,#e0a24c);color:var(--gold-ink);padding:12px 18px}
+.primary:hover{filter:brightness(1.07)}
+.err{min-height:20px;color:var(--red);font-size:13px;margin:12px 0 0}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat{padding:16px 18px;border-radius:var(--radius);background:rgba(37,29,61,.85);border:1px solid var(--line)}
+.stat span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat strong{display:block;font-size:34px;font-family:Georgia,serif;line-height:1.1;margin-top:4px}
+.stat.s-pending strong{color:var(--amber)}
+.stat.s-paid strong{color:var(--green)}
+.stat.s-sent strong{color:var(--blue)}
+.stat small{color:var(--muted);font-size:12px}
+.money{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;padding:12px 18px;border-radius:var(--radius);background:linear-gradient(90deg,rgba(127,216,162,.14),rgba(127,216,162,.04));border:1px solid rgba(127,216,162,.3);font-size:14px}
+.money strong{color:var(--green);font-size:20px;font-family:Georgia,serif}
+
+/* breakdowns */
+.breaks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
+.break{padding:16px 18px;border-radius:var(--radius);background:rgba(37,29,61,.85);border:1px solid var(--line)}
+.break h3{font-size:12px;font-family:system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.bar-row{display:grid;grid-template-columns:minmax(80px,1.2fr) 3fr auto;gap:10px;align-items:center;margin:7px 0;font-size:13px}
+.bar{height:8px;background:#17122b;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#e8b45f,#f2c36b)}
+.empty{color:var(--muted);font-size:13px}
+
+/* toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.search{flex:1 1 220px}
+.search input{width:100%}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--muted);padding:8px 13px;font-size:13px;font-weight:600;border-radius:99px}
+.tab b{color:var(--cream);margin-left:4px}
+.tab.on{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
+.tab.on b{color:var(--gold-ink)}
+
+/* ticket cards */
+.list{display:grid;gap:10px}
+.ticket{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:14px 16px;border-radius:var(--radius);background:rgba(37,29,61,.9);border:1px solid var(--line);border-left:4px solid var(--amber)}
+.ticket.paid{border-left-color:var(--green)}
+.ticket.emailed{border-left-color:var(--blue)}
+.ticket.fresh{animation:flash 2.5s ease-out}
+@keyframes flash{from{background:rgba(232,180,95,.3)}to{background:rgba(37,29,61,.9)}}
+.code{font:700 17px ui-monospace,Consolas,monospace;letter-spacing:.04em;background:#17122b;border:1px dashed var(--line);border-radius:10px;padding:8px 11px;color:var(--gold);cursor:copy;white-space:nowrap}
+.code:hover{border-color:var(--gold)}
+.who strong{font-size:16px}
+.who .mail{color:var(--muted);font-size:13px;word-break:break-all}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:12px;padding:2px 9px;border-radius:99px;background:rgba(255,255,255,.07);color:var(--muted)}
+.badge{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:99px}
+.badge.pending{background:rgba(242,195,107,.16);color:var(--amber)}
+.badge.paid{background:rgba(127,216,162,.16);color:var(--green)}
+.badge.emailed{background:rgba(156,194,255,.16);color:var(--blue)}
+.act{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.go{padding:9px 14px;font-size:13px}
+.go.pay{background:var(--green);color:#0c2a18}
+.go.mail{background:var(--blue);color:#0d2142}
+.mini{background:transparent;border:1px solid var(--line);color:var(--muted);padding:7px 10px;font-size:12px;font-weight:600}
+.mini:hover{color:var(--cream);border-color:var(--muted)}
+.mini.del:hover{color:var(--red);border-color:var(--red)}
+.mini-sel{background:transparent;border:1px solid var(--line);color:var(--muted);padding:6px 8px;font-size:12px;border-radius:10px;max-width:120px}
+.time{font-size:12px;color:var(--muted)}
+.none{text-align:center;padding:40px 10px;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius)}
+
+/* toast */
+.toasts{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:grid;gap:8px;z-index:50;width:min(92vw,420px)}
+.toast{background:#f6ecd8;color:#241a38;padding:11px 15px;border-radius:12px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.4);animation:up .25s ease-out}
+.toast.bad{background:#ffd6cf;color:#5b1409}
+@keyframes up{from{opacity:0;transform:translateY(10px)}}
+
+@media(max-width:780px){
+  .stats{grid-template-columns:1fr 1fr}
+  .breaks{grid-template-columns:1fr}
+  .ticket{grid-template-columns:1fr;gap:10px}
+  .act{align-items:stretch}
+  .btns{justify-content:flex-start}
+  .top{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<main>
+
+  <!-- LOGIN -->
+  <section class="login" id="login">
+    <div class="logo">🏮</div>
+    <h1>Ticket Desk</h1>
+    <p class="sub">Asian Society · organisers only</p>
+    <form id="loginForm">
+      <div class="pw">
+        <input id="password" type="password" autocomplete="current-password" placeholder="Organiser password" aria-label="Organiser password">
+        <button type="button" id="showPw">Show</button>
+      </div>
+      <button class="primary" id="load" type="submit">Open dashboard</button>
+    </form>
+    <p class="err" id="loginErr" role="alert"></p>
+  </section>
+
+  <!-- DASHBOARD -->
+  <div id="app" hidden>
+    <div class="top">
+      <div class="brand">
+        <div class="logo">🏮</div>
+        <div><h1>Ticket Desk</h1><p id="summary">Loading…</p></div>
+      </div>
+      <div class="top-actions">
+        <span class="live"><i class="dot"></i> Live</span>
+        <button class="ghost" id="soundBtn" title="Play a ping when someone registers">🔔 Sound on</button>
+        <button class="ghost" id="csvBtn">⬇ CSV</button>
+        <button class="ghost" id="logout">Log out</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span>Registered</span><strong id="nTotal">0</strong></div>
+      <div class="stat s-pending"><span>Waiting for payment</span><strong id="nPending">0</strong></div>
+      <div class="stat s-paid"><span>Paid</span><strong id="nPaid">0</strong><small>awaiting ticket email</small></div>
+      <div class="stat s-sent"><span>Ticket sent</span><strong id="nSent">0</strong></div>
+    </div>
+
+    <div class="money"><span>Confirmed so far (<span id="nConfirmed">0</span> × €8)</span><strong id="revenue">€0</strong></div>
+
+    <div class="breaks">
+      <section class="break"><h3>Confirmed by year</h3><div id="years"></div></section>
+      <section class="break"><h3>Confirmed by background</h3><div id="backgrounds"></div></section>
+    </div>
+
+    <div class="toolbar">
+      <div class="search"><input id="search" type="search" placeholder="Search name, email or code…" aria-label="Search"></div>
+      <div class="tabs" id="tabs"></div>
+    </div>
+
+    <div class="list" id="list"></div>
+  </div>
+</main>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const password = $('#password');
+const STATUS_LABEL = { pending: 'Pending', paid: 'Paid', emailed: 'Sent' };
+const PRICE = 8;
+let tickets = [], known = new Set(), firstLoad = true, audio, soundOn = true, filter = 'all', query = '', freshCodes = new Set();
+
+const api = (url, opts = {}) => fetch(url, {
+  ...opts, cache: 'no-store',
+  headers: { Authorization: 'Bearer ' + password.value, 'content-type': 'application/json', ...(opts.headers || {}) }
+});
+
+function esc(v) {
+  return String(v == null || v === '' ? '—' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function toast(msg, bad) {
+  const t = document.createElement('div');
+  t.className = 'toast' + (bad ? ' bad' : '');
+  t.textContent = msg;
+  $('#toasts').appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+function ping() {
+  if (!soundOn) return;
+  try {
+    audio ||= new AudioContext();
+    const t0 = audio.currentTime;
+    [880, 1175].forEach((f, i) => {
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.frequency.value = f;
+      g.gain.setValueAtTime(.001, t0 + i * .14);
+      g.gain.exponentialRampToValueAtTime(.09, t0 + i * .14 + .02);
+      g.gain.exponentialRampToValueAtTime(.001, t0 + i * .14 + .3);
+      o.connect(g).connect(audio.destination);
+      o.start(t0 + i * .14); o.stop(t0 + i * .14 + .32);
+    });
+  } catch (e) {}
+}
+function parseDate(s) { return new Date(String(s).replace(' ', 'T') + 'Z'); }
+function ago(s) {
+  const d = parseDate(s), sec = Math.max(0, (Date.now() - d) / 1000);
+  if (isNaN(sec)) return '';
+  if (sec < 60) return 'just now';
+  if (sec < 3600) return Math.floor(sec / 60) + ' min ago';
+  if (sec < 86400) return Math.floor(sec / 3600) + ' h ago';
+  return d.toLocaleDateString([], { day: 'numeric', month: 'short' });
+}
+function bars(target, values) {
+  const r = {};
+  values.forEach(v => { v = (v || '').trim() || 'Not provided'; r[v] = (r[v] || 0) + 1; });
+  const data = Object.entries(r).sort((a, b) => b[1] - a[1]);
+  const max = data.length ? data[0][1] : 1;
+  target.innerHTML = data.length
+    ? data.map(([k, n]) => `<div class="bar-row"><span>${esc(k)}</span><div class="bar"><i style="width:${n / max * 100}%"></i></div><strong>${n}</strong></div>`).join('')
+    : '<span class="empty">No confirmed people yet</span>';
+}
+
+function render() {
+  const by = s => tickets.filter(t => t.status === s);
+  const pending = by('pending'), paid = by('paid'), sent = by('emailed');
+  const confirmed = tickets.filter(t => t.status !== 'pending');
+  $('#nTotal').textContent = tickets.length;
+  $('#nPending').textContent = pending.length;
+  $('#nPaid').textContent = paid.length;
+  $('#nSent').textContent = sent.length;
+  $('#nConfirmed').textContent = confirmed.length;
+  $('#revenue').textContent = '€' + confirmed.length * PRICE;
+  $('#summary').textContent = `Updated ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · checks every 15s`;
+  bars($('#years'), confirmed.map(t => t.year));
+  bars($('#backgrounds'), confirmed.map(t => t.background));
+
+  const tabs = [['all', 'All', tickets.length], ['pending', 'Pending', pending.length], ['paid', 'Paid', paid.length], ['emailed', 'Sent', sent.length]];
+  $('#tabs').innerHTML = tabs.map(([k, l, n]) => `<button class="tab ${filter === k ? 'on' : ''}" data-tab="${k}">${l}<b>${n}</b></button>`).join('');
+
+  const q = query.trim().toLowerCase();
+  const shown = tickets.filter(t => (filter === 'all' || t.status === filter) &&
+    (!q || [t.code, t.name, t.email].some(x => (x || '').toLowerCase().includes(q))));
+
+  $('#list').innerHTML = shown.length ? shown.map(t => {
+    const c = esc(t.code);
+    let main = '';
+    if (t.status === 'pending') main = `<button class="go pay" data-code="${c}" data-do="pay">✓ Mark paid</button>`;
+    else if (t.status === 'paid') main = `<button class="go mail" data-code="${c}" data-do="mail">✉ Email ticket</button>`;
+    else main = `<button class="mini" data-code="${c}" data-do="mail">✉ Email again</button>`;
+    return `<article class="ticket ${t.status} ${freshCodes.has(t.code) ? 'fresh' : ''}">
+      <div class="code" data-copy="${c}" title="Click to copy">${c}</div>
+      <div class="who">
+        <strong>${esc(t.name)}</strong> <span class="badge ${t.status}">${STATUS_LABEL[t.status] || esc(t.status)}</span>
+        <div class="mail">${esc(t.email)}</div>
+        <div class="meta"><span class="tag">${esc(t.year)}</span><span class="tag">${esc(t.background)}</span><span class="tag">${ago(t.created_at)}</span></div>
+      </div>
+      <div class="act"><div class="btns">${main}</div>
+        <div class="btns">
+          <select class="mini-sel" data-code="${c}" aria-label="Change status"><option value="">Change…</option><option value="pending">→ Pending</option><option value="paid">→ Paid</option><option value="emailed">→ Sent</option></select>
+          <button class="mini del" data-code="${c}" data-do="del">Delete</button>
+        </div>
+      </div></article>`;
+  }).join('') : `<div class="none">${tickets.length ? 'Nothing matches that filter.' : 'No registrations yet. They will show up here by themselves.'}</div>`;
+}
+
+async function load(isLogin) {
+  const r = await api('/api/admin/tickets');
+  let d = {};
+  try { d = await r.json(); } catch (e) {}
+  if (!r.ok) {
+    if (isLogin) { $('#loginErr').textContent = r.status === 401 ? 'Wrong password.' : (d.error || 'Could not load registrations.'); }
+    else if (r.status === 401) { logout(); }
+    return false;
+  }
+  const fresh = d.tickets.filter(t => !known.has(t.code));
+  if (!firstLoad && fresh.length) {
+    ping();
+    toast(fresh.length === 1 ? `New registration: ${fresh[0].name}` : `${fresh.length} new registrations`);
+    freshCodes = new Set(fresh.map(t => t.code));
+    setTimeout(() => { freshCodes.clear(); }, 3000);
+  }
+  tickets = d.tickets;
+  known = new Set(tickets.map(t => t.code));
+  firstLoad = false;
+  $('#login').hidden = true;
+  $('#app').hidden = false;
+  render();
+  return true;
+}
+
+async function update(code, action, status) {
+  const r = await api('/api/admin/tickets/' + encodeURIComponent(code), { method: 'PATCH', body: JSON.stringify({ action, status }) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { toast(d.error || 'Could not update ticket.', true); return false; }
+  await load();
+  return true;
+}
+
+function gmail(t) {
+  const sub = 'Your Cultural Night ticket – ' + t.code;
+  const body = 'Hi ' + t.name + ',\n\nYour payment has been confirmed.\n\nYour ticket reference: ' + t.code + '\n\nPlease keep this email for entry.\n\nSee you there!\nAsian Society';
+  return 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(t.email) + '&su=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
+}
+
+function logout() {
+  try { sessionStorage.removeItem('asoc_pw'); } catch (e) {}
+  password.value = ''; firstLoad = true; known = new Set(); tickets = [];
+  $('#app').hidden = true; $('#login').hidden = false;
+}
+
+/* events */
+$('#loginForm').onsubmit = async e => {
+  e.preventDefault();
+  $('#loginErr').textContent = '';
+  const b = $('#load'); b.disabled = true; b.textContent = 'Checking…';
+  try { audio ||= new AudioContext(); audio.resume(); } catch (x) {}
+  try {
+    if (await load(true)) { try { sessionStorage.setItem('asoc_pw', password.value); } catch (x) {} }
+  } catch (x) { $('#loginErr').textContent = 'Could not reach the server.'; }
+  b.disabled = false; b.textContent = 'Open dashboard';
+};
+$('#showPw').onclick = () => {
+  const show = password.type === 'password';
+  password.type = show ? 'text' : 'password';
+  $('#showPw').textContent = show ? 'Hide' : 'Show';
+};
+$('#logout').onclick = logout;
+$('#soundBtn').onclick = () => {
+  soundOn = !soundOn;
+  $('#soundBtn').textContent = soundOn ? '🔔 Sound on' : '🔕 Sound off';
+  if (soundOn) { try { audio ||= new AudioContext(); audio.resume(); } catch (x) {} ping(); }
+};
+$('#search').oninput = e => { query = e.target.value; render(); };
+$('#tabs').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) { filter = b.dataset.tab; render(); } };
+$('#csvBtn').onclick = () => {
+  const cell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const head = ['code', 'name', 'email', 'year', 'background', 'status', 'registered'];
+  const csv = [head.join(',')].concat(tickets.map(t => [t.code, t.name, t.email, t.year, t.background, t.status, t.created_at].map(cell).join(','))).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = 'asian-society-attendees.csv'; a.click();
+};
+
+$('#list').onclick = async e => {
+  const copy = e.target.closest('[data-copy]');
+  if (copy) { try { await navigator.clipboard.writeText(copy.dataset.copy); toast('Copied ' + copy.dataset.copy); } catch (x) {} return; }
+  const b = e.target.closest('button[data-do]');
+  if (!b) return;
+  const code = b.dataset.code, t = tickets.find(x => x.code === code);
+  if (!t) return;
+  b.disabled = true;
+  if (b.dataset.do === 'pay') {
+    if (await update(code, 'mark_paid')) toast(`${t.name} marked as paid`);
+  } else if (b.dataset.do === 'mail') {
+    window.open(gmail(t), '_blank', 'noopener');
+    if (t.status !== 'emailed') await update(code, 'mark_emailed');
+    toast('Gmail opened — press Send there');
+  } else if (b.dataset.do === 'del') {
+    if (confirm(`Permanently delete ${code} (${t.name})?\nThis cannot be undone.`)) {
+      const r = await api('/api/admin/tickets/' + encodeURIComponent(code), { method: 'DELETE' });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) toast(d.error || 'Could not delete.', true); else { toast('Deleted ' + code); await load(); }
+    }
+  }
+  b.disabled = false;
+};
+$('#list').onchange = e => {
+  const s = e.target.closest('.mini-sel');
+  if (s && s.value) { update(s.dataset.code, 'set_status', s.value); s.value = ''; }
+};
+
+setInterval(() => { if (!$('#app').hidden) load().catch(() => {}); }, 15000);
+
+/* stay signed in for this browser tab */
+try {
+  const saved = sessionStorage.getItem('asoc_pw');
+  if (saved) { password.value = saved; load(true).catch(() => {}); }
+} catch (e) {}
+</script>
+</body>
+</html>
