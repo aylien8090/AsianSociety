@@ -5,10 +5,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#141234">
-<title>Cultural Night — Coming Soon · Asian Society, Trakia University</title>
-<meta name="description" content="A cultural dress-up night is coming in early October at Trakia University. Best dressed competition, prizes, games, new people. Register your interest — free — and get a discount on tickets.">
-<meta property="og:title" content="Cultural Night — Coming Soon">
-<meta property="og:description" content="Dress up in your cultural clothes! Register your interest — free — and get a discount on tickets.">
+<title>Cultural Night — 17 October · Asian Society, Trakia University</title>
+<meta name="description" content="Cultural Night, 17 October in Stara Zagora. Dress up in your cultural clothes! Best dressed competition, prizes, games, food and snacks, free henna. Early bird tickets on sale now — limited spots.">
+<meta property="og:title" content="Cultural Night — 17 October · Tickets on sale now">
+<meta property="og:description" content="Dress up in your cultural clothes! Early bird tickets on sale now — limited spots.">
 <meta property="og:image" content="Images/MNMLOGO.png">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%AE%3C/text%3E%3C/svg%3E">
@@ -81,7 +81,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .chip{margin-top:20px;border:1px solid rgba(216,162,74,.5);color:var(--gold-soft);
   border-radius:999px;padding:8px 16px;font:700 10px 'Karla';letter-spacing:.2em}
 
-.cta{position:relative;display:inline-flex;align-items:center;gap:9px;margin-top:26px;
+.cta{text-decoration:none;position:relative;display:inline-flex;align-items:center;gap:9px;margin-top:26px;
   padding:17px 34px;border-radius:999px;
   background:linear-gradient(180deg,var(--red-hi),var(--red));color:#fff7ea;
   font:800 13.5px 'Karla';letter-spacing:.14em;text-transform:uppercase;
@@ -96,6 +96,18 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .cta:active{transform:scale(.96)}
 .fine{margin-top:16px;font-size:12.5px;line-height:1.55;color:var(--cream-dim);max-width:34ch}
 .fine b{color:var(--gold-soft);font-weight:800}
+.venue{display:flex;align-items:center;gap:12px;margin-top:20px;padding:13px 16px;max-width:360px;text-align:left;
+  border:1.5px solid rgba(216,162,74,.65);border-radius:16px;background:rgba(20,18,52,.55);
+  backdrop-filter:blur(4px);color:var(--cream);text-decoration:none;
+  transition:transform .3s cubic-bezier(.2,1.6,.4,1),border-color .3s}
+.venue:hover,.venue:focus-visible{transform:scale(1.03);border-color:var(--gold-hi)}
+.venue__pin{flex:none;width:30px;height:30px;color:var(--gold-hi)}
+.venue__txt{display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1.35;color:var(--cream-dim)}
+.venue__txt b{font:800 16px 'Karla';color:var(--cream)}
+.venue__txt em{font-style:normal;font-weight:800;font-size:11px;letter-spacing:.1em;color:var(--gold-soft);margin-top:3px;text-transform:uppercase}
+.herolinks{margin-top:12px;font-size:13px;color:var(--cream-dim);display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.herolinks a{color:var(--gold-soft);font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.fine s{opacity:.7}
 .cue{margin-top:22px;color:rgba(233,200,135,.75)}
 .cue__i{width:20px;height:12px;animation:cueb 2.2s ease-in-out infinite}
 @keyframes cueb{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
@@ -112,7 +124,22 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .below::before{content:"";position:absolute;top:0;left:0;right:0;height:90px;pointer-events:none;
   background:linear-gradient(180deg,rgba(255,170,90,.1),transparent)}
 .onnight{padding:54px 22px 10px;text-align:center}
-.onnight__h{font:800 11px 'Karla';letter-spacing:.3em;color:var(--gold-soft)}
+.onnight__h{font:800 24px 'Karla';letter-spacing:.24em;color:var(--gold-soft)}
+.tickets{padding:46px 22px 4px;text-align:center}
+.tickets__h{font:800 20px 'Karla';letter-spacing:.22em;color:var(--gold-soft)}
+.tickets__h::after{content:"";display:block;width:34px;height:1px;background:rgba(216,162,74,.5);margin:12px auto 0}
+.tiers{display:grid;gap:10px;margin-top:20px;text-align:left}
+.tier{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-radius:14px;border:1px solid rgba(216,162,74,.3);background:rgba(255,255,255,.04)}
+.tier__n{font:800 15px 'Karla';color:var(--cream)}
+.tier__d{font-size:12.5px;color:var(--cream-dim);margin-top:2px}
+.tier__p{font:900 28px 'Fraunces',serif;color:var(--cream)}
+.tier.old .tier__p{text-decoration:line-through;opacity:.55}
+.tier.now{border:2px solid var(--gold-hi);background:rgba(216,162,74,.12);box-shadow:0 0 28px rgba(255,170,80,.18)}
+.tier.now .tier__p{color:var(--gold-hi)}
+.tier__tag{display:inline-block;margin-left:8px;font:800 9.5px 'Karla';letter-spacing:.12em;color:#2b2115;background:var(--gold-hi);border-radius:99px;padding:3px 8px;vertical-align:2px}
+.tier.done{opacity:.8}
+.tickets__note{margin-top:14px;font-size:13.5px;line-height:1.55;color:var(--cream-dim)}
+.tickets__note b{color:var(--gold-soft)}
 .onnight__h::after{content:"";display:block;width:34px;height:1px;
   background:rgba(216,162,74,.5);margin:12px auto 0}
 
@@ -194,16 +221,16 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .done__c.small{font-size:13px}
 .done__help{margin-top:14px;font-size:14px;color:#574833}
 .steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:12px;text-align:left}
-.step{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid #d8a24a;border-radius:14px;background:#fff6e5}
+.step{display:flex;gap:11px;align-items:flex-start;padding:14px 12px;border:1px solid #d8a24a;border-radius:14px;background:#fff6e5}
 .step__n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff7ea;display:grid;place-items:center;font:900 18px 'Karla'}
 .step__b{min-width:0;flex:1}
 .step__h{font:800 16px/1.3 'Karla';color:var(--ink)}
 .step__big{font:900 46px/1.1 'Fraunces',serif;color:var(--red);margin:6px 0 2px}
 .step__sub{font-size:15px;color:#574833;margin-top:4px}
 .step__sub.warn{font-size:13px;color:#7a6540}
-.tag{display:inline-block;font:900 24px/1.2 'Karla';color:var(--ink);background:#fff;border:2px dashed #d8a24a;border-radius:10px;padding:4px 12px;margin-top:4px;word-break:break-all}
+.tag{display:inline-block;white-space:nowrap;font:900 clamp(18px,5.4vw,24px)/1.2 'Karla';color:var(--ink);background:#fff;border:2px dashed #d8a24a;border-radius:10px;padding:4px 12px;margin-top:4px;word-break:break-all}
 .payment__code{display:block;margin:8px 0;font:900 clamp(26px,8vw,36px)/1.1 'Karla';letter-spacing:.04em;white-space:nowrap;color:var(--red)}
-.copy{font:800 12px 'Karla';letter-spacing:.1em;text-transform:uppercase;color:var(--red);border:2px solid rgba(194,51,24,.45);border-radius:99px;padding:7px 14px;margin:2px 0 6px}
+.copy{font:800 12px 'Karla';letter-spacing:.1em;text-transform:uppercase;color:var(--red);border:2px solid rgba(194,51,24,.45);border-radius:99px;padding:8px 14px;margin:2px 0 6px}
 .copy:hover{border-color:var(--red)}
 .paidbtn{margin-top:20px;font-size:18px;padding:20px 18px;background:linear-gradient(180deg,#3fae6a,#2c8a52);box-shadow:0 8px 20px rgba(44,138,82,.35),inset 0 1px 0 rgba(255,255,255,.25)}
 .paidmsg{font-size:18px;font-weight:700;color:var(--ink)}
@@ -211,12 +238,84 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .wa-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;margin-top:16px;padding:14px 22px;border-radius:99px;background:#25d366;color:#07351a;font:800 16px 'Karla';text-decoration:none;box-shadow:0 8px 20px rgba(37,211,102,.3)}
 .wa-btn svg{width:22px;height:22px}
 .wa-btn:hover{filter:brightness(1.06)}
-.wa-float{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:40;display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:99px;background:#25d366;color:#07351a;font:800 14px 'Karla';text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.35)}
-.wa-float svg{width:22px;height:22px}
+.wa-float{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:40;display:flex;align-items:center;height:52px;min-width:52px;padding:0 15px;border-radius:99px;background:#25d366;color:#07351a;font:800 14px 'Karla';text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.35);overflow:hidden;transition:box-shadow .25s,transform .25s}
+.wa-float svg{flex:none;width:22px;height:22px}
+.wa-float__txt{max-width:0;opacity:0;white-space:nowrap;overflow:hidden;transition:max-width .3s ease,opacity .25s ease,margin .3s ease}
+.wa-float:hover,.wa-float:focus-visible,.wa-float.open{box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.wa-float:hover .wa-float__txt,.wa-float:focus-visible .wa-float__txt,.wa-float.open .wa-float__txt{max-width:110px;opacity:1;margin-left:8px}
 .contact{margin:6px auto 28px;max-width:420px}
 .contact__t{font:700 24px 'Fraunces',serif;color:var(--gold-hi)}
 .contact__s{margin-top:6px;color:var(--cream-dim);font-size:15px}
 .contact .wa-btn{font-size:18px}
+.foot__c{margin-top:10px;font-size:12px}
+.foot__c a{color:rgba(233,200,135,.8);text-decoration:underline;text-underline-offset:3px}
+
+/* price line + pre-reg toggle inside the card */
+.priceline{display:flex;align-items:center;gap:14px;margin-top:16px;padding:12px 14px;border-radius:12px;background:#fff6e5;border:1px solid #d8a24a}
+.priceline__now{font:900 34px/1 'Fraunces',serif;color:var(--red)}
+.priceline__txt{font-size:13px;line-height:1.4;color:#574833}
+.priceline__txt b{color:var(--ink);font-size:14px}
+.priceline__txt s{opacity:.7}
+.priceline.pre{background:#e8f6ec;border-color:#6bbf8a}
+.priceline.pre .priceline__now{color:#1f7a45}
+.preg{display:block;width:100%;margin-top:12px;padding:11px 12px;border:1.5px dashed #cdbb92;border-radius:10px;font:700 13.5px 'Karla';color:#574833;text-align:center}
+.preg u{color:var(--red);font-weight:800}
+.preg[aria-pressed="true"]{border-style:solid;border-color:#6bbf8a;background:#e8f6ec}
+.preg__note{margin-top:8px;font-size:13px;line-height:1.5;color:#574833}
+.preg__fail{margin-top:10px;padding:12px;border-radius:10px;background:#fde8e3;color:#7a2312;font-size:13.5px;line-height:1.5}
+.preg__btns{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px}
+.preg__btns .linkbtn{margin-top:0}
+
+/* phone field */
+.phone{display:flex;gap:10px;align-items:flex-end}
+.phone__cc{flex:none;width:112px}
+.phone__num{flex:1;min-width:0}
+.phone__cc select{padding-right:20px}
+
+/* pay step extras */
+.done__again{margin-bottom:10px;padding:9px 12px;border-radius:10px;background:#e7f0ff;color:#27406e;font-size:13.5px;font-weight:700}
+.step__sub.tiernote{color:#1f7a45;font-weight:800}
+a.tag{text-decoration:none}
+a.tag:hover{border-style:solid}
+.revbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.revopen,.revqr{font:800 12.5px 'Karla';letter-spacing:.06em;padding:9px 14px;border-radius:99px}
+.revopen{background:var(--ink);color:#fff7ea;text-decoration:none}
+.revqr{border:2px solid rgba(43,33,21,.35);color:var(--ink)}
+.revqr:hover{border-color:var(--ink)}
+.qrbox{margin-top:12px;text-align:center}
+.qrbox img{width:min(100%,240px);border-radius:12px;border:1px solid #d8a24a;background:#fff}
+.qrbox p{font-size:12.5px;color:#7a6540;margin-top:6px}
+.copy{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;letter-spacing:.05em;position:relative;overflow:hidden;transition:background .2s,color .2s,border-color .2s}
+.copy__ico{font-size:15px;line-height:1}
+.copy.copied{background:#2c8a52;border-color:#2c8a52;color:#fff;animation:copyBounce .5s cubic-bezier(.3,1.7,.4,1)}
+.copy.copied .copy__ico{animation:copyTick .5s ease}
+@keyframes copyBounce{0%{transform:scale(1)}35%{transform:scale(.88)}65%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes copyTick{0%{transform:scale(.2) rotate(-40deg);opacity:0}100%{transform:none;opacity:1}}
+.cashline{margin-top:12px;font-size:12.5px;color:#7a6540}
+.cashline a{color:#1a8a4a;font-weight:800;text-decoration:underline;text-underline-offset:2px}
+
+/* ticket states (waiting / confirmed / used) */
+.pass{margin-top:6px;padding:20px 16px 18px;border-radius:16px;text-align:center;background:linear-gradient(180deg,#fffaf0,#fff1d6);border:2px solid #d8a24a;position:relative}
+.pass.ok{border-color:#2c8a52;background:linear-gradient(180deg,#f3fff7,#dff5e7)}
+.pass.wait{border-color:#d8a24a}
+.pass.used{border-color:#8a744e;background:#efe6d3}
+.pass__stamp{display:inline-block;font:900 15px 'Karla';letter-spacing:.2em;color:#fff;background:#2c8a52;border-radius:99px;padding:6px 16px}
+.pass.wait .pass__stamp{background:#d8a24a;color:#2b2115}
+.pass.used .pass__stamp{background:#8a744e}
+.pass__big{font:900 clamp(26px,7vw,34px)/1.1 'Fraunces',serif;color:var(--ink);margin:14px 0 4px}
+.pass__name{font:800 22px 'Karla';color:var(--ink);word-break:break-word}
+.pass__ref{margin-top:10px;font:700 11px 'Karla';letter-spacing:.16em;color:#7a6540;text-transform:uppercase}
+.pass__code{font:900 clamp(26px,8vw,36px)/1.15 'Karla';letter-spacing:.05em;color:var(--red);white-space:nowrap}
+.pass__msg{margin-top:12px;font-size:15px;line-height:1.55;color:#574833}
+.pass__where{display:inline-block;margin-top:12px;font-size:13.5px;color:#574833}
+.pass__where a{color:var(--red);font-weight:800}
+.pass__note{margin-top:14px;padding:11px 12px;border-radius:10px;background:#fff;border-left:4px solid var(--gold);text-align:left;font-size:14px;line-height:1.5;color:#3a2e1f;white-space:pre-wrap;word-break:break-word}
+.pass__note b{display:block;font:800 10px 'Karla';letter-spacing:.14em;color:#8a744e;text-transform:uppercase;margin-bottom:3px}
+.pass .linkbtn{margin-top:16px}
+.pass .send{margin-top:14px}
+.lookres{margin-top:16px}
+.lookres .none{padding:12px;border-radius:10px;background:#fde8e3;color:#7a2312;font-size:14px;line-height:1.5}
+.lookres .none a{color:#7a2312;font-weight:800}
 .linkbtn{margin-top:18px;font:800 11.5px 'Karla';letter-spacing:.14em;text-transform:uppercase;
   color:var(--red);border-bottom:2px solid rgba(194,51,24,.4);padding-bottom:3px}
 .linkbtn:hover{border-color:var(--red)}
@@ -264,7 +363,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   transition:opacity .7s ease var(--d,0s),transform .7s cubic-bezier(.2,.7,.2,1) var(--d,0s)}
 .rv.in{opacity:1;transform:none}
 
-.spark{position:fixed;z-index:120;pointer-events:none;
+.spark{position:fixed;z-index:120;pointer-events:none;opacity:0;
   clip-path:polygon(50% 0,63% 37%,100% 50%,63% 63%,50% 100%,37% 63%,0 50%,37% 37%)}
 
 @media(prefers-reduced-motion:reduce){
@@ -406,15 +505,24 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
     <div class="hero__content">
       <p class="kicker up" style="--d:.35s">ASIAN SOCIETY × TRAKIA UNIVERSITY</p>
       <h1 class="title">
-        <span class="t1 up" style="--d:.5s">CULTURAL EVENT</span>
-        <span class="t2 pop" style="--d:.78s">COMING SOON</span>
+        <span class="t1 up" style="--d:.5s">CULTURAL NIGHT</span>
+        <span class="t2 pop" style="--d:.78s">17 OCTOBER</span>
       </h1>
       <p class="sub up" style="--d:1s">Dress up in your cultural clothes!</p>
-      <p class="chip up" style="--d:1.18s">EARLY OCTOBER · DATE TBC</p>
-      <a class="cta pop" style="--d:1.32s" href="#join">REGISTER INTEREST
+      <a class="venue up" style="--d:1.15s" href="https://maps.app.goo.gl/PGVZ2q4MvKAYjRC27" target="_blank" rel="noopener" aria-label="Open the venue in Google Maps">
+        <svg class="venue__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.500C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></svg>
+        <span class="venue__txt">
+          <b>Stara Zagora Centre</b>
+          <span>bul. “Tsar Simeon Veliki” 55, 6000 Stara Zagora</span>
+          <em>Tap to open in Maps →</em>
+        </span>
+      </a>
+      <p class="chip up" style="--d:1.25s">TICKETS ON SALE NOW · LIMITED SPOTS</p>
+      <a class="cta pop" style="--d:1.35s" href="#join">GET YOUR TICKETS NOW!
         <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l7 7 7-7"/></svg>
       </a>
-      <p class="fine up" style="--d:1.5s"><b>IT'S FREE TO REGISTER</b> — and everyone on the list gets a discount on tickets.</p>
+      <p class="fine up" style="--d:1.5s"><b>EARLY BIRD €8</b> <s>€10</s> — spots are limited, so grab yours while they last.</p>
+      <p class="herolinks up" style="--d:1.6s"><a href="#ticket">Already got a ticket?</a><span aria-hidden="true">·</span><a href="#join" data-prereg>Pre-registered? Get your €7 ticket</a></p>
       <a class="cue fade" style="--d:1.7s" href="#onnight" aria-label="See what's on the night">
         <svg class="cue__i" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l8 8 8-8"/></svg>
       </a>
@@ -464,14 +572,33 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
               <span class="perk__float" style="--fd:-3.3s"><span class="perk__orb">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5h16a8 8 0 0 1-4.3 6.6 8.2 8.2 0 0 1-7.4 0A8 8 0 0 1 4 12.5z"/><path d="M9.5 9c-.9-1.1.9-2.1 0-3.3M14.5 9c-.9-1.1.9-2.1 0-3.3"/></svg>
               </span></span>
-              <span class="perk__txt">Potential food? <span class="peek">👀</span></span>
+              <span class="perk__txt">Food and Snacks included!</span>
+            </button>
+          </li>
+          <li>
+            <button class="perk" type="button">
+              <span class="perk__float" style="--fd:-4s"><span class="perk__orb">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="6.2" rx="2" ry="3.4"/><ellipse cx="12" cy="17.8" rx="2" ry="3.4"/><ellipse cx="6.2" cy="12" rx="3.4" ry="2"/><ellipse cx="17.8" cy="12" rx="3.4" ry="2"/></svg>
+              </span></span>
+              <span class="perk__txt">Free Henna / Mehndi!</span>
             </button>
           </li>
         </ul>
       </div>
     </section>
 
-    <!-- ═══════════ REGISTER ═══════════ -->
+    <!-- ═══════════ TICKET PRICES ═══════════ -->
+    <section class="tickets" id="prices">
+      <h2 class="tickets__h rv">TICKETS</h2>
+      <div class="tiers rv" style="--d:.1s">
+        <div class="tier old"><div><p class="tier__n">Normal price</p><p class="tier__d">What tickets cost after the early bird</p></div><p class="tier__p">€10</p></div>
+        <div class="tier now"><div><p class="tier__n">Early bird<span class="tier__tag">ON NOW</span></p><p class="tier__d">Discounted, limited spots</p></div><p class="tier__p">€8</p></div>
+        <div class="tier done"><div><p class="tier__n">First release</p><p class="tier__d">Only for people who pre-registered</p></div><p class="tier__p">€7</p></div>
+      </div>
+      <p class="tickets__note rv" style="--d:.15s">Our first release was <b>€7</b>, and that price was for everyone who pre-registered. If that's you, tap <b>“Pre-registered?”</b> below to get it. Everyone else gets the early bird price of <b>€8</b> instead of the normal €10. Spots are limited and early bird ends when they're gone.</p>
+    </section>
+
+    <!-- ═══════════ GET A TICKET ═══════════ -->
     <section class="join" id="join">
       <div class="card rv" id="card">
         <div class="card__head">
@@ -487,7 +614,23 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
           </svg>
           <div>
             <h2 class="card__t">Get your ticket</h2>
-            <p class="card__s">REGISTER · PAY BY REVOLUT · CONFIRM BY EMAIL</p>
+            <p class="card__s">RESERVE YOUR SPOT · PAY · SEE YOUR TICKET HERE</p>
+          </div>
+        </div>
+
+        <div id="formTop">
+          <div class="priceline" id="priceLine">
+            <span class="priceline__now" id="plNow">€8</span>
+            <span class="priceline__txt"><b id="plLabel">Early bird</b> <s id="plOld">€10</s><br><span id="plSub">Limited spots. Early bird ends when they're gone.</span></span>
+          </div>
+          <button class="preg" id="pregBtn" type="button" aria-pressed="false">Already pre-registered? <u>Click here</u> to get your €7 ticket</button>
+          <p class="preg__note" id="pregNote" hidden>Enter the <b>same email you pre-registered with</b> below and we'll give you the €7 first-release price.</p>
+          <div class="preg__fail" id="pregFail" hidden>
+            <p>We couldn't find that email on the pre-registration list. Check for typos, or message us and we'll sort it.</p>
+            <div class="preg__btns">
+              <a class="wa-inline" data-wa href="https://wa.me/359882093176" target="_blank" rel="noopener">Message us on WhatsApp</a>
+              <button type="button" class="linkbtn" id="pregSkip">Continue at €8 instead</button>
+            </div>
           </div>
         </div>
 
@@ -501,6 +644,27 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
             <label for="fName">Name<span class="req">*</span></label>
             <div class="ctl"><input id="fName" name="name" type="text" autocomplete="name" placeholder="Your name"></div>
             <p class="err">Please tell us your name.</p>
+          </div>
+          <div class="f">
+            <label for="fPhone">Phone number<span class="opt">optional</span></label>
+            <div class="phone">
+              <div class="ctl phone__cc">
+                <select id="fCC" aria-label="Country code">
+                  <option value="+359" selected>🇧🇬 +359</option>
+                  <option value="+91">🇮🇳 +91</option><option value="+92">🇵🇰 +92</option><option value="+880">🇧🇩 +880</option>
+                  <option value="+94">🇱🇰 +94</option><option value="+977">🇳🇵 +977</option>
+                  <option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+254">🇰🇪 +254</option><option value="+27">🇿🇦 +27</option>
+                  <option value="+20">🇪🇬 +20</option><option value="+212">🇲🇦 +212</option><option value="+962">🇯🇴 +962</option><option value="+961">🇱🇧 +961</option>
+                  <option value="+963">🇸🇾 +963</option><option value="+964">🇮🇶 +964</option><option value="+966">🇸🇦 +966</option><option value="+971">🇦🇪 +971</option>
+                  <option value="+90">🇹🇷 +90</option><option value="+98">🇮🇷 +98</option>
+                  <option value="+30">🇬🇷 +30</option><option value="+39">🇮🇹 +39</option><option value="+40">🇷🇴 +40</option><option value="+34">🇪🇸 +34</option>
+                  <option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+31">🇳🇱 +31</option><option value="+47">🇳🇴 +47</option>
+                  <option value="+44">🇬🇧 +44</option><option value="+353">🇮🇪 +353</option><option value="+1">🇺🇸 +1</option>
+                  <option value="+86">🇨🇳 +86</option><option value="+60">🇲🇾 +60</option><option value="+65">🇸🇬 +65</option><option value="+63">🇵🇭 +63</option>
+                </select>
+              </div>
+              <div class="ctl phone__num"><input id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="88 123 4567"></div>
+            </div>
           </div>
           <div class="f">
             <label for="fYear">Year of study<span class="opt">optional</span></label>
@@ -518,7 +682,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
             <label for="fBackground">Background<span class="opt">optional</span></label>
             <div class="ctl"><input id="fBackground" name="background" type="text" autocomplete="off" placeholder="e.g. Desi, Mideast, Türk, Bulgarian…"></div>
           </div>
-          <button class="send" type="submit" id="sendBtn">Get payment reference</button>
+          <button class="send" type="submit" id="sendBtn">Pay</button>
         </form>
 
         <div class="done" id="done" hidden>
@@ -532,24 +696,34 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
             <line x1="35" y1="79" x2="35" y2="87" stroke="#caa24d" stroke-width="1.8"/>
             <path d="M31 87h8l-4 8z" fill="#d8a24a"/>
           </svg>
+          <p class="done__again" id="dExisting" hidden>That email already has a ticket, so here it is again.</p>
           <div id="payStep">
             <h2 class="done__t">Almost there, <span id="dName"></span>!</h2>
-            <p class="done__c">Your ticket isn’t booked until you pay. Do these 3 things:</p>
+            <p class="done__c">Your spot isn’t reserved until you’ve paid. Do these 3 things:</p>
             <ol class="steps">
               <li class="step">
                 <span class="step__n">1</span>
                 <div class="step__b">
                   <p class="step__h">Open Revolut and send</p>
                   <p class="step__big" id="ticketPrice"></p>
-                  <p class="step__sub">to <strong class="tag" id="revolutTag"></strong></p>
+                  <p class="step__sub" id="tierNote" hidden></p>
+                  <p class="step__sub">to <a class="tag" id="revolutTag" href="https://revolut.me/siddiquico" target="_blank" rel="noopener">@siddiquico</a></p>
+                  <div class="revbtns">
+                    <a class="revopen" href="https://revolut.me/siddiquico" target="_blank" rel="noopener">Open in Revolut</a>
+                    <button type="button" class="revqr" id="qrBtn" aria-expanded="false">Show QR code</button>
+                  </div>
+                  <div class="qrbox" id="qrBox" hidden>
+                    <img src="Images/REVQR.jpeg" alt="Revolut QR code for @siddiquico" loading="lazy">
+                    <p>Scan with your phone camera or Revolut app.</p>
+                  </div>
                 </div>
               </li>
               <li class="step">
                 <span class="step__n">2</span>
                 <div class="step__b">
-                  <p class="step__h">Write this as the transfer note</p>
+                  <p class="step__h">Put this as the reference note</p>
                   <p class="payment__code" id="ticketCode"></p>
-                  <button type="button" class="copy" id="copyBtn">Copy reference</button>
+                  <button type="button" class="copy" id="copyBtn"><span class="copy__ico" aria-hidden="true">⧉</span><span id="copyTxt">Copy reference note</span></button>
                   <p class="step__sub warn">Type it exactly. It’s how we find your payment.</p>
                 </div>
               </li>
@@ -561,23 +735,35 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
               </li>
             </ol>
             <button class="send paidbtn" id="paidBtn" type="button">✓ Paid!</button>
-            <p class="done__help">Stuck? <a class="wa-inline" data-wa href="https://wa.me/359882093176" target="_blank" rel="noopener">Message us on WhatsApp</a></p>
+            <p class="cashline">Want to pay with cash? <a data-wa href="https://wa.me/359882093176?text=Hi%21%20I%27d%20like%20to%20pay%20for%20my%20Cultural%20Night%20ticket%20with%20cash." target="_blank" rel="noopener">Msg us</a></p>
           </div>
 
-          <div id="paidStep" hidden>
-            <h2 class="done__t">Thank you!</h2>
-            <p class="done__c paidmsg">Your ticket will be emailed to <b id="dEmail"></b> soon.</p>
-            <p class="done__c">We check payments by hand, so it can take a little while. Check your spam folder too.</p>
-            <p class="done__c small">Your reference: <b id="ticketCode2"></b></p>
-            <a class="wa-btn" data-wa href="https://wa.me/359882093176" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.200Zm4.500-6.100c-.2-.1-1.500-.7-1.700-.8-.2-.1-.4-.1-.6.100l-.8 1c-.1.200-.3.200-.5.100a6.700 6.700 0 0 1-3.300-2.900c-.2-.4.200-.4.700-1.300.1-.2 0-.3 0-.5l-.8-1.800c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.100-.7.300-.2.300-.9.900-.9 2.200s.9 2.500 1.100 2.700c.1.200 1.800 2.800 4.400 3.900 1.600.7 2.300.8 3.100.7.500-.1 1.500-.6 1.700-1.200.2-.6.2-1.100.2-1.200-.1-.1-.3-.2-.5-.3Z"/></svg>
-              Questions? WhatsApp us
-            </a>
-          </div>
-          <button class="linkbtn" id="againBtn" type="button">Register someone else</button>
+          <div id="stateBox" hidden></div>
+          <button class="linkbtn" id="againBtn" type="button">Get another ticket for someone else</button>
         </div>
 
-        <p class="card__fine">We'll only email you about this event — nothing else.</p>
+        <p class="card__fine">We only use your details for this event.</p>
+      </div>
+    </section>
+
+    <!-- ═══════════ ALREADY GOT A TICKET? ═══════════ -->
+    <section class="join check" id="ticket">
+      <div class="card rv">
+        <div class="card__head">
+          <div>
+            <h2 class="card__t">Already got a ticket?</h2>
+            <p class="card__s">ENTER YOUR EMAIL TO SEE IT</p>
+          </div>
+        </div>
+        <form id="lookForm" novalidate>
+          <div class="f" id="lEmailW">
+            <label for="lEmail">Email you booked with</label>
+            <div class="ctl"><input id="lEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
+            <p class="err">That email doesn't look right.</p>
+          </div>
+          <button class="send" type="submit" id="lookBtn">Check my ticket</button>
+        </form>
+        <div id="lookRes" class="lookres" hidden></div>
       </div>
     </section>
 
@@ -606,12 +792,13 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
         </a>
       </div>
       <p class="foot__a">ASIAN SOCIETY · TRAKIA UNIVERSITY</p>
-      <p class="foot__b">EARLY OCTOBER · STARA ZAGORA</p>
+      <p class="foot__b">17 OCTOBER · STARA ZAGORA</p>
+      <p class="foot__c"><a href="https://maps.app.goo.gl/PGVZ2q4MvKAYjRC27" target="_blank" rel="noopener">Stara Zagora Centre, bul. “Tsar Simeon Veliki” 55 · Open in Maps</a></p>
     </footer>
   </main>
   <a class="wa-float" data-wa href="https://wa.me/359882093176" target="_blank" rel="noopener" aria-label="Questions? Message us on WhatsApp +359 88 209 3176">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.200Zm4.500-6.100c-.2-.1-1.500-.7-1.700-.8-.2-.1-.4-.1-.6.100l-.8 1c-.1.200-.3.200-.5.100a6.700 6.700 0 0 1-3.300-2.900c-.2-.4.200-.4.700-1.300.1-.2 0-.3 0-.5l-.8-1.800c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.100-.7.300-.2.300-.9.900-.9 2.200s.9 2.500 1.100 2.700c.1.200 1.800 2.800 4.400 3.900 1.600.7 2.300.8 3.100.7.500-.1 1.500-.6 1.700-1.200.2-.6.2-1.100.2-1.200-.1-.1-.3-.2-.5-.3Z"/></svg>
-    <span>Questions?</span>
+    <span class="wa-float__txt">Questions?</span>
   </a>
 </div>
 
@@ -621,9 +808,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 var $=function(s){return document.querySelector(s)};
 var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* Change these three values before publishing. The ticket record is saved by
-   Cloudflare, then you verify the Revolut transfer in /admin.html. */
-var PAYMENT={price:'€8',revolutTag:'@siddiquico'};
+/* Prices are decided by the server (functions/api/_shared.js); these are only used for display. */
+var PRICE={prereg:7,early:8};
+var WA_LINK='https://wa.me/359882093176';
+var MAPS_LINK='https://maps.app.goo.gl/PGVZ2q4MvKAYjRC27';
 
 /* ---------- LOGO: matches your folder setup (Images/MNMLOGO.png) ---------- */
 (function(){
@@ -672,8 +860,10 @@ document.querySelectorAll('.rv').forEach(function(el){
 
 /* ---------- little star particles ---------- */
 function sparks(x,y,n,colors){
-  if(reduced)return;
-  for(var i=0;i<n;i++){
+  if(reduced||!document.body.animate)return;
+  /* each star gets its own scope, otherwise only the last one is removed
+     when the animation ends and the rest are left stuck on the page */
+  for(var i=0;i<n;i++)(function(i){
     var p=document.createElement('i');
     p.className='spark';
     var sz=6+Math.random()*9;
@@ -681,14 +871,14 @@ function sparks(x,y,n,colors){
     p.style.left=x+'px';p.style.top=y+'px';
     p.style.background=colors[i%colors.length];
     document.body.appendChild(p);
-    if(!p.animate){p.remove();continue}
     var ang=Math.random()*Math.PI*2,d=26+Math.random()*46;
     var dx=Math.cos(ang)*d,dy=Math.sin(ang)*d*.7-30;
-    p.animate([
+    var a=p.animate([
       {transform:'translate(-50%,-50%) scale(.3) rotate(0deg)',opacity:1},
       {transform:'translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px)) scale(1) rotate('+(Math.random()*180-90)+'deg)',opacity:0}
-    ],{duration:650+Math.random()*550,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=function(){p.remove()};
-  }
+    ],{duration:650+Math.random()*550,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
+    a.onfinish=a.oncancel=function(){p.remove()};
+  })(i);
 }
 
 /* ---------- perks: tap = bounce + star pop ---------- */
@@ -725,14 +915,79 @@ if(hs){
   });
 }
 
+/* ---------- helpers ---------- */
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function rememberEmail(e){try{localStorage.setItem('asoc_email',e)}catch(x){}}
+function api(path,body){
+  return fetch(path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)})
+    .then(function(r){return r.json().catch(function(){return {}}).then(function(d){return {ok:r.ok,status:r.status,data:d}})});
+}
+
+/* ---------- WhatsApp button: icon only; hover / tap opens the label ---------- */
+var waFloat=$('.wa-float');
+if(waFloat){
+  waFloat.addEventListener('click',function(e){
+    if(matchMedia('(hover: none)').matches&&!waFloat.classList.contains('open')){
+      e.preventDefault();
+      waFloat.classList.add('open');
+      setTimeout(function(){waFloat.classList.remove('open')},3500);
+    }
+  });
+}
+
+/* ---------- the ticket views (waiting / confirmed / used) ---------- */
+function ticketHTML(d){
+  var name=esc(d.name),code=esc(d.code);
+  var note=d.note?'<div class="pass__note"><b>Message from the organisers</b>'+esc(d.note)+'</div>':'';
+  var where='<p class="pass__where">Saturday 17 October · <a href="'+MAPS_LINK+'" target="_blank" rel="noopener">Stara Zagora Centre, bul. “Tsar Simeon Veliki” 55</a></p>';
+  var help='<p class="pass__where">Questions? <a data-wa href="'+WA_LINK+'" target="_blank" rel="noopener">Message us on WhatsApp</a></p>';
+  var again='<button class="linkbtn" type="button" data-again>Get another ticket for someone else</button>';
+  if(d.used){
+    return '<div class="pass used"><span class="pass__stamp">CHECKED IN</span><p class="pass__big">This ticket has been used</p>'
+      +'<p class="pass__name">'+name+'</p><p class="pass__ref">Reference</p><p class="pass__code">'+code+'</p>'
+      +'<p class="pass__msg">You were scanned in at the door. Enjoy the night!</p>'+note+help+'</div>';
+  }
+  if(d.status==='paid'||d.status==='emailed'){
+    return '<div class="pass ok"><span class="pass__stamp">✓ PAID</span><p class="pass__big">PAID! SEE YOU THERE!</p>'
+      +'<p class="pass__name">'+name+'</p><p class="pass__ref">Your reference</p><p class="pass__code">'+code+'</p>'
+      +'<p class="pass__msg">Can’t wait to see you all dressed up in your cultural clothes! Show this page at the door.</p>'
+      +where+note+again+'</div>';
+  }
+  return '<div class="pass wait"><span class="pass__stamp">BEING ISSUED</span><p class="pass__big">Not much longer now!</p>'
+    +'<p class="pass__name">'+name+'</p><p class="pass__ref">Your reference</p><p class="pass__code">'+code+'</p>'
+    +'<p class="pass__msg">Sorry for the wait. We check every payment by hand, so it can take a little while. Your ticket is being issued soon and we’ll email you to come back here once it’s confirmed. You can also check any time yourself with <b>“Already got a ticket?”</b> and your email.</p>'
+    +note+help+again+'</div>';
+}
+
 /* ---------- the form ---------- */
-var form=$('#reg'),done=$('#done'),send=$('#sendBtn'),card=$('#card');
+var form=$('#reg'),done=$('#done'),send=$('#sendBtn'),card=$('#card'),formTop=$('#formTop');
 var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-var currentEntry=null,settled=false;
+var current=null,preMode=false;
 
 ['fEmail','fName'].forEach(function(id){
   document.getElementById(id).addEventListener('input',function(){
     this.closest('.f').classList.remove('bad');
+    $('#pregFail').hidden=true;
+  });
+});
+
+function updatePriceLine(){
+  var pl=$('#priceLine');
+  pl.classList.toggle('pre',preMode);
+  $('#plNow').textContent='€'+(preMode?PRICE.prereg:PRICE.early);
+  $('#plLabel').textContent=preMode?'First-release price':'Early bird';
+  $('#plOld').textContent='€10';
+  $('#plSub').textContent=preMode?'For pre-registered people. We check your email when you tap Pay.':'Limited spots. Early bird ends when they\'re gone.';
+  $('#pregBtn').setAttribute('aria-pressed',preMode?'true':'false');
+  $('#pregNote').hidden=!preMode;
+}
+function setPre(on){preMode=on;$('#pregFail').hidden=true;updatePriceLine()}
+$('#pregBtn').addEventListener('click',function(){setPre(!preMode)});
+$('#pregSkip').addEventListener('click',function(){setPre(false);form.requestSubmit?form.requestSubmit():send.click()});
+document.querySelectorAll('[data-prereg]').forEach(function(a){
+  a.addEventListener('click',function(){
+    if(!form.hidden)setPre(true);
+    setTimeout(function(){var f=$('#fEmail');if(f&&!form.hidden)f.focus({preventScroll:true})},700);
   });
 });
 
@@ -742,59 +997,125 @@ form.addEventListener('submit',function(e){
   var name=$('#fName').value.trim();
   var year=$('#fYear').value;
   var background=$('#fBackground').value.trim();
+  var digits=$('#fPhone').value.replace(/\D/g,'').replace(/^0+/,'');
+  var phone=digits?($('#fCC').value+' '+digits):'';
 
   var bad=null;
   if(!EMAIL_RE.test(email)){$('#fEmailW').classList.add('bad');bad=bad||$('#fEmail');}
   if(name.length<2){$('#fNameW').classList.add('bad');bad=bad||$('#fName');}
   if(bad){bad.focus();return;}
 
-  var entry={email:email,name:name,year:year,background:background,at:new Date().toISOString()};
-  currentEntry=entry;settled=false;
   send.classList.add('busy');
-  fetch('/api/register',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(entry)})
-    .then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Could not create your ticket.');return data})})
-    .then(function(data){currentEntry.code=data.code;settle()})
-    .catch(function(error){send.classList.remove('busy');alert(error.message+' Please try again.');});
+  api('/api/register',{email:email,name:name,year:year,background:background,phone:phone,prereg:preMode}).then(function(res){
+    send.classList.remove('busy');
+    if(res.status===404&&res.data.error==='not_prereg'){$('#pregFail').hidden=false;return}
+    if(!res.ok){alert((res.data.error||'Could not create your ticket.')+' Please try again.');return}
+    var d=res.data;d.email=email;d.name=d.name||name;
+    present(d);
+  }).catch(function(){send.classList.remove('busy');alert('Could not reach the server. Please try again.')});
 });
 
-function settle(){
-  settled=true;
-  send.classList.remove('busy');
-  $('#dName').textContent=currentEntry.name;
-  $('#dEmail').textContent=currentEntry.email;
-  $('#ticketCode').textContent=currentEntry.code;
-  $('#ticketPrice').textContent=PAYMENT.price;
-  $('#revolutTag').textContent=PAYMENT.revolutTag;
-  $('#ticketCode2').textContent=currentEntry.code;
-  $('#payStep').hidden=false;$('#paidStep').hidden=true;
-  $('#copyBtn').textContent='Copy reference';
-  form.hidden=true;done.hidden=false;
+function present(d){
+  current=d;rememberEmail(d.email);
+  formTop.hidden=true;form.hidden=true;done.hidden=false;
+  $('#dExisting').hidden=!d.existing;
+  if(d.status==='draft'){
+    $('#dName').textContent=d.name;
+    $('#ticketPrice').textContent='€'+d.price;
+    var tn=$('#tierNote');
+    if(d.tier==='prereg'){tn.textContent='Pre-registered price (normally €10)';tn.className='step__sub tiernote';tn.hidden=false}
+    else{tn.textContent='Early bird price (normally €10)';tn.className='step__sub';tn.hidden=false}
+    $('#ticketCode').textContent=d.code;
+    resetCopy();
+    $('#payStep').hidden=false;$('#stateBox').hidden=true;
+  }else{
+    $('#payStep').hidden=true;
+    var sb=$('#stateBox');sb.innerHTML=ticketHTML(d);sb.hidden=false;
+  }
   var r=card.getBoundingClientRect();
-  sparks(r.left+r.width/2,r.top+46,22,['#ffd27a','#e8a34b','#f6f1e7','#e0532f']);
+  sparks(r.left+r.width/2,Math.max(60,r.top+46),22,['#ffd27a','#e8a34b','#f6f1e7','#e0532f']);
+  card.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
 }
 
-$('#paidBtn').addEventListener('click',function(){
-  $('#payStep').hidden=true;$('#paidStep').hidden=false;
-  var r=card.getBoundingClientRect();
-  sparks(r.left+r.width/2,r.top+80,22,['#ffd27a','#e8a34b','#f6f1e7','#e0532f']);
-  card.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+/* ---------- pay step: QR, copy, Paid! ---------- */
+$('#qrBtn').addEventListener('click',function(){
+  var box=$('#qrBox'),open=box.hidden;
+  box.hidden=!open;this.textContent=open?'Hide QR code':'Show QR code';
+  this.setAttribute('aria-expanded',open?'true':'false');
 });
 
+var copyTimer;
+function resetCopy(){
+  clearTimeout(copyTimer);
+  $('#copyBtn').classList.remove('copied');
+  $('#copyTxt').textContent='Copy reference note';
+  $('.copy__ico').textContent='⧉';
+}
 $('#copyBtn').addEventListener('click',function(){
-  var btn=this,code=currentEntry&&currentEntry.code;
+  var btn=this,code=current&&current.code;
   if(!code)return;
-  var ok=function(){btn.textContent='Copied ✓'};
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(ok,function(){});}
-  else{var t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){}t.remove();}
+  var ok=function(){
+    clearTimeout(copyTimer);
+    btn.classList.remove('copied');void btn.offsetWidth;btn.classList.add('copied'); /* restarts the bounce on every press */
+    $('#copyTxt').textContent='Copied!';$('.copy__ico').textContent='✓';
+    var r=btn.getBoundingClientRect();
+    sparks(r.left+24,r.top+r.height/2,4,['#7fd8a2','#ffd27a','#f6f1e7']);
+    copyTimer=setTimeout(resetCopy,2500);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(ok,function(){})}
+  else{var ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok()}catch(x){}ta.remove()}
 });
 
-$('#againBtn').addEventListener('click',function(){
-  done.hidden=true;form.hidden=false;form.reset();
+$('#paidBtn').addEventListener('click',function(){
+  var btn=this;if(!current)return;
+  btn.disabled=true;
+  api('/api/claim',{code:current.code,email:current.email}).then(function(res){
+    btn.disabled=false;
+    if(!res.ok){alert((res.data.error||'Could not save that.')+' Please try again, or message us on WhatsApp.');return}
+    current.status=res.data.status||'pending';
+    present(current);
+  }).catch(function(){btn.disabled=false;alert('Could not reach the server. Please try again.')});
+});
+
+/* ---------- start over / another ticket ---------- */
+function startOver(){
+  done.hidden=true;form.hidden=false;formTop.hidden=false;form.reset();setPre(false);
   document.querySelectorAll('.f.bad').forEach(function(f){f.classList.remove('bad')});
-  currentEntry=null;settled=false;
-  $('#fEmail').focus();
-});
+  current=null;
+  card.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+  setTimeout(function(){$('#fEmail').focus({preventScroll:true})},500);
+}
+$('#againBtn').addEventListener('click',startOver);
+document.addEventListener('click',function(e){if(e.target.closest('[data-again]'))startOver()});
 
+/* ---------- "Already got a ticket?" ---------- */
+var lookForm=$('#lookForm'),lookRes=$('#lookRes');
+try{var saved=localStorage.getItem('asoc_email');if(saved)$('#lEmail').value=saved}catch(x){}
+$('#lEmail').addEventListener('input',function(){this.closest('.f').classList.remove('bad')});
+lookForm.addEventListener('submit',function(e){
+  e.preventDefault();
+  var email=$('#lEmail').value.trim();
+  if(!EMAIL_RE.test(email)){$('#lEmailW').classList.add('bad');$('#lEmail').focus();return}
+  var btn=$('#lookBtn');btn.classList.add('busy');
+  api('/api/lookup',{email:email}).then(function(res){
+    btn.classList.remove('busy');
+    lookRes.hidden=false;
+    if(!res.ok){lookRes.innerHTML='<div class="none">'+esc(res.data.error||'Something went wrong. Please try again.')+'</div>';return}
+    var d=res.data;
+    if(!d.found){
+      lookRes.innerHTML='<div class="none">We couldn’t find a ticket for that email. Check for typos, or <a href="#join">get your ticket now</a>. Need help? <a data-wa href="'+WA_LINK+'" target="_blank" rel="noopener">Message us on WhatsApp</a>.</div>';
+      return;
+    }
+    d.email=email;rememberEmail(email);
+    if(d.status==='draft'){
+      lookRes.innerHTML='<div class="pass wait"><p class="pass__big">Almost there, '+esc(d.name)+'!</p><p class="pass__msg">You’ve reserved a ticket but haven’t confirmed your payment yet.</p><button class="send" type="button" id="contPay">Continue to payment</button></div>';
+      $('#contPay').addEventListener('click',function(){present(d)});
+      return;
+    }
+    lookRes.innerHTML=ticketHTML(d);
+    lookRes.scrollIntoView({behavior:reduced?'auto':'smooth',block:'nearest'});
+  }).catch(function(){btn.classList.remove('busy');lookRes.hidden=false;lookRes.innerHTML='<div class="none">Could not reach the server. Please try again.</div>'});
+});
 })();
 </script>
 </body>

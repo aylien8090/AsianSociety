@@ -60,7 +60,22 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--gold);outl
 .err{min-height:20px;color:var(--red);font-size:13px;margin:12px 0 0}
 
 /* stats */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.stat.s-door strong{color:#d9b8ff}
+.money__split{color:var(--muted);font-size:13px;margin-left:6px}
+.badge.used{background:rgba(217,184,255,.18);color:#d9b8ff}
+.ticket.used{border-left-color:#b48ce6;opacity:.8}
+.tag.tier{background:rgba(232,180,95,.16);color:var(--gold)}
+.tag.tier.pre{background:rgba(127,216,162,.16);color:var(--green)}
+.tag a{color:inherit;text-decoration:none}
+.go.door{background:#d9b8ff;color:#2a1450}
+.note-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-left:5px}
+dialog{width:min(92vw,480px);border:1px solid var(--line);border-radius:18px;background:#251d3d;color:var(--cream);padding:22px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+dialog::backdrop{background:rgba(5,3,15,.65)}
+dialog h3{font-size:20px;margin-bottom:4px}
+dialog p.hint{color:var(--muted);font-size:13px;margin:0 0 12px}
+dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid var(--line);border-radius:10px;padding:11px 13px;color:var(--cream);font:inherit;resize:vertical}
+.dlg-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:flex-end}
 .stat{padding:16px 18px;border-radius:var(--radius);background:rgba(37,29,61,.85);border:1px solid var(--line)}
 .stat span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .stat strong{display:block;font-size:34px;font-family:Georgia,serif;line-height:1.1;margin-top:4px}
@@ -127,6 +142,7 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--gold);outl
 
 @media(max-width:780px){
   .stats{grid-template-columns:1fr 1fr}
+  .stat:last-child{grid-column:1/-1}
   .breaks{grid-template-columns:1fr}
   .ticket{grid-template-columns:1fr;gap:10px}
   .act{align-items:stretch}
@@ -169,17 +185,18 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--gold);outl
     </div>
 
     <div class="stats">
-      <div class="stat"><span>Registered</span><strong id="nTotal">0</strong></div>
-      <div class="stat s-pending"><span>Waiting for payment</span><strong id="nPending">0</strong></div>
-      <div class="stat s-paid"><span>Paid</span><strong id="nPaid">0</strong><small>awaiting ticket email</small></div>
+      <div class="stat"><span>Registered</span><strong id="nTotal">0</strong><small>tapped “Paid!”</small></div>
+      <div class="stat s-pending"><span>To check</span><strong id="nPending">0</strong><small>check Revolut</small></div>
+      <div class="stat s-paid"><span>Paid</span><strong id="nPaid">0</strong><small>not emailed yet</small></div>
       <div class="stat s-sent"><span>Ticket sent</span><strong id="nSent">0</strong></div>
+      <div class="stat s-door"><span>Checked in</span><strong id="nUsed">0</strong><small id="nUsedOf">of 0 confirmed</small></div>
     </div>
 
-    <div class="money"><span>Confirmed so far (<span id="nConfirmed">0</span> × €8)</span><strong id="revenue">€0</strong></div>
+    <div class="money"><span>Confirmed so far: <span id="nConfirmed">0</span> tickets <span class="money__split" id="moneySplit"></span></span><strong id="revenue">€0</strong></div>
 
     <div class="breaks">
       <section class="break"><h3>Confirmed by year</h3><div id="years"></div></section>
-      <section class="break"><h3>Confirmed by background</h3><div id="backgrounds"></div></section>
+      <section class="break"><h3>Confirmed by release</h3><div id="tiers"></div></section>
     </div>
 
     <div class="toolbar">
@@ -190,13 +207,27 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--gold);outl
     <div class="list" id="list"></div>
   </div>
 </main>
+<dialog id="msgDlg">
+  <h3 id="msgTitle">Message</h3>
+  <p class="hint">This shows on their ticket page when they check with their email. You can also email it to them.</p>
+  <textarea id="msgText" maxlength="1000" placeholder="e.g. We couldn't find your payment yet. Please message us on WhatsApp."></textarea>
+  <div class="dlg-btns">
+    <button class="ghost" id="msgCancel" type="button">Cancel</button>
+    <button class="ghost" id="msgClear" type="button">Clear message</button>
+    <button class="ghost" id="msgSave" type="button">Save</button>
+    <button class="primary" id="msgEmail" type="button">Save &amp; email (Gmail)</button>
+  </div>
+</dialog>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 
 <script>
 const $ = s => document.querySelector(s);
 const password = $('#password');
-const STATUS_LABEL = { pending: 'Pending', paid: 'Paid', emailed: 'Sent' };
-const PRICE = 8;
+const STATUS_LABEL = { draft: 'Not paid yet', pending: 'Pending', paid: 'Paid', emailed: 'Sent' };
+const PRICES = { prereg: 7, early: 8 };
+const TIER_LABEL = { prereg: 'Pre-reg €7', early: 'Early bird €8' };
+const tierOf = t => t.tier === 'prereg' ? 'prereg' : 'early';
+let msgCode = null;
 let tickets = [], known = new Set(), firstLoad = true, audio, soundOn = true, filter = 'all', query = '', freshCodes = new Set();
 
 const api = (url, opts = {}) => fetch(url, {
@@ -250,41 +281,55 @@ function bars(target, values) {
 }
 
 function render() {
-  const by = s => tickets.filter(t => t.status === s);
+  const live = tickets.filter(t => t.status !== 'draft');
+  const drafts = tickets.filter(t => t.status === 'draft');
+  const by = s => live.filter(t => t.status === s);
   const pending = by('pending'), paid = by('paid'), sent = by('emailed');
-  const confirmed = tickets.filter(t => t.status !== 'pending');
-  $('#nTotal').textContent = tickets.length;
+  const confirmed = live.filter(t => t.status === 'paid' || t.status === 'emailed');
+  const used = confirmed.filter(t => t.used_at);
+  const nPre = confirmed.filter(t => tierOf(t) === 'prereg').length, nEarly = confirmed.length - nPre;
+
+  $('#nTotal').textContent = live.length;
   $('#nPending').textContent = pending.length;
   $('#nPaid').textContent = paid.length;
   $('#nSent').textContent = sent.length;
+  $('#nUsed').textContent = used.length;
+  $('#nUsedOf').textContent = `of ${confirmed.length} confirmed`;
   $('#nConfirmed').textContent = confirmed.length;
-  $('#revenue').textContent = '€' + confirmed.length * PRICE;
+  $('#revenue').textContent = '€' + (nPre * PRICES.prereg + nEarly * PRICES.early);
+  $('#moneySplit').textContent = confirmed.length ? `(${nEarly} × €${PRICES.early} + ${nPre} × €${PRICES.prereg})` : '';
   $('#summary').textContent = `Updated ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · checks every 15s`;
   bars($('#years'), confirmed.map(t => t.year));
-  bars($('#backgrounds'), confirmed.map(t => t.background));
+  bars($('#tiers'), confirmed.map(t => TIER_LABEL[tierOf(t)]));
 
-  const tabs = [['all', 'All', tickets.length], ['pending', 'Pending', pending.length], ['paid', 'Paid', paid.length], ['emailed', 'Sent', sent.length]];
+  const tabs = [['all', 'All', live.length], ['pending', 'Pending', pending.length], ['paid', 'Paid', paid.length], ['emailed', 'Sent', sent.length], ['used', 'Checked in', used.length], ['draft', 'Not tapped Paid', drafts.length]];
   $('#tabs').innerHTML = tabs.map(([k, l, n]) => `<button class="tab ${filter === k ? 'on' : ''}" data-tab="${k}">${l}<b>${n}</b></button>`).join('');
 
   const q = query.trim().toLowerCase();
-  const shown = tickets.filter(t => (filter === 'all' || t.status === filter) &&
-    (!q || [t.code, t.name, t.email].some(x => (x || '').toLowerCase().includes(q))));
+  const pool = filter === 'draft' ? drafts : filter === 'used' ? used : filter === 'all' ? live : live.filter(t => t.status === filter);
+  const shown = pool.filter(t => !q || [t.code, t.name, t.email, t.phone].some(x => (x || '').toLowerCase().includes(q)));
 
   $('#list').innerHTML = shown.length ? shown.map(t => {
-    const c = esc(t.code);
+    const c = esc(t.code), isConfirmed = t.status === 'paid' || t.status === 'emailed';
     let main = '';
-    if (t.status === 'pending') main = `<button class="go pay" data-code="${c}" data-do="pay">✓ Mark paid</button>`;
-    else if (t.status === 'paid') main = `<button class="go mail" data-code="${c}" data-do="mail">✉ Email ticket</button>`;
-    else main = `<button class="mini" data-code="${c}" data-do="mail">✉ Email again</button>`;
-    return `<article class="ticket ${t.status} ${freshCodes.has(t.code) ? 'fresh' : ''}">
+    if (t.status === 'pending' || t.status === 'draft') main += `<button class="go pay" data-code="${c}" data-do="pay">✓ Mark paid</button>`;
+    if (isConfirmed) main += t.used_at
+      ? `<button class="mini" data-code="${c}" data-do="unuse">Undo check-in</button>`
+      : `<button class="go door" data-code="${c}" data-do="use">✓ Check in</button>`;
+    if (t.status === 'paid') main += `<button class="go mail" data-code="${c}" data-do="mail">✉ Email ticket</button>`;
+    if (t.status === 'emailed') main += `<button class="mini" data-code="${c}" data-do="mail">✉ Email again</button>`;
+    const digits = String(t.phone || '').replace(/\D/g, '');
+    const phone = digits ? `<span class="tag"><a href="https://wa.me/${digits}" target="_blank" rel="noopener">📱 ${esc(t.phone)}</a></span>` : '';
+    return `<article class="ticket ${t.status} ${t.used_at ? 'used' : ''} ${freshCodes.has(t.code) ? 'fresh' : ''}">
       <div class="code" data-copy="${c}" title="Click to copy">${c}</div>
       <div class="who">
-        <strong>${esc(t.name)}</strong> <span class="badge ${t.status}">${STATUS_LABEL[t.status] || esc(t.status)}</span>
+        <strong>${esc(t.name)}</strong> <span class="badge ${t.status}">${STATUS_LABEL[t.status] || esc(t.status)}</span>${t.used_at ? ' <span class="badge used">Checked in</span>' : ''}
         <div class="mail">${esc(t.email)}</div>
-        <div class="meta"><span class="tag">${esc(t.year)}</span><span class="tag">${esc(t.background)}</span><span class="tag">${ago(t.created_at)}</span></div>
+        <div class="meta"><span class="tag tier ${tierOf(t) === 'prereg' ? 'pre' : ''}">${TIER_LABEL[tierOf(t)]}</span><span class="tag">${esc(t.year)}</span><span class="tag">${esc(t.background)}</span>${phone}<span class="tag">${ago(t.created_at)}</span></div>
       </div>
       <div class="act"><div class="btns">${main}</div>
         <div class="btns">
+          <button class="mini" data-code="${c}" data-do="msg">Message${t.note ? '<i class="note-dot"></i>' : ''}</button>
           <select class="mini-sel" data-code="${c}" aria-label="Change status"><option value="">Change…</option><option value="pending">→ Pending</option><option value="paid">→ Paid</option><option value="emailed">→ Sent</option></select>
           <button class="mini del" data-code="${c}" data-do="del">Delete</button>
         </div>
@@ -301,7 +346,7 @@ async function load(isLogin) {
     else if (r.status === 401) { logout(); }
     return false;
   }
-  const fresh = d.tickets.filter(t => !known.has(t.code));
+  const fresh = d.tickets.filter(t => t.status !== 'draft' && !known.has(t.code));
   if (!firstLoad && fresh.length) {
     ping();
     toast(fresh.length === 1 ? `New registration: ${fresh[0].name}` : `${fresh.length} new registrations`);
@@ -309,7 +354,7 @@ async function load(isLogin) {
     setTimeout(() => { freshCodes.clear(); }, 3000);
   }
   tickets = d.tickets;
-  known = new Set(tickets.map(t => t.code));
+  known = new Set(tickets.filter(t => t.status !== 'draft').map(t => t.code));
   firstLoad = false;
   $('#login').hidden = true;
   $('#app').hidden = false;
@@ -317,19 +362,49 @@ async function load(isLogin) {
   return true;
 }
 
-async function update(code, action, status) {
-  const r = await api('/api/admin/tickets/' + encodeURIComponent(code), { method: 'PATCH', body: JSON.stringify({ action, status }) });
+async function update(code, action, extra = {}) {
+  const r = await api('/api/admin/tickets/' + encodeURIComponent(code), { method: 'PATCH', body: JSON.stringify({ action, ...extra }) });
   const d = await r.json().catch(() => ({}));
   if (!r.ok) { toast(d.error || 'Could not update ticket.', true); return false; }
   await load();
   return true;
 }
 
+const gmailUrl = (t, sub, body) => 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(t.email) + '&su=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
+const ticketPage = () => location.origin + '/#ticket';
+
+// "Your ticket is ready" email: sends them to the Already-got-a-ticket box on the site.
 function gmail(t) {
-  const sub = 'Your Cultural Night ticket – ' + t.code;
-  const body = 'Hi ' + t.name + ',\n\nYour payment has been confirmed.\n\nYour ticket reference: ' + t.code + '\n\nPlease keep this email for entry.\n\nSee you there!\nAsian Society';
-  return 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(t.email) + '&su=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
+  const body = 'Hi ' + t.name + ',\n\nGood news: your payment is confirmed and your ticket is ready!\n\nView your ticket here:\n' + ticketPage() + '\n(Type in this email address when asked: ' + t.email + ')\n\nCome dressed in your cultural clothes. We can\'t wait to see you!\n\nAsian Society';
+  return gmailUrl(t, 'Your Cultural Night ticket is ready', body);
 }
+function gmailMessage(t, note) {
+  const body = 'Hi ' + t.name + ',\n\n' + note + '\n\nYou can also see this on your ticket page:\n' + ticketPage() + '\n(Type in this email address when asked: ' + t.email + ')\n\nAsian Society';
+  return gmailUrl(t, 'About your Cultural Night ticket', body);
+}
+
+/* message dialog */
+const dlg = $('#msgDlg');
+function openMsg(t) {
+  msgCode = t.code;
+  $('#msgTitle').textContent = 'Message for ' + t.name;
+  $('#msgText').value = t.note || '';
+  dlg.showModal();
+}
+async function saveMsg(note) {
+  const ok = await update(msgCode, 'set_note', { note });
+  if (ok) toast(note ? 'Message saved. It now shows on their ticket page.' : 'Message cleared.');
+  return ok;
+}
+$('#msgCancel').onclick = () => dlg.close();
+$('#msgSave').onclick = async () => { if (await saveMsg($('#msgText').value.trim())) dlg.close(); };
+$('#msgClear').onclick = async () => { $('#msgText').value = ''; if (await saveMsg('')) dlg.close(); };
+$('#msgEmail').onclick = async () => {
+  const note = $('#msgText').value.trim(), t = tickets.find(x => x.code === msgCode);
+  if (!note) { toast('Write a message first.', true); return; }
+  window.open(gmailMessage(t, note), '_blank', 'noopener');
+  if (await saveMsg(note)) dlg.close();
+};
 
 function logout() {
   try { sessionStorage.removeItem('asoc_pw'); } catch (e) {}
@@ -363,8 +438,8 @@ $('#search').oninput = e => { query = e.target.value; render(); };
 $('#tabs').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) { filter = b.dataset.tab; render(); } };
 $('#csvBtn').onclick = () => {
   const cell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
-  const head = ['code', 'name', 'email', 'year', 'background', 'status', 'registered'];
-  const csv = [head.join(',')].concat(tickets.map(t => [t.code, t.name, t.email, t.year, t.background, t.status, t.created_at].map(cell).join(','))).join('\n');
+  const head = ['code', 'name', 'email', 'phone', 'year', 'background', 'release', 'status', 'checked_in', 'registered'];
+  const csv = [head.join(',')].concat(tickets.map(t => [t.code, t.name, t.email, t.phone, t.year, t.background, TIER_LABEL[tierOf(t)], t.status, t.used_at ? 'yes' : '', t.created_at].map(cell).join(','))).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
   a.download = 'asian-society-attendees.csv'; a.click();
@@ -377,9 +452,14 @@ $('#list').onclick = async e => {
   if (!b) return;
   const code = b.dataset.code, t = tickets.find(x => x.code === code);
   if (!t) return;
+  if (b.dataset.do === 'msg') { openMsg(t); return; }
   b.disabled = true;
   if (b.dataset.do === 'pay') {
     if (await update(code, 'mark_paid')) toast(`${t.name} marked as paid`);
+  } else if (b.dataset.do === 'use') {
+    if (await update(code, 'mark_used')) toast(`✓ ${t.name} checked in`);
+  } else if (b.dataset.do === 'unuse') {
+    if (await update(code, 'unmark_used')) toast(`Check-in undone for ${t.name}`);
   } else if (b.dataset.do === 'mail') {
     window.open(gmail(t), '_blank', 'noopener');
     if (t.status !== 'emailed') await update(code, 'mark_emailed');
@@ -396,7 +476,7 @@ $('#list').onclick = async e => {
 };
 $('#list').onchange = e => {
   const s = e.target.closest('.mini-sel');
-  if (s && s.value) { update(s.dataset.code, 'set_status', s.value); s.value = ''; }
+  if (s && s.value) { update(s.dataset.code, 'set_status', { status: s.value }); s.value = ''; }
 };
 
 setInterval(() => { if (!$('#app').hidden) load().catch(() => {}); }, 15000);

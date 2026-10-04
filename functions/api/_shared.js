@@ -4,6 +4,22 @@ export function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json; charset=utf-8", ...headers } });
 }
 
+// Ticket prices in euros per release. "prereg" = first release (people who pre-registered), "early" = early bird.
+export const PRICES = { prereg: 7, early: 8 };
+
+// Adds the newer columns/tables on first use so no manual database step is needed.
+let schemaReady;
+export function ensureSchema(env) {
+  schemaReady ||= (async () => {
+    const db = env.TICKETS_DB;
+    for (const column of ["phone TEXT", "tier TEXT", "used_at TEXT", "note TEXT"]) {
+      try { await db.prepare("ALTER TABLE tickets ADD COLUMN " + column).run(); } catch { /* column already exists */ }
+    }
+    await db.prepare("CREATE TABLE IF NOT EXISTS prereg (email TEXT PRIMARY KEY, name TEXT)").run();
+  })().catch(error => { schemaReady = null; throw error; });
+  return schemaReady;
+}
+
 export function code() {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const bytes = crypto.getRandomValues(new Uint8Array(4));
