@@ -515,7 +515,7 @@ $('#list').onclick = async e => {
     if (t.status !== 'emailed') await update(code, 'mark_emailed');
     toast('Gmail opened — press Send there');
   } else if (b.dataset.do === 'del') {
-    if (confirm(`Permanently delete ${code} (${t.name})?\nThis cannot be undone.`)) {
+    if (confirm(`Permanently delete ${code} (${t.name})?\nThis also frees up ${t.email} so it can be used to register again.\nThis cannot be undone.`)) {
       const r = await api('/api/admin/tickets/' + encodeURIComponent(code), { method: 'DELETE' });
       const raw = await r.text();
       let d = {}; try { d = JSON.parse(raw); } catch (x) {}
