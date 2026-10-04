@@ -180,6 +180,8 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
         <span class="live"><i class="dot"></i> Live</span>
         <button class="ghost" id="soundBtn" title="Play a ping when someone registers">🔔 Sound on</button>
         <button class="ghost" id="csvBtn">⬇ CSV</button>
+        <button class="ghost" id="preBtn" title="Upload the pre-registration CSV (Email, Name columns)">⬆ Pre-reg list</button>
+        <input type="file" id="preFile" accept=".csv,text/csv,text/plain" hidden>
         <button class="ghost" id="logout">Log out</button>
       </div>
     </div>
@@ -302,7 +304,7 @@ function render() {
   bars($('#years'), confirmed.map(t => t.year));
   bars($('#tiers'), confirmed.map(t => TIER_LABEL[tierOf(t)]));
 
-  const tabs = [['all', 'All', live.length], ['pending', 'Pending', pending.length], ['paid', 'Paid', paid.length], ['emailed', 'Sent', sent.length], ['used', 'Checked in', used.length], ['draft', 'Not tapped Paid', drafts.length]];
+  const tabs = [['all', 'All', live.length], ['pending', 'Pending', pending.length], ['paid', 'Paid', paid.length], ['emailed', 'Sent', sent.length], ['used', 'Checked in', used.length]];
   $('#tabs').innerHTML = tabs.map(([k, l, n]) => `<button class="tab ${filter === k ? 'on' : ''}" data-tab="${k}">${l}<b>${n}</b></button>`).join('');
 
   const q = query.trim().toLowerCase();
@@ -359,6 +361,7 @@ async function load(isLogin) {
   $('#login').hidden = true;
   $('#app').hidden = false;
   render();
+  if (isLogin) loadPreCount();
   return true;
 }
 
@@ -376,11 +379,11 @@ const ticketPage = () => location.origin + '/#ticket';
 // "Your ticket is ready" email: sends them to the Already-got-a-ticket box on the site.
 function gmail(t) {
   const body = 'Hi ' + t.name + ',\n\nGood news: your payment is confirmed and your ticket is ready!\n\nView your ticket here:\n' + ticketPage() + '\n(Type in this email address when asked: ' + t.email + ')\n\nCome dressed in your cultural clothes. We can\'t wait to see you!\n\nAsian Society';
-  return gmailUrl(t, 'Your Cultural Night ticket is ready', body);
+  return gmailUrl(t, 'Your Cultural Event ticket is ready', body);
 }
 function gmailMessage(t, note) {
   const body = 'Hi ' + t.name + ',\n\n' + note + '\n\nYou can also see this on your ticket page:\n' + ticketPage() + '\n(Type in this email address when asked: ' + t.email + ')\n\nAsian Society';
-  return gmailUrl(t, 'About your Cultural Night ticket', body);
+  return gmailUrl(t, 'About your Cultural Event ticket', body);
 }
 
 /* message dialog */
@@ -443,6 +446,35 @@ $('#csvBtn').onclick = () => {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
   a.download = 'asian-society-attendees.csv'; a.click();
+};
+
+/* pre-registration list (first-release €7 emails) */
+async function loadPreCount() {
+  try {
+    const r = await api('/api/admin/prereg'), d = await r.json();
+    if (r.ok) $('#preBtn').textContent = `⬆ Pre-reg list (${d.count})`;
+  } catch (x) {}
+}
+function parseCsvRows(text) {
+  const rows = [];
+  text.split(/\r?\n/).forEach(line => {
+    const cells = (line.match(/("([^"]|"")*"|[^,]*)(,|$)/g) || []).map(c => c.replace(/,$/, '').replace(/^"|"$/g, '').replace(/""/g, '"').trim());
+    const i = cells.findIndex(c => /^\S+@\S+\.\S+$/.test(c));
+    if (i >= 0) rows.push({ email: cells[i], name: cells[i + 1] || '' });
+  });
+  return rows;
+}
+$('#preBtn').onclick = () => $('#preFile').click();
+$('#preFile').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  const rows = parseCsvRows(await f.text());
+  if (!rows.length) { toast('No emails found in that file.', true); return; }
+  const r = await api('/api/admin/prereg', { method: 'POST', body: JSON.stringify({ rows }) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { toast(d.error || 'Could not import.', true); return; }
+  toast(`Imported ${d.imported} emails. ${d.count} on the pre-reg list.`);
+  loadPreCount();
 };
 
 $('#list').onclick = async e => {

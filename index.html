@@ -5,12 +5,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#141234">
-<title>Cultural Night — 17 October · Asian Society, Trakia University</title>
+<title>Cultural Event — 17 October · Asian Society, Trakia University</title>
 <meta name="description" content="Cultural Night, 17 October in Stara Zagora. Dress up in your cultural clothes! Best dressed competition, prizes, games, food and snacks, free henna. Early bird tickets on sale now — limited spots.">
-<meta property="og:title" content="Cultural Night — 17 October · Tickets on sale now">
-<meta property="og:description" content="Dress up in your cultural clothes! Early bird tickets on sale now — limited spots.">
-<meta property="og:image" content="Images/MNMLOGO.png">
-<meta name="twitter:card" content="summary">
+<meta property="og:title" content="Cultural Event — 17 October · Tickets on sale now">
+<meta property="og:description" content="Dress up in your cultural clothes! Early bird tickets are 20% off. Limited spots.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://asiansociety.pages.dev/">
+<meta property="og:image" content="https://asiansociety.pages.dev/Images/linkpreview.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="630">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cultural Event, 17 October, 6PM–10PM. Early bird tickets 20% off, only €8.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://asiansociety.pages.dev/Images/linkpreview.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%AE%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -105,8 +112,12 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .venue__txt{display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1.35;color:var(--cream-dim)}
 .venue__txt b{font:800 16px 'Karla';color:var(--cream)}
 .venue__txt em{font-style:normal;font-weight:800;font-size:11px;letter-spacing:.1em;color:var(--gold-soft);margin-top:3px;text-transform:uppercase}
-.herolinks{margin-top:12px;font-size:13px;color:var(--cream-dim);display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
-.herolinks a{color:var(--gold-soft);font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.when{margin-top:10px;font:800 clamp(15px,4.4vw,19px) 'Karla';letter-spacing:.2em;color:var(--gold-hi)}
+.herolinks{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.hlink{display:inline-block;padding:11px 18px;border-radius:999px;border:1.5px solid rgba(233,200,135,.55);
+  background:rgba(20,18,52,.45);color:var(--gold-soft);font:800 15px 'Karla';text-decoration:none;
+  transition:transform .25s cubic-bezier(.2,1.6,.4,1),background .25s,border-color .25s}
+.hlink:hover,.hlink:focus-visible{transform:scale(1.04);background:rgba(216,162,74,.18);border-color:var(--gold-hi);color:var(--gold-hi)}
 .fine s{opacity:.7}
 .cue{margin-top:22px;color:rgba(233,200,135,.75)}
 .cue__i{width:20px;height:12px;animation:cueb 2.2s ease-in-out infinite}
@@ -134,10 +145,18 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .tier__d{font-size:12.5px;color:var(--cream-dim);margin-top:2px}
 .tier__p{font:900 28px 'Fraunces',serif;color:var(--cream)}
 .tier.old .tier__p{text-decoration:line-through;opacity:.55}
+.tier__r{text-align:right;flex:none}
+.tier__disc{display:flex;align-items:center;justify-content:flex-end;gap:7px;font:700 14px 'Karla'}
+.tier__disc s{opacity:.6}
+.tier__off{font:900 11px 'Karla';letter-spacing:.08em;color:#fff7ea;background:var(--red);border-radius:99px;padding:3px 8px}
+.tier__r .tier__p{line-height:1}
 .tier.now{border:2px solid var(--gold-hi);background:rgba(216,162,74,.12);box-shadow:0 0 28px rgba(255,170,80,.18)}
 .tier.now .tier__p{color:var(--gold-hi)}
 .tier__tag{display:inline-block;margin-left:8px;font:800 9.5px 'Karla';letter-spacing:.12em;color:#2b2115;background:var(--gold-hi);border-radius:99px;padding:3px 8px;vertical-align:2px}
-.tier.done{opacity:.8}
+a.tier{text-decoration:none;color:inherit;transition:transform .25s cubic-bezier(.2,1.6,.4,1),border-color .25s}
+a.tier:hover,a.tier:focus-visible{transform:scale(1.02);border-color:var(--gold-hi)}
+.tier.first{opacity:.9;cursor:pointer}
+.tier__go{display:inline-block;margin-top:4px;font:800 11px 'Karla';letter-spacing:.1em;color:var(--gold-hi);text-transform:uppercase}
 .tickets__note{margin-top:14px;font-size:13.5px;line-height:1.55;color:var(--cream-dim)}
 .tickets__note b{color:var(--gold-soft)}
 .onnight__h::after{content:"";display:block;width:34px;height:1px;
@@ -505,14 +524,15 @@ a.tag:hover{border-style:solid}
     <div class="hero__content">
       <p class="kicker up" style="--d:.35s">ASIAN SOCIETY × TRAKIA UNIVERSITY</p>
       <h1 class="title">
-        <span class="t1 up" style="--d:.5s">CULTURAL NIGHT</span>
+        <span class="t1 up" style="--d:.5s">CULTURAL EVENT</span>
         <span class="t2 pop" style="--d:.78s">17 OCTOBER</span>
       </h1>
+      <p class="when up" style="--d:.9s">SATURDAY · 6PM – 10PM</p>
       <p class="sub up" style="--d:1s">Dress up in your cultural clothes!</p>
       <a class="venue up" style="--d:1.15s" href="https://maps.app.goo.gl/PGVZ2q4MvKAYjRC27" target="_blank" rel="noopener" aria-label="Open the venue in Google Maps">
         <svg class="venue__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.500C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></svg>
         <span class="venue__txt">
-          <b>Stara Zagora Centre</b>
+          <b>International Youth Center</b>
           <span>bul. “Tsar Simeon Veliki” 55, 6000 Stara Zagora</span>
           <em>Tap to open in Maps →</em>
         </span>
@@ -521,8 +541,8 @@ a.tag:hover{border-style:solid}
       <a class="cta pop" style="--d:1.35s" href="#join">GET YOUR TICKETS NOW!
         <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l7 7 7-7"/></svg>
       </a>
-      <p class="fine up" style="--d:1.5s"><b>EARLY BIRD €8</b> <s>€10</s> — spots are limited, so grab yours while they last.</p>
-      <p class="herolinks up" style="--d:1.6s"><a href="#ticket">Already got a ticket?</a><span aria-hidden="true">·</span><a href="#join" data-prereg>Pre-registered? Get your €7 ticket</a></p>
+      <p class="fine up" style="--d:1.5s"><b>EARLY BIRD: 20% OFF</b> <s>€10</s> <b>€8</b><br>Spots are limited, so grab yours while they last.</p>
+      <p class="herolinks up" style="--d:1.6s"><a class="hlink" href="#ticket">Already got a ticket?</a><a class="hlink" href="#join" data-prereg>Pre-registered? 30% off</a></p>
       <a class="cue fade" style="--d:1.7s" href="#onnight" aria-label="See what's on the night">
         <svg class="cue__i" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l8 8 8-8"/></svg>
       </a>
@@ -553,20 +573,21 @@ a.tag:hover{border-style:solid}
           </li>
           <li>
             <button class="perk" type="button">
+              <span class="perk__float" style="--fd:-4s"><span class="perk__orb">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="6.2" rx="2" ry="3.4"/><ellipse cx="12" cy="17.8" rx="2" ry="3.4"/><ellipse cx="6.2" cy="12" rx="3.4" ry="2"/><ellipse cx="17.8" cy="12" rx="3.4" ry="2"/></svg>
+              </span></span>
+              <span class="perk__txt">Free Henna / Mehndi!</span>
+            </button>
+          </li>
+          <li>
+            <button class="perk" type="button">
               <span class="perk__float" style="--fd:-1.7s"><span class="perk__orb">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="4.6"/><circle cx="8.3" cy="8.3" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="15.7" cy="15.7" r="1.5" fill="currentColor" stroke="none"/></svg>
               </span></span>
               <span class="perk__txt">Games to play!</span>
             </button>
           </li>
-          <li>
-            <button class="perk" type="button">
-              <span class="perk__float" style="--fd:-2.6s"><span class="perk__orb">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7.8" r="3.1"/><path d="M3.6 19.6a5.4 5.4 0 0 1 10.8 0"/><circle cx="17" cy="8.8" r="2.5"/><path d="M16.4 14.6a4.4 4.4 0 0 1 4.3 5"/></svg>
-              </span></span>
-              <span class="perk__txt">Meet up with new people!</span>
-            </button>
-          </li>
+          
           <li>
             <button class="perk" type="button">
               <span class="perk__float" style="--fd:-3.3s"><span class="perk__orb">
@@ -575,14 +596,7 @@ a.tag:hover{border-style:solid}
               <span class="perk__txt">Food and Snacks included!</span>
             </button>
           </li>
-          <li>
-            <button class="perk" type="button">
-              <span class="perk__float" style="--fd:-4s"><span class="perk__orb">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="6.2" rx="2" ry="3.4"/><ellipse cx="12" cy="17.8" rx="2" ry="3.4"/><ellipse cx="6.2" cy="12" rx="3.4" ry="2"/><ellipse cx="17.8" cy="12" rx="3.4" ry="2"/></svg>
-              </span></span>
-              <span class="perk__txt">Free Henna / Mehndi!</span>
-            </button>
-          </li>
+          
         </ul>
       </div>
     </section>
@@ -592,10 +606,10 @@ a.tag:hover{border-style:solid}
       <h2 class="tickets__h rv">TICKETS</h2>
       <div class="tiers rv" style="--d:.1s">
         <div class="tier old"><div><p class="tier__n">Normal price</p><p class="tier__d">What tickets cost after the early bird</p></div><p class="tier__p">€10</p></div>
-        <div class="tier now"><div><p class="tier__n">Early bird<span class="tier__tag">ON NOW</span></p><p class="tier__d">Discounted, limited spots</p></div><p class="tier__p">€8</p></div>
-        <div class="tier done"><div><p class="tier__n">First release</p><p class="tier__d">Only for people who pre-registered</p></div><p class="tier__p">€7</p></div>
+        <div class="tier now" id="tierEarly"><div><p class="tier__n">Early bird<span class="tier__tag">ON NOW</span></p><p class="tier__d">Limited spots</p></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">20% OFF</span></p><p class="tier__p">€8</p></div></div>
+        <a class="tier first" id="tierFirst" href="#join" data-prereg><div><p class="tier__n">First release<span class="tier__tag" hidden>YOURS</span></p><p class="tier__d">Only for people who pre-registered</p><span class="tier__go">Pre-registered? Tap here →</span></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">30% OFF</span></p><p class="tier__p">€7</p></div></a>
       </div>
-      <p class="tickets__note rv" style="--d:.15s">Our first release was <b>€7</b>, and that price was for everyone who pre-registered. If that's you, tap <b>“Pre-registered?”</b> below to get it. Everyone else gets the early bird price of <b>€8</b> instead of the normal €10. Spots are limited and early bird ends when they're gone.</p>
+      <p class="tickets__note rv" style="--d:.15s">Normal tickets are <b>€10</b>. Early bird tickets are <b>20% off</b>, just <b>€8</b>. Our first release was <b>30% off</b> (<b>€7</b>) and was for everyone who pre-registered. If that's you, tap <b>“First release”</b> above to get it. Spots are limited and early bird ends when they're gone.</p>
     </section>
 
     <!-- ═══════════ GET A TICKET ═══════════ -->
@@ -792,8 +806,8 @@ a.tag:hover{border-style:solid}
         </a>
       </div>
       <p class="foot__a">ASIAN SOCIETY · TRAKIA UNIVERSITY</p>
-      <p class="foot__b">17 OCTOBER · STARA ZAGORA</p>
-      <p class="foot__c"><a href="https://maps.app.goo.gl/PGVZ2q4MvKAYjRC27" target="_blank" rel="noopener">Stara Zagora Centre, bul. “Tsar Simeon Veliki” 55 · Open in Maps</a></p>
+      <p class="foot__b">17 OCTOBER · 6PM – 10PM · STARA ZAGORA</p>
+      <p class="foot__c"><a href="https://maps.app.goo.gl/PGVZ2q4MvKAYjRC27" target="_blank" rel="noopener">International Youth Center, bul. “Tsar Simeon Veliki” 55 · Open in Maps</a></p>
     </footer>
   </main>
   <a class="wa-float" data-wa href="https://wa.me/359882093176" target="_blank" rel="noopener" aria-label="Questions? Message us on WhatsApp +359 88 209 3176">
@@ -936,12 +950,12 @@ if(waFloat){
 }
 
 /* ---------- the ticket views (waiting / confirmed / used) ---------- */
-function ticketHTML(d){
+function ticketHTML(d,withAgain){
   var name=esc(d.name),code=esc(d.code);
   var note=d.note?'<div class="pass__note"><b>Message from the organisers</b>'+esc(d.note)+'</div>':'';
-  var where='<p class="pass__where">Saturday 17 October · <a href="'+MAPS_LINK+'" target="_blank" rel="noopener">Stara Zagora Centre, bul. “Tsar Simeon Veliki” 55</a></p>';
+  var where='<p class="pass__where">Saturday 17 October, 6PM – 10PM · <a href="'+MAPS_LINK+'" target="_blank" rel="noopener">International Youth Center, bul. “Tsar Simeon Veliki” 55</a></p>';
   var help='<p class="pass__where">Questions? <a data-wa href="'+WA_LINK+'" target="_blank" rel="noopener">Message us on WhatsApp</a></p>';
-  var again='<button class="linkbtn" type="button" data-again>Get another ticket for someone else</button>';
+  var again=withAgain?'<button class="linkbtn" type="button" data-again>Get another ticket for someone else</button>':'';
   if(d.used){
     return '<div class="pass used"><span class="pass__stamp">CHECKED IN</span><p class="pass__big">This ticket has been used</p>'
       +'<p class="pass__name">'+name+'</p><p class="pass__ref">Reference</p><p class="pass__code">'+code+'</p>'
@@ -975,10 +989,15 @@ function updatePriceLine(){
   var pl=$('#priceLine');
   pl.classList.toggle('pre',preMode);
   $('#plNow').textContent='€'+(preMode?PRICE.prereg:PRICE.early);
-  $('#plLabel').textContent=preMode?'First-release price':'Early bird';
+  $('#plLabel').textContent=preMode?'First release · 30% OFF':'Early bird · 20% OFF';
+  $('#tierEarly').classList.toggle('now',!preMode);
+  $('#tierFirst').classList.toggle('now',preMode);
+  $('#tierEarly .tier__tag').hidden=preMode;
+  $('#tierFirst .tier__tag').hidden=!preMode;
   $('#plOld').textContent='€10';
   $('#plSub').textContent=preMode?'For pre-registered people. We check your email when you tap Pay.':'Limited spots. Early bird ends when they\'re gone.';
   $('#pregBtn').setAttribute('aria-pressed',preMode?'true':'false');
+  $('#pregBtn').innerHTML=preMode?'Pre-registered: <u>30% off</u> applied. Tap to switch back':'Already pre-registered? <u>Click here</u> for 30% off (€7)';
   $('#pregNote').hidden=!preMode;
 }
 function setPre(on){preMode=on;$('#pregFail').hidden=true;updatePriceLine()}
@@ -1023,8 +1042,8 @@ function present(d){
     $('#dName').textContent=d.name;
     $('#ticketPrice').textContent='€'+d.price;
     var tn=$('#tierNote');
-    if(d.tier==='prereg'){tn.textContent='Pre-registered price (normally €10)';tn.className='step__sub tiernote';tn.hidden=false}
-    else{tn.textContent='Early bird price (normally €10)';tn.className='step__sub';tn.hidden=false}
+    if(d.tier==='prereg'){tn.textContent='Pre-registered: 30% off the normal €10';tn.className='step__sub tiernote';tn.hidden=false}
+    else{tn.textContent='Early bird: 20% off the normal €10';tn.className='step__sub';tn.hidden=false}
     $('#ticketCode').textContent=d.code;
     resetCopy();
     $('#payStep').hidden=false;$('#stateBox').hidden=true;
@@ -1112,7 +1131,7 @@ lookForm.addEventListener('submit',function(e){
       $('#contPay').addEventListener('click',function(){present(d)});
       return;
     }
-    lookRes.innerHTML=ticketHTML(d);
+    lookRes.innerHTML=ticketHTML(d,true);
     lookRes.scrollIntoView({behavior:reduced?'auto':'smooth',block:'nearest'});
   }).catch(function(){btn.classList.remove('busy');lookRes.hidden=false;lookRes.innerHTML='<div class="none">Could not reach the server. Please try again.</div>'});
 });
