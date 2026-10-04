@@ -285,6 +285,16 @@ a.tier:hover,a.tier:focus-visible{transform:scale(1.02);border-color:var(--gold-
 .preg__btns{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px}
 .preg__btns .linkbtn{margin-top:0}
 
+/* yes / no pills */
+.yn{display:flex;gap:10px;margin-top:8px}
+.yn__opt{position:relative;flex:1;margin:0!important;cursor:pointer}
+.yn__opt input{position:absolute;opacity:0;pointer-events:none}
+.yn__opt span{display:block;text-align:center;padding:12px 10px;border:1.5px solid #cdbb92;border-radius:12px;
+  font:800 15px 'Karla';letter-spacing:.02em;text-transform:none;color:#574833;background:#fffaf0;transition:all .2s}
+.yn__opt input:checked+span{background:var(--red);border-color:var(--red);color:#fff7ea;box-shadow:0 4px 12px rgba(194,51,24,.3)}
+.yn__opt input:focus-visible+span{outline:2px dashed var(--gold);outline-offset:2px}
+.f.bad .yn__opt span{border-color:var(--red)}
+
 /* phone field */
 .phone{display:flex;gap:10px;align-items:flex-end}
 .phone__cc{flex:none;width:112px}
@@ -696,6 +706,14 @@ a.tag:hover{border-style:solid}
             <label for="fBackground">Background<span class="opt">optional</span></label>
             <div class="ctl"><input id="fBackground" name="background" type="text" autocomplete="off" placeholder="e.g. Desi, Mideast, Türk, Bulgarian…"></div>
           </div>
+          <div class="f" id="fVeganW">
+            <label>Vegan food only?<span class="req">*</span></label>
+            <div class="yn" role="radiogroup" aria-label="Vegan food only?">
+              <label class="yn__opt"><input type="radio" name="vegan" value="yes"><span>🌱 Yes</span></label>
+              <label class="yn__opt"><input type="radio" name="vegan" value="no"><span>No</span></label>
+            </div>
+            <p class="err">Please choose Yes or No.</p>
+          </div>
           <button class="send" type="submit" id="sendBtn">Pay</button>
         </form>
 
@@ -978,6 +996,9 @@ var form=$('#reg'),done=$('#done'),send=$('#sendBtn'),card=$('#card'),formTop=$(
 var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 var current=null,preMode=false;
 
+document.querySelectorAll('input[name="vegan"]').forEach(function(r){
+  r.addEventListener('change',function(){$('#fVeganW').classList.remove('bad')});
+});
 ['fEmail','fName'].forEach(function(id){
   document.getElementById(id).addEventListener('input',function(){
     this.closest('.f').classList.remove('bad');
@@ -1019,13 +1040,17 @@ form.addEventListener('submit',function(e){
   var digits=$('#fPhone').value.replace(/\D/g,'').replace(/^0+/,'');
   var phone=digits?($('#fCC').value+' '+digits):'';
 
+  var veganEl=document.querySelector('input[name="vegan"]:checked');
+  var vegan=veganEl?veganEl.value:'';
+
   var bad=null;
   if(!EMAIL_RE.test(email)){$('#fEmailW').classList.add('bad');bad=bad||$('#fEmail');}
   if(name.length<2){$('#fNameW').classList.add('bad');bad=bad||$('#fName');}
+  if(!vegan){$('#fVeganW').classList.add('bad');bad=bad||document.querySelector('input[name="vegan"]');}
   if(bad){bad.focus();return;}
 
   send.classList.add('busy');
-  api('/api/register',{email:email,name:name,year:year,background:background,phone:phone,prereg:preMode}).then(function(res){
+  api('/api/register',{email:email,name:name,year:year,background:background,phone:phone,vegan:vegan,prereg:preMode}).then(function(res){
     send.classList.remove('busy');
     if(res.status===404&&res.data.error==='not_prereg'){$('#pregFail').hidden=false;return}
     if(!res.ok){alert((res.data.error||'Could not create your ticket.')+' Please try again.');return}

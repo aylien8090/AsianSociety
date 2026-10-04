@@ -12,7 +12,7 @@ let schemaReady;
 export function ensureSchema(env) {
   schemaReady ||= (async () => {
     const db = env.TICKETS_DB;
-    for (const column of ["phone TEXT", "tier TEXT", "used_at TEXT", "note TEXT"]) {
+    for (const column of ["phone TEXT", "tier TEXT", "used_at TEXT", "note TEXT", "vegan TEXT"]) {
       try { await db.prepare("ALTER TABLE tickets ADD COLUMN " + column).run(); } catch { /* column already exists */ }
     }
     await db.prepare("CREATE TABLE IF NOT EXISTS prereg (email TEXT PRIMARY KEY, name TEXT)").run();

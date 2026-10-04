@@ -15,6 +15,9 @@ export async function onRequestPost({ request, env }) {
     return json({ existing: true, code: existing.code, name: existing.name, status: existing.status, tier, price: PRICES[tier], used: !!existing.used_at, note: existing.note || "" });
   }
 
+  const vegan = body.vegan === "yes" ? "yes" : body.vegan === "no" ? "no" : "";
+  if (!vegan) return json({ error: "Please choose Yes or No for vegan food only." }, 400);
+
   let tier = "early";
   if (body.prereg) {
     const listed = await env.TICKETS_DB.prepare("SELECT 1 AS ok FROM prereg WHERE email = ?").bind(email).first();
@@ -26,8 +29,8 @@ export async function onRequestPost({ request, env }) {
   for (let attempt = 0; attempt < 5; attempt++) {
     const ticketCode = code();
     try {
-      await env.TICKETS_DB.prepare("INSERT INTO tickets (code, email, name, year, background, status, phone, tier) VALUES (?, ?, ?, ?, ?, 'draft', ?, ?)")
-        .bind(ticketCode, email, name, String(body.year || "").trim().slice(0, 40), String(body.background || "").trim().slice(0, 80), phone, tier).run();
+      await env.TICKETS_DB.prepare("INSERT INTO tickets (code, email, name, year, background, status, phone, tier, vegan) VALUES (?, ?, ?, ?, ?, 'draft', ?, ?, ?)")
+        .bind(ticketCode, email, name, String(body.year || "").trim().slice(0, 40), String(body.background || "").trim().slice(0, 80), phone, tier, vegan).run();
       return json({ code: ticketCode, name, status: "draft", tier, price: PRICES[tier] });
     } catch (error) {
       if (!String(error.message).includes("UNIQUE")) return json({ error: "Could not save your registration." }, 500);
