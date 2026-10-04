@@ -312,7 +312,7 @@ function render() {
   $('#nConfirmed').textContent = confirmed.length;
   $('#revenue').textContent = '€' + (nPre * PRICES.prereg + nEarly * PRICES.early);
   const nVegan = confirmed.filter(t => t.vegan === 'yes').length;
-  $('#moneySplit').textContent = confirmed.length ? `(${nEarly} × €${PRICES.early} + ${nPre} × €${PRICES.prereg}) · 🌱 ${nVegan} vegan only` : '';
+  $('#moneySplit').textContent = confirmed.length ? `(${nEarly} × €${PRICES.early} + ${nPre} × €${PRICES.prereg}) · 🌱 ${nVegan} vegan food` : '';
   $('#summary').textContent = `Updated ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · checks every 15s`;
   bars($('#years'), confirmed.map(t => t.year));
   bars($('#tiers'), confirmed.map(t => TIER_LABEL[tierOf(t)]));
@@ -340,7 +340,7 @@ function render() {
       <div class="who">
         <strong>${esc(t.name)}</strong> <span class="badge ${t.status}">${STATUS_LABEL[t.status] || esc(t.status)}</span>${t.used_at ? ' <span class="badge used">Checked in</span>' : ''}
         <div class="mail">${esc(t.email)}</div>
-        <div class="meta"><span class="tag tier ${tierOf(t) === 'prereg' ? 'pre' : ''}">${TIER_LABEL[tierOf(t)]}</span><span class="tag">${esc(t.year)}</span><span class="tag">${esc(t.background)}</span>${t.vegan === 'yes' ? '<span class="tag vegan">🌱 Vegan only</span>' : ''}${phone}<span class="tag">${ago(t.created_at)}</span></div>
+        <div class="meta"><span class="tag tier ${tierOf(t) === 'prereg' ? 'pre' : ''}">${TIER_LABEL[tierOf(t)]}</span><span class="tag">${esc(t.year)}</span><span class="tag">${esc(t.background)}</span>${t.vegan === 'yes' ? '<span class="tag vegan">🌱 Vegan food</span>' : ''}${phone}<span class="tag">${ago(t.created_at)}</span></div>
       </div>
       <div class="act"><div class="btns">${main}</div>
         <div class="btns">
