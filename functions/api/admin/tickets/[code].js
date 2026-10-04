@@ -46,7 +46,10 @@ export async function onRequestPatch({ request, env, params }) {
 
 export async function onRequestDelete({ request, env, params }) {
   const denied = await requireAdmin(request, env); if (denied) return denied;
-  const result = await env.TICKETS_DB.prepare("DELETE FROM tickets WHERE code = ?").bind(params.code).run();
-  if (!result.meta.changes) return json({ error: "Ticket not found" }, 404);
-  return json({ ok: true });
+  const ticket = await env.TICKETS_DB.prepare("SELECT email FROM tickets WHERE code = ?").bind(params.code).first();
+  if (!ticket) return json({ error: "Ticket not found" }, 404);
+  // Remove every record for this email, including hidden "never tapped Paid!" drafts,
+  // so the email is completely free to be used again.
+  const result = await env.TICKETS_DB.prepare("DELETE FROM tickets WHERE lower(email) = lower(?)").bind(ticket.email).run();
+  return json({ ok: true, removed: result.meta.changes });
 }
