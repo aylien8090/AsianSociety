@@ -15,5 +15,24 @@ export async function onRequestPatch({ request, env, params }) {
     await env.TICKETS_DB.prepare("UPDATE tickets SET status = 'emailed', emailed_at = CURRENT_TIMESTAMP WHERE code = ?").bind(params.code).run();
     return json({ ok: true });
   }
+  if (body.action === "set_status") {
+    const status = String(body.status || "");
+    if (!['pending', 'paid', 'emailed'].includes(status)) return json({ error: "Invalid status" }, 400);
+    if (status === 'pending') {
+      await env.TICKETS_DB.prepare("UPDATE tickets SET status = 'pending', paid_at = NULL, emailed_at = NULL WHERE code = ?").bind(params.code).run();
+    } else if (status === 'paid') {
+      await env.TICKETS_DB.prepare("UPDATE tickets SET status = 'paid', paid_at = COALESCE(paid_at, CURRENT_TIMESTAMP), emailed_at = NULL WHERE code = ?").bind(params.code).run();
+    } else {
+      await env.TICKETS_DB.prepare("UPDATE tickets SET status = 'emailed', paid_at = COALESCE(paid_at, CURRENT_TIMESTAMP), emailed_at = CURRENT_TIMESTAMP WHERE code = ?").bind(params.code).run();
+    }
+    return json({ ok: true });
+  }
   return json({ error: "Unknown action" }, 400);
+}
+
+export async function onRequestDelete({ request, env, params }) {
+  const denied = await requireAdmin(request, env); if (denied) return denied;
+  const result = await env.TICKETS_DB.prepare("DELETE FROM tickets WHERE code = ?").bind(params.code).run();
+  if (!result.meta.changes) return json({ error: "Ticket not found" }, 404);
+  return json({ ok: true });
 }
