@@ -7,7 +7,7 @@ export function json(data, status = 200, headers = {}) {
 export function code() {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const bytes = crypto.getRandomValues(new Uint8Array(4));
-  return "CN-" + [...bytes].map(byte => alphabet[byte % alphabet.length]).join("");
+  return "ASOC-" + [...bytes].map(byte => alphabet[byte % alphabet.length]).join("");
 }
 
 export async function isAdmin(request, env) {
