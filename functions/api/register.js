@@ -16,7 +16,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   const vegan = body.vegan === "yes" ? "yes" : body.vegan === "no" ? "no" : "";
-  if (!vegan) return json({ error: "Please choose Yes or No for vegan food only." }, 400);
+  if (!vegan) return json({ error: "Please choose Vegan or Not Vegan." }, 400);
 
   let tier = "early";
   if (body.prereg) {
