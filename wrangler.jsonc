@@ -6,6 +6,6 @@
   "d1_databases": [{
     "binding": "TICKETS_DB",
     "database_name": "asian-society-tickets",
-    "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+    "database_id": "88f3a08f-52e3-4f02-bd5d-db384342caf5"
   }]
 }
