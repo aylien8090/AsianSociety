@@ -5,13 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#141234">
 <title>Cultural Night — Coming Soon · Asian Society, Trakia University</title>
-<meta name="description" content="A cultural dress-up night is coming in mid October at Trakia University. Best dressed competition, prizes, games, new people. Register your interest — free — and get exclusive early bird tickets first.">
+<meta name="description" content="A cultural dress-up night is coming in early October at Trakia University. Best dressed competition, prizes, games, new people. Register your interest — free — and get a discount on tickets.">
 <meta property="og:title" content="Cultural Night — Coming Soon">
-<meta property="og:description" content="Dress up in your cultural clothes! Register your interest — free — and get exclusive early bird tickets first.">
-<meta property="og:image" content="https://aylien8090.github.io/AsianSociety/Images/linkpreview.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:description" content="Dress up in your cultural clothes! Register your interest — free — and get a discount on tickets.">
+<meta property="og:image" content="Images/MNMLOGO.png">
+<meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%AE%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +29,6 @@ body{background:#0a0920;font-family:'Karla',sans-serif;color:var(--cream);
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
   display:flex;justify-content:center;overflow-x:hidden}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
-a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px dashed var(--gold);outline-offset:3px}
 ::selection{background:var(--red);color:var(--cream)}
 
@@ -69,7 +66,7 @@ a{color:inherit;text-decoration:none}
 
 .hero__content{position:relative;z-index:8;margin:auto;max-width:480px;
   display:flex;flex-direction:column;align-items:center;text-align:center;
-  padding:clamp(110px,15vh,160px) 24px clamp(140px,24vh,220px)}
+  padding:clamp(120px,17vh,170px) 24px clamp(150px,26vh,230px)}
 
 .kicker{font:800 10.5px 'Karla';letter-spacing:.24em;color:var(--gold-soft);margin-bottom:14px}
 .title{font-family:'Fraunces',serif;font-optical-sizing:auto;line-height:1.04}
@@ -96,25 +93,9 @@ a{color:inherit;text-decoration:none}
 .cta:hover,.cta:focus-visible{transform:scale(1.06);
   box-shadow:0 16px 36px rgba(200,55,25,.5),inset 0 1px 0 rgba(255,255,255,.25)}
 .cta:active{transform:scale(.96)}
-
-/* ═══ THE EARLY BIRD BANNER — the big reason to register ═══ */
-.earlybird{position:relative;margin-top:24px;max-width:340px;width:100%;
-  padding:14px 20px 15px;border-radius:14px;
-  background:linear-gradient(160deg,rgba(216,162,74,.16),rgba(216,162,74,.05));
-  border:1px solid rgba(216,162,74,.45);
-  box-shadow:0 0 26px rgba(216,162,74,.14),inset 0 1px 0 rgba(255,207,126,.18)}
-.earlybird::before,.earlybird::after{content:"✦";position:absolute;top:-8px;font-size:13px;
-  color:var(--gold-hi);text-shadow:0 0 8px rgba(255,207,126,.8)}
-.earlybird::before{left:14px}
-.earlybird::after{right:14px}
-.earlybird__label{font:800 9px 'Karla';letter-spacing:.3em;color:var(--gold-soft)}
-.earlybird__line{margin-top:5px;font-family:'Fraunces',serif;font-weight:700;
-  font-size:clamp(18px,5.4vw,24px);line-height:1.15;letter-spacing:.005em;
-  color:#ffe4ac;text-shadow:0 0 18px rgba(255,207,126,.35)}
-.earlybird__line em{font-style:italic;color:var(--gold-hi)}
-.fine{margin-top:14px;font-size:12.5px;line-height:1.55;color:var(--cream-dim);max-width:34ch}
+.fine{margin-top:16px;font-size:12.5px;line-height:1.55;color:var(--cream-dim);max-width:34ch}
 .fine b{color:var(--gold-soft);font-weight:800}
-.cue{margin-top:20px;color:rgba(233,200,135,.75)}
+.cue{margin-top:22px;color:rgba(233,200,135,.75)}
 .cue__i{width:20px;height:12px;animation:cueb 2.2s ease-in-out infinite}
 @keyframes cueb{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 
@@ -209,6 +190,11 @@ a{color:inherit;text-decoration:none}
 .done__t{font-family:'Fraunces',serif;font-weight:700;font-size:27px;color:var(--ink)}
 .done__c{margin-top:10px;font-size:15px;line-height:1.6;color:#574833}
 .done__c b{color:var(--ink);word-break:break-word}
+.payment{margin:18px 0 4px;padding:15px 13px;border:1px solid #d8a24a;border-radius:12px;background:#fff6e5;text-align:left}
+.payment__label{font:800 10px 'Karla';letter-spacing:.15em;color:#7a6540;text-transform:uppercase}
+.payment__code{display:block;margin:7px 0;font:900 27px/1 'Karla';letter-spacing:.08em;color:var(--red)}
+.payment__note{font-size:13px;line-height:1.45;color:#574833}
+.payment__note strong{color:var(--ink)}
 .linkbtn{margin-top:18px;font:800 11.5px 'Karla';letter-spacing:.14em;text-transform:uppercase;
   color:var(--red);border-bottom:2px solid rgba(194,51,24,.4);padding-bottom:3px}
 .linkbtn:hover{border-color:var(--red)}
@@ -402,19 +388,12 @@ a{color:inherit;text-decoration:none}
         <span class="t2 pop" style="--d:.78s">COMING SOON</span>
       </h1>
       <p class="sub up" style="--d:1s">Dress up in your cultural clothes!</p>
-      <p class="chip up" style="--d:1.18s">MID OCTOBER · DATE TBC</p>
+      <p class="chip up" style="--d:1.18s">EARLY OCTOBER · DATE TBC</p>
       <a class="cta pop" style="--d:1.32s" href="#join">REGISTER INTEREST
         <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l7 7 7-7"/></svg>
       </a>
-
-      <!-- the big reason to register -->
-      <div class="earlybird pop" style="--d:1.44s" role="note">
-        <p class="earlybird__label">WHY REGISTER?</p>
-        <p class="earlybird__line">Get <em>exclusive early bird</em> tickets first!</p>
-      </div>
-
-      <p class="fine up" style="--d:1.58s"><b>IT'S FREE TO REGISTER</b> — everyone on the list hears about tickets before anyone else.</p>
-      <a class="cue fade" style="--d:1.72s" href="#onnight" aria-label="See what's on the night">
+      <p class="fine up" style="--d:1.5s"><b>IT'S FREE TO REGISTER</b> — and everyone on the list gets a discount on tickets.</p>
+      <a class="cue fade" style="--d:1.7s" href="#onnight" aria-label="See what's on the night">
         <svg class="cue__i" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l8 8 8-8"/></svg>
       </a>
     </div>
@@ -485,8 +464,8 @@ a{color:inherit;text-decoration:none}
             <path d="M31 87h8l-4 8z" fill="#d8a24a"/>
           </svg>
           <div>
-            <h2 class="card__t">Register interest</h2>
-            <p class="card__s">FREE · 30 SECONDS · EARLY BIRD TICKETS FIRST</p>
+            <h2 class="card__t">Get your ticket</h2>
+            <p class="card__s">REGISTER · PAY BY REVOLUT · CONFIRM BY EMAIL</p>
           </div>
         </div>
 
@@ -517,7 +496,7 @@ a{color:inherit;text-decoration:none}
             <label for="fBackground">Background<span class="opt">optional</span></label>
             <div class="ctl"><input id="fBackground" name="background" type="text" autocomplete="off" placeholder="e.g. Desi, Mideast, Türk, Bulgarian…"></div>
           </div>
-          <button class="send" type="submit" id="sendBtn">Get my early bird ticket</button>
+          <button class="send" type="submit" id="sendBtn">Get payment reference</button>
         </form>
 
         <div class="done" id="done" hidden>
@@ -531,10 +510,13 @@ a{color:inherit;text-decoration:none}
             <line x1="35" y1="79" x2="35" y2="87" stroke="#caa24d" stroke-width="1.8"/>
             <path d="M31 87h8l-4 8z" fill="#d8a24a"/>
           </svg>
-          <h2 class="done__t">You're on the list!</h2>
-          <p class="done__c">Thanks, <b id="dName"></b> — your interest is registered, completely
-            free, and you're first in line for <b>exclusive early bird tickets</b> the moment they
-            drop. We'll email <b id="dEmail"></b> as soon as the exact date is confirmed.</p>
+          <h2 class="done__t">Almost there!</h2>
+          <p class="done__c">Thanks, <b id="dName"></b>. Send the payment exactly as below. We’ll confirm your ticket at <b id="dEmail"></b> after we verify it.</p>
+          <div class="payment">
+            <p class="payment__label">Your unique transfer reference</p>
+            <strong class="payment__code" id="ticketCode"></strong>
+            <p class="payment__note">Send <strong id="ticketPrice"></strong> to Revolut <strong id="revolutTag"></strong> and put <strong id="ticketNote"></strong> as the transfer note. Do not change the note.</p>
+          </div>
           <button class="linkbtn" id="againBtn" type="button">Register someone else</button>
         </div>
 
@@ -559,12 +541,10 @@ a{color:inherit;text-decoration:none}
         <p class="hoststamp__join">TAP LOGO TO JOIN WA GROUP</p>
       </div>
       <p class="foot__a">ASIAN SOCIETY · TRAKIA UNIVERSITY</p>
-      <p class="foot__b">MID OCTOBER · STARA ZAGORA</p>
+      <p class="foot__b">EARLY OCTOBER · STARA ZAGORA</p>
     </footer>
   </main>
 </div>
-
-<iframe id="gpost" name="gpost" style="display:none" tabindex="-1" title="form submission" aria-hidden="true"></iframe>
 
 <script>
 (function(){
@@ -572,43 +552,9 @@ a{color:inherit;text-decoration:none}
 var $=function(s){return document.querySelector(s)};
 var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* ═══════════════════════════════════════════════════════════════
-   ALREADY CONNECTED — your Google Form link is pasted below.
-   Every submission lands in that form's Responses tab (link a
-   Sheet via the green Sheets icon there for a spreadsheet view).
-
-   Form settings to double-check ONCE (in Google Forms → Settings):
-   "Collect email addresses" = OFF, "Limit to 1 response" = OFF.
-   ═══════════════════════════════════════════════════════════════ */
-var PREFILLED_LINK="https://docs.google.com/forms/d/e/1FAIpQLScws70kz5cr3K7oDPA72_Mz5jJq3oUvhtNZfJFCXiQVJk6LFQ/viewform?usp=pp_url&entry.820816497=EMAIL&entry.1105030834=NAME&entry.1941540015=YEAR&entry.70380582=BACKGROUND";
-
-function resolveConfig(link){
-  link=(link||'').trim();
-  if(!link)return null;
-  try{
-    var u=new URL(link);
-    var action=u.origin+u.pathname.replace(/viewform\/?$/,'formResponse');
-    var byWord={},ordered=[];
-    u.searchParams.forEach(function(value,key){
-      if(/^entry\.\d+$/.test(key)){
-        ordered.push(key);
-        var w=value.trim().toUpperCase();
-        if(w&&!byWord[w])byWord[w]=key;
-      }
-    });
-    var c={action:action,
-      email:byWord['EMAIL']||ordered[0]||null,
-      name:byWord['NAME']||ordered[1]||null,
-      year:byWord['YEAR']||ordered[2]||null,
-      background:byWord['BACKGROUND']||ordered[3]||null};
-    if(!c.email||!c.name)return null;
-    return c;
-  }catch(err){return null}
-}
-var cfg=resolveConfig(PREFILLED_LINK);
-console.info(cfg
-  ?'Google Form connected — submissions appear in its Responses tab (and linked Sheet).'
-  :'No PREFILLED_LINK set yet — test mode: submissions are saved in this browser only.');
+/* Change these three values before publishing. The ticket record is saved by
+   Cloudflare, then you verify the Revolut transfer in /admin.html. */
+var PAYMENT={price:'€8',revolutTag:'@siddiquico'};
 
 /* ---------- LOGO: matches your folder setup (Images/MNMLOGO.png) ---------- */
 (function(){
@@ -655,34 +601,24 @@ document.querySelectorAll('.rv').forEach(function(el){
   if(io)io.observe(el);else el.classList.add('in');
 });
 
-/* ---------- little star particles ----------
-   Each particle gets its own scope (the wrapped function below),
-   its own cleanup handler, stays faded-out after finishing
-   (fill:'forwards'), AND a hard 2.4s removal timer as a final
-   safety net — so no spark can ever get stuck on screen.      */
+/* ---------- little star particles ---------- */
 function sparks(x,y,n,colors){
   if(reduced)return;
   for(var i=0;i<n;i++){
-    (function(idx){
-      var p=document.createElement('i');
-      p.className='spark';
-      var sz=6+Math.random()*9;
-      p.style.width=sz+'px';p.style.height=sz+'px';
-      p.style.left=x+'px';p.style.top=y+'px';
-      p.style.background=colors[idx%colors.length];
-      document.body.appendChild(p);
-      var kill=function(){if(p.parentNode)p.parentNode.removeChild(p)};
-      setTimeout(kill,2400); /* guaranteed cleanup no matter what */
-      if(!p.animate)return;
-      var ang=Math.random()*Math.PI*2,d=26+Math.random()*46;
-      var dx=Math.cos(ang)*d,dy=Math.sin(ang)*d*.7-30;
-      var anim=p.animate([
-        {transform:'translate(-50%,-50%) scale(.3) rotate(0deg)',opacity:1},
-        {transform:'translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px)) scale(1) rotate('+(Math.random()*180-90)+'deg)',opacity:0}
-      ],{duration:650+Math.random()*550,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
-      anim.onfinish=kill;
-      anim.oncancel=kill;
-    })(i);
+    var p=document.createElement('i');
+    p.className='spark';
+    var sz=6+Math.random()*9;
+    p.style.width=sz+'px';p.style.height=sz+'px';
+    p.style.left=x+'px';p.style.top=y+'px';
+    p.style.background=colors[i%colors.length];
+    document.body.appendChild(p);
+    if(!p.animate){p.remove();continue}
+    var ang=Math.random()*Math.PI*2,d=26+Math.random()*46;
+    var dx=Math.cos(ang)*d,dy=Math.sin(ang)*d*.7-30;
+    p.animate([
+      {transform:'translate(-50%,-50%) scale(.3) rotate(0deg)',opacity:1},
+      {transform:'translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px)) scale(1) rotate('+(Math.random()*180-90)+'deg)',opacity:0}
+    ],{duration:650+Math.random()*550,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=function(){p.remove()};
   }
 }
 
@@ -722,14 +658,8 @@ if(hs){
 
 /* ---------- the form ---------- */
 var form=$('#reg'),done=$('#done'),send=$('#sendBtn'),card=$('#card');
-var gpost=document.getElementById('gpost');
 var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-var KEY='cultural-night-interest';
-var currentEntry=null,settled=false,awaitingPost=false;
-
-gpost.addEventListener('load',function(){
-  if(awaitingPost&&!settled&&currentEntry)settle();
-});
+var currentEntry=null,settled=false;
 
 ['fEmail','fName'].forEach(function(id){
   document.getElementById(id).addEventListener('input',function(){
@@ -750,42 +680,23 @@ form.addEventListener('submit',function(e){
   if(bad){bad.focus();return;}
 
   var entry={email:email,name:name,year:year,background:background,at:new Date().toISOString()};
-  saveBackup(entry);
   currentEntry=entry;settled=false;
   send.classList.add('busy');
-
-  if(cfg){
-    postToGoogle(entry);
-    setTimeout(function(){if(!settled)settle()},6000); /* safety net */
-  }else{
-    setTimeout(settle,650); /* test mode */
-  }
+  fetch('/api/register',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(entry)})
+    .then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Could not create your ticket.');return data})})
+    .then(function(data){currentEntry.code=data.code;settle()})
+    .catch(function(error){send.classList.remove('busy');alert(error.message+' Please try again.');});
 });
 
-function postToGoogle(entry){
-  var f=document.createElement('form');
-  f.method='POST';f.action=cfg.action;f.target='gpost';
-  var add=function(id,val){
-    if(!id)return;
-    var i=document.createElement('input');
-    i.type='hidden';i.name=id;i.value=val==null?'':val;
-    f.appendChild(i);
-  };
-  add(cfg.email,entry.email);
-  add(cfg.name,entry.name);
-  add(cfg.year,entry.year);
-  add(cfg.background,entry.background);
-  document.body.appendChild(f);
-  awaitingPost=true;
-  f.submit();
-  setTimeout(function(){f.remove()},10000);
-}
-
 function settle(){
-  settled=true;awaitingPost=false;
+  settled=true;
   send.classList.remove('busy');
   $('#dName').textContent=currentEntry.name;
   $('#dEmail').textContent=currentEntry.email;
+  $('#ticketCode').textContent=currentEntry.code;
+  $('#ticketPrice').textContent=PAYMENT.price;
+  $('#revolutTag').textContent=PAYMENT.revolutTag;
+  $('#ticketNote').textContent=currentEntry.code;
   form.hidden=true;done.hidden=false;
   var r=card.getBoundingClientRect();
   sparks(r.left+r.width/2,r.top+46,22,['#ffd27a','#e8a34b','#f6f1e7','#e0532f']);
@@ -798,13 +709,6 @@ function settle(){
   $('#fEmail').focus();
 });
 
-function saveBackup(entry){
-  try{
-    var list=JSON.parse(localStorage.getItem(KEY)||'[]');
-    list.push(entry);
-    localStorage.setItem(KEY,JSON.stringify(list));
-  }catch(err){/* storage unavailable — the Google post still goes out */}
-}
 })();
 </script>
 </body>

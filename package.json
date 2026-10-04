@@ -1,0 +1,12 @@
+{
+  "name": "asian-society-ticketing",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev . --d1=TICKETS_DB",
+    "deploy": "wrangler pages deploy ."
+  },
+  "devDependencies": {
+    "wrangler": "^4.41.0"
+  }
+}

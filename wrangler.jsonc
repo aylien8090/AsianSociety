@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "asian-society-tickets",
+  "compatibility_date": "2026-10-04",
+  "pages_build_output_dir": ".",
+  "d1_databases": [{
+    "binding": "TICKETS_DB",
+    "database_name": "asian-society-tickets",
+    "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+  }]
+}
