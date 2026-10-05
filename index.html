@@ -1023,7 +1023,8 @@ function ticketHTML(d,withAgain){
       +'<p class="pass__msg">You were scanned in at the door. Enjoy the night!</p>'+note+help+'</div>';
   }
   if(d.status==='paid'||d.status==='emailed'){
-    return '<div class="pass ok"><span class="pass__stamp">✓ PAID</span><p class="pass__big">PAID! SEE YOU THERE!</p>'
+    var team=d.tier==='team';
+    return '<div class="pass ok"><span class="pass__stamp">'+(team?'✓ TEAM MEMBER':'✓ PAID')+'</span><p class="pass__big">'+(team?'YOU’RE ON THE TEAM! SEE YOU THERE!':'PAID! SEE YOU THERE!')+'</p>'
       +'<p class="pass__name">'+name+'</p><p class="pass__ref">Your reference</p><p class="pass__code">'+code+'</p>'
       +'<p class="pass__msg">Can’t wait to see you all dressed up in your cultural clothes! Show this page at the door.</p>'
       +where+note+again+'</div>';

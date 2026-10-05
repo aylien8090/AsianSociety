@@ -5,7 +5,8 @@ export function json(data, status = 200, headers = {}) {
 }
 
 // Ticket prices in euros per release. "prereg" = first release (people who pre-registered), "early" = early bird.
-export const PRICES = { prereg: 7, early: 8 };
+export const PRICES = { prereg: 7, early: 8, team: 0 };
+export const tierOf = tier => (tier === "prereg" || tier === "team") ? tier : "early";
 
 // Adds the newer columns/tables on first use so no manual database step is needed.
 let schemaReady;
@@ -13,7 +14,8 @@ export function ensureSchema(env) {
   schemaReady ||= (async () => {
     const db = env.TICKETS_DB;
     for (const column of ["phone TEXT", "tier TEXT", "used_at TEXT", "note TEXT", "vegan TEXT"]) {
-      try { await db.prepare("ALTER TABLE tickets ADD COLUMN " + column).run(); } catch { /* column already exists */ }
+      try { await db.prepare("ALTER TABLE tickets ADD COLUMN " + column).run(); }
+      catch (error) { if (!/duplicate column/i.test(String(error.message))) throw error; /* already added */ }
     }
     await db.prepare("CREATE TABLE IF NOT EXISTS prereg (email TEXT PRIMARY KEY, name TEXT)").run();
   })().catch(error => { schemaReady = null; throw error; });

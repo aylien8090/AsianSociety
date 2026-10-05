@@ -1,4 +1,4 @@
-import { json, ensureSchema, PRICES } from "./_shared";
+import { json, ensureSchema, PRICES, tierOf as tierName } from "./_shared";
 
 // "Already got a ticket?": the visitor types their email and sees where their ticket is at.
 export async function onRequestPost({ request, env }) {
@@ -9,6 +9,6 @@ export async function onRequestPost({ request, env }) {
   await ensureSchema(env);
   const t = await env.TICKETS_DB.prepare("SELECT code, name, status, tier, used_at, note FROM tickets WHERE lower(email) = ? ORDER BY created_at DESC LIMIT 1").bind(email).first();
   if (!t) return json({ found: false });
-  const tier = t.tier === "prereg" ? "prereg" : "early";
+  const tier = tierName(t.tier);
   return json({ found: true, code: t.code, name: t.name, status: t.status, tier, price: PRICES[tier], used: !!t.used_at, note: t.note || "" });
 }

@@ -1,4 +1,4 @@
-import { code, json, ensureSchema, PRICES } from "./_shared";
+import { code, json, ensureSchema, PRICES, tierOf } from "./_shared";
 
 export async function onRequestPost({ request, env }) {
   let body;
@@ -11,7 +11,7 @@ export async function onRequestPost({ request, env }) {
   // Same email twice: show the existing ticket again instead of making a second one.
   const existing = await env.TICKETS_DB.prepare("SELECT code, name, status, tier, used_at, note FROM tickets WHERE lower(email) = ? ORDER BY created_at DESC LIMIT 1").bind(email).first();
   if (existing) {
-    const tier = existing.tier === "prereg" ? "prereg" : "early";
+    const tier = tierOf(existing.tier);
     return json({ existing: true, code: existing.code, name: existing.name, status: existing.status, tier, price: PRICES[tier], used: !!existing.used_at, note: existing.note || "" });
   }
 

@@ -16,6 +16,16 @@ export async function onRequestPatch({ request, env, params }) {
     await env.TICKETS_DB.prepare("UPDATE tickets SET status = 'emailed', emailed_at = CURRENT_TIMESTAMP WHERE code = ?").bind(params.code).run();
     return json({ ok: true });
   }
+  if (body.action === "set_tier") {
+    const tier = String(body.tier || "");
+    if (!["early", "prereg", "team"].includes(tier)) return json({ error: "Invalid ticket type" }, 400);
+    await env.TICKETS_DB.prepare("UPDATE tickets SET tier = ? WHERE code = ?").bind(tier, params.code).run();
+    // A free team ticket has nothing to pay, so it is confirmed straight away.
+    if (tier === "team" && (ticket.status === "pending" || ticket.status === "draft")) {
+      await env.TICKETS_DB.prepare("UPDATE tickets SET status = 'paid', paid_at = CURRENT_TIMESTAMP WHERE code = ?").bind(params.code).run();
+    }
+    return json({ ok: true });
+  }
   if (body.action === "set_note") {
     await env.TICKETS_DB.prepare("UPDATE tickets SET note = ? WHERE code = ?").bind(String(body.note || "").trim().slice(0, 1000), params.code).run();
     return json({ ok: true });
