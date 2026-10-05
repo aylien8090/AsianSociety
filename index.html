@@ -167,7 +167,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .tier.now{border:2px solid var(--gold-hi);background:rgba(216,162,74,.12);box-shadow:0 0 28px rgba(255,170,80,.18)}
 .tier.now .tier__p{color:var(--gold-hi)}
 .tier__tag{display:inline-block;margin-left:8px;font:800 9.5px 'Karla';letter-spacing:.12em;color:#2b2115;background:var(--gold-hi);border-radius:99px;padding:3px 8px;vertical-align:2px}
-a.tier{text-decoration:none;color:inherit;transition:transform .25s cubic-bezier(.2,1.6,.4,1),border-color .25s}
+a.tier{cursor:pointer;text-decoration:none;color:inherit;transition:transform .25s cubic-bezier(.2,1.6,.4,1),border-color .25s}
 a.tier:hover,a.tier:focus-visible{transform:scale(1.02);border-color:var(--gold-hi)}
 .tier.first{opacity:.9;cursor:pointer}
 .tier__go{display:inline-block;margin-top:4px;font:800 11px 'Karla';letter-spacing:.1em;color:var(--gold-hi);text-transform:uppercase}
@@ -357,6 +357,12 @@ a.tag:hover{border-style:solid}
 .pass__note b{display:block;font:800 10px 'Karla';letter-spacing:.14em;color:#8a744e;text-transform:uppercase;margin-bottom:3px}
 .pass .linkbtn{margin-top:16px}
 .pass .send{margin-top:14px}
+.paycheck{margin-top:16px;padding:14px;border-radius:12px;background:#fff;border:1.5px dashed #d8a24a;text-align:center}
+.paycheck__h{font:800 15px 'Karla';color:var(--ink)}
+.paycheck__t{margin-top:6px;font-size:15px;line-height:1.7;color:#574833}
+.paycheck__t b{color:var(--red)}
+.paycheck .tag{font-size:18px;padding:2px 10px;margin:2px 0}
+.paycheck .revopen{display:inline-block;margin-top:10px}
 .lookres{margin-top:16px}
 .lookres .none{padding:12px;border-radius:10px;background:#fde8e3;color:#7a2312;font-size:14px;line-height:1.5}
 .lookres .none a{color:#7a2312;font-weight:800}
@@ -637,7 +643,7 @@ a.tag:hover{border-style:solid}
       <div class="dlbar rv" style="--d:.05s"><b>⏰ Early bird ends 9th October!</b><span class="cd"></span></div>
       <div class="tiers rv" style="--d:.1s">
         <div class="tier old"><div><p class="tier__n">Normal price</p><p class="tier__d">What tickets cost after the early bird</p></div><p class="tier__p">€10</p></div>
-        <div class="tier now" id="tierEarly"><div><p class="tier__n">Early bird<span class="tier__tag">ON NOW</span></p><p class="tier__d">Only until 9th October! Limited spots</p></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">20% OFF</span></p><p class="tier__p">€8</p></div></div>
+        <a class="tier now" id="tierEarly" href="#join" data-early><div><p class="tier__n">Early bird<span class="tier__tag">ON NOW</span></p><p class="tier__d">Only until 9th October! Limited spots</p><span class="tier__go" id="earlyGo" hidden>Tap to switch back →</span></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">20% OFF</span></p><p class="tier__p">€8</p></div></a>
         <a class="tier first" id="tierFirst" href="#join" data-prereg><div><p class="tier__n">First release<span class="tier__tag" hidden>YOURS</span></p><p class="tier__d">Only for people who pre-registered</p><span class="tier__go">Pre-registered? Tap here →</span></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">30% OFF</span></p><p class="tier__p">€7</p></div></a>
       </div>
       <p class="tickets__note rv" style="--d:.15s">Normal tickets are <b>€10</b>. Early bird tickets are <b>20% off</b>, just <b>€8</b>, and <b>only until 9th October</b>. Our first release was <b>30% off</b> (<b>€7</b>) and was for everyone who pre-registered. If that's you, tap <b>“First release”</b> above to get it. Spots are limited and early bird ends when they're gone.</p>
@@ -1022,10 +1028,14 @@ function ticketHTML(d,withAgain){
       +'<p class="pass__msg">Can’t wait to see you all dressed up in your cultural clothes! Show this page at the door.</p>'
       +where+note+again+'</div>';
   }
+  var amount=d.price||(d.tier==='prereg'?PRICE.prereg:PRICE.early);
+  var payBox='<div class="paycheck"><p class="paycheck__h">Haven’t sent the payment yet?</p>'
+    +'<p class="paycheck__t">Send <b>€'+amount+'</b> to <a class="tag" href="https://revolut.me/siddiquico" target="_blank" rel="noopener">@siddiquico</a> and put <b>'+code+'</b> as the reference note.</p>'
+    +'<a class="revopen" href="https://revolut.me/siddiquico" target="_blank" rel="noopener">Open in Revolut</a></div>';
   return '<div class="pass wait"><span class="pass__stamp">BEING ISSUED</span><p class="pass__big">Not much longer now!</p>'
     +'<p class="pass__name">'+name+'</p><p class="pass__ref">Your reference</p><p class="pass__code">'+code+'</p>'
     +'<p class="pass__msg">Sorry for the wait. We check every payment by hand, so it can take a little while. Your ticket is being issued soon and we’ll email you to come back here once it’s confirmed. You can also check any time yourself with <b>“Already got a ticket?”</b> and your email.</p>'
-    +note+help+again+'</div>';
+    +payBox+note+help+again+'</div>';
 }
 
 /* ---------- the form ---------- */
@@ -1052,6 +1062,8 @@ function updatePriceLine(){
   $('#tierFirst').classList.toggle('now',preMode);
   $('#tierEarly .tier__tag').hidden=preMode;
   $('#tierFirst .tier__tag').hidden=!preMode;
+  $('#earlyGo').hidden=!preMode;
+  $('#tierFirst .tier__go').hidden=preMode;
   $('#plOld').textContent='€10';
   $('#plSub').textContent=preMode?'For pre-registered people. We check your email when you tap Pay.':'Early bird tickets are only until 9th October! Limited spots.';
   $('#pregBtn').setAttribute('aria-pressed',preMode?'true':'false');
@@ -1061,6 +1073,9 @@ function updatePriceLine(){
 function setPre(on){preMode=on;$('#pregFail').hidden=true;updatePriceLine()}
 $('#pregBtn').addEventListener('click',function(){setPre(!preMode)});
 $('#pregSkip').addEventListener('click',function(){setPre(false);form.requestSubmit?form.requestSubmit():send.click()});
+document.querySelectorAll('[data-early]').forEach(function(a){
+  a.addEventListener('click',function(){if(!form.hidden)setPre(false)});
+});
 document.querySelectorAll('[data-prereg]').forEach(function(a){
   a.addEventListener('click',function(){
     if(!form.hidden)setPre(true);
