@@ -246,7 +246,7 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
     <button class="ghost" id="msgCancel" type="button">Cancel</button>
     <button class="ghost" id="msgClear" type="button">Clear message</button>
     <button class="ghost" id="msgSave" type="button">Save</button>
-    <button class="primary" id="msgEmail" type="button">Save &amp; email (Gmail)</button>
+    <button class="primary" id="msgEmail" type="button">Save &amp; email (Outlook)</button>
   </div>
 </dialog>
 <div class="toasts" id="toasts" aria-live="polite"></div>
@@ -406,7 +406,8 @@ async function update(code, action, extra = {}) {
   return true;
 }
 
-const gmailUrl = (t, sub, body) => 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(t.email) + '&su=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
+// Opens a ready-to-send draft in Outlook on the web (Hotmail / Outlook.com account).
+const gmailUrl = (t, sub, body) => 'https://outlook.live.com/mail/0/deeplink/compose?to=' + encodeURIComponent(t.email) + '&subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
 const ticketPage = () => location.origin + '/#ticket';
 
 // "Your ticket is ready" email: sends them to the Already-got-a-ticket box on the site.
@@ -550,7 +551,7 @@ $('#list').onclick = async e => {
   } else if (b.dataset.do === 'mail') {
     window.open(gmail(t), '_blank', 'noopener');
     if (t.status !== 'emailed') await update(code, 'mark_emailed');
-    toast('Gmail opened — press Send there');
+    toast('Outlook opened — press Send there');
   } else if (b.dataset.do === 'del') {
     if (confirm(`Permanently delete ${code} (${t.name})?\nThis also frees up ${t.email} so it can be used to register again.\nThis cannot be undone.`)) {
       const r = await api('/api/admin/tickets/' + encodeURIComponent(code), { method: 'DELETE' });
