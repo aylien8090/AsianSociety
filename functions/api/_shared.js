@@ -13,7 +13,7 @@ let schemaReady;
 export function ensureSchema(env) {
   schemaReady ||= (async () => {
     const db = env.TICKETS_DB;
-    for (const column of ["phone TEXT", "tier TEXT", "used_at TEXT", "note TEXT", "vegan TEXT"]) {
+    for (const column of ["phone TEXT", "tier TEXT", "used_at TEXT", "note TEXT", "vegan TEXT", "pay_method TEXT"]) {
       try { await db.prepare("ALTER TABLE tickets ADD COLUMN " + column).run(); }
       catch (error) { if (!/duplicate column/i.test(String(error.message))) throw error; /* already added */ }
     }

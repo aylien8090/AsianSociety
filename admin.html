@@ -65,6 +65,7 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--gold);outl
 .money__split{color:var(--muted);font-size:13px;margin-left:6px}
 .badge.used{background:rgba(217,184,255,.18);color:#d9b8ff}
 .ticket.used{border-left-color:#b48ce6;opacity:.8}
+.tag.cash{background:rgba(242,195,107,.22);color:var(--amber);font-weight:700}
 .tag.tier.team{background:rgba(217,184,255,.2);color:#d9b8ff}
 .dlg-field{display:grid;gap:4px;margin-top:10px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .dlg-field input,.dlg-field select{width:100%;text-transform:none;letter-spacing:0;font-size:15px;color:var(--cream)}
@@ -317,6 +318,7 @@ function render() {
   const pending = by('pending'), paid = by('paid'), sent = by('emailed');
   const confirmed = live.filter(t => t.status === 'paid' || t.status === 'emailed');
   const used = confirmed.filter(t => t.used_at);
+  const cashDue = pending.filter(t => t.pay_method === 'cash');
   const nPre = confirmed.filter(t => tierOf(t) === 'prereg').length, nTeam = confirmed.filter(t => tierOf(t) === 'team').length, nEarly = confirmed.length - nPre - nTeam;
 
   $('#nTotal').textContent = live.length;
@@ -333,17 +335,17 @@ function render() {
   bars($('#years'), confirmed.map(t => t.year));
   bars($('#tiers'), confirmed.map(t => TIER_LABEL[tierOf(t)]));
 
-  const tabs = [['all', 'All', live.length], ['pending', 'Pending', pending.length], ['paid', 'Paid', paid.length], ['emailed', 'Sent', sent.length], ['used', 'Checked in', used.length]];
+  const tabs = [['all', 'All', live.length], ['pending', 'Pending', pending.length], ['cash', '💵 Cash to collect', cashDue.length], ['paid', 'Paid', paid.length], ['emailed', 'Sent', sent.length], ['used', 'Checked in', used.length]];
   $('#tabs').innerHTML = tabs.map(([k, l, n]) => `<button class="tab ${filter === k ? 'on' : ''}" data-tab="${k}">${l}<b>${n}</b></button>`).join('');
 
   const q = query.trim().toLowerCase();
-  const pool = filter === 'draft' ? drafts : filter === 'used' ? used : filter === 'all' ? live : live.filter(t => t.status === filter);
+  const pool = filter === 'draft' ? drafts : filter === 'used' ? used : filter === 'cash' ? cashDue : filter === 'all' ? live : live.filter(t => t.status === filter);
   const shown = pool.filter(t => !q || [t.code, t.name, t.email, t.phone].some(x => (x || '').toLowerCase().includes(q)));
 
   $('#list').innerHTML = shown.length ? shown.map(t => {
     const c = esc(t.code), isConfirmed = t.status === 'paid' || t.status === 'emailed';
     let main = '';
-    if (t.status === 'pending' || t.status === 'draft') main += `<button class="go pay" data-code="${c}" data-do="pay">✓ Mark paid</button>`;
+    if (t.status === 'pending' || t.status === 'draft') main += `<button class="go pay" data-code="${c}" data-do="pay">${t.pay_method === 'cash' ? '💵 Cash received' : '✓ Mark paid'}</button>`;
     if (isConfirmed) main += t.used_at
       ? `<button class="mini" data-code="${c}" data-do="unuse">Undo check-in</button>`
       : `<button class="go door" data-code="${c}" data-do="use">✓ Check in</button>`;
@@ -356,11 +358,12 @@ function render() {
       <div class="who">
         <strong>${esc(t.name)}</strong> <span class="badge ${t.status}">${STATUS_LABEL[t.status] || esc(t.status)}</span>${t.used_at ? ' <span class="badge used">Checked in</span>' : ''}
         <div class="mail">${esc(t.email)}</div>
-        <div class="meta"><span class="tag tier ${tierOf(t) === 'prereg' ? 'pre' : tierOf(t) === 'team' ? 'team' : ''}">${TIER_LABEL[tierOf(t)]}</span><span class="tag">${esc(t.year)}</span><span class="tag">${esc(t.background)}</span>${t.vegan === 'yes' ? '<span class="tag vegan">🌱 Vegan food</span>' : ''}${phone}<span class="tag">${ago(t.created_at)}</span></div>
+        <div class="meta"><span class="tag tier ${tierOf(t) === 'prereg' ? 'pre' : tierOf(t) === 'team' ? 'team' : ''}">${TIER_LABEL[tierOf(t)]}</span><span class="tag">${esc(t.year)}</span><span class="tag">${esc(t.background)}</span>${t.pay_method === 'cash' ? '<span class="tag cash">💵 Cash</span>' : ''}${t.vegan === 'yes' ? '<span class="tag vegan">🌱 Vegan food</span>' : ''}${phone}<span class="tag">${ago(t.created_at)}</span></div>
       </div>
       <div class="act"><div class="btns">${main}</div>
         <div class="btns">
           <button class="mini" data-code="${c}" data-do="msg">Message${t.note ? '<i class="note-dot"></i>' : ''}</button>
+          <select class="mini-sel" data-kind="pay" data-code="${c}" aria-label="Payment method"><option value="">Payment…</option><option value="revolut">→ Revolut</option><option value="cash">→ Cash (pay at door)</option></select>
           <select class="mini-sel" data-kind="tier" data-code="${c}" aria-label="Ticket type"><option value="">Ticket type…</option><option value="early">Early bird €8</option><option value="prereg">Pre-reg €7</option><option value="team">Team member (free)</option></select>
           <select class="mini-sel" data-code="${c}" aria-label="Change status"><option value="">Change…</option><option value="pending">→ Pending</option><option value="paid">→ Paid</option><option value="emailed">→ Sent</option></select>
           <button class="mini del" data-code="${c}" data-do="del">Delete</button>
@@ -471,8 +474,8 @@ $('#search').oninput = e => { query = e.target.value; render(); };
 $('#tabs').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) { filter = b.dataset.tab; render(); } };
 $('#csvBtn').onclick = () => {
   const cell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
-  const head = ['code', 'name', 'email', 'phone', 'year', 'background', 'vegan_only', 'release', 'status', 'checked_in', 'registered'];
-  const csv = [head.join(',')].concat(tickets.map(t => [t.code, t.name, t.email, t.phone, t.year, t.background, t.vegan, TIER_LABEL[tierOf(t)], t.status, t.used_at ? 'yes' : '', t.created_at].map(cell).join(','))).join('\n');
+  const head = ['code', 'name', 'email', 'phone', 'year', 'background', 'vegan_only', 'release', 'payment', 'status', 'checked_in', 'registered'];
+  const csv = [head.join(',')].concat(tickets.map(t => [t.code, t.name, t.email, t.phone, t.year, t.background, t.vegan, TIER_LABEL[tierOf(t)], t.pay_method === 'cash' ? 'cash' : 'revolut', t.status, t.used_at ? 'yes' : '', t.created_at].map(cell).join(','))).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
   a.download = 'asian-society-attendees.csv'; a.click();
@@ -562,7 +565,8 @@ $('#list').onchange = e => {
   const s = e.target.closest('.mini-sel');
   if (!s || !s.value) return;
   const v = s.value; s.value = '';
-  if (s.dataset.kind === 'tier') update(s.dataset.code, 'set_tier', { tier: v }).then(ok => ok && toast(v === 'team' ? 'Marked as team member: free ticket' : 'Ticket type changed'));
+  if (s.dataset.kind === 'pay') update(s.dataset.code, 'set_pay', { method: v }).then(ok => ok && toast(v === 'cash' ? 'Marked as cash. It stays unpaid until you press "Cash received".' : 'Switched back to Revolut'));
+  else if (s.dataset.kind === 'tier') update(s.dataset.code, 'set_tier', { tier: v }).then(ok => ok && toast(v === 'team' ? 'Marked as team member: free ticket' : 'Ticket type changed'));
   else update(s.dataset.code, 'set_status', { status: v });
 };
 

@@ -16,6 +16,16 @@ export async function onRequestPatch({ request, env, params }) {
     await env.TICKETS_DB.prepare("UPDATE tickets SET status = 'emailed', emailed_at = CURRENT_TIMESTAMP WHERE code = ?").bind(params.code).run();
     return json({ ok: true });
   }
+  if (body.action === "set_pay") {
+    // Switch how someone is paying. Cash stays unpaid until you press "Mark paid".
+    if (body.method === "cash") {
+      await env.TICKETS_DB.prepare("UPDATE tickets SET pay_method = 'cash' WHERE code = ?").bind(params.code).run();
+      if (ticket.status === "draft") await env.TICKETS_DB.prepare("UPDATE tickets SET status = 'pending' WHERE code = ?").bind(params.code).run();
+    } else if (body.method === "revolut") {
+      await env.TICKETS_DB.prepare("UPDATE tickets SET pay_method = '' WHERE code = ?").bind(params.code).run();
+    } else return json({ error: "Invalid payment method" }, 400);
+    return json({ ok: true });
+  }
   if (body.action === "set_tier") {
     const tier = String(body.tier || "");
     if (!["early", "prereg", "team"].includes(tier)) return json({ error: "Invalid ticket type" }, 400);

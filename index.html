@@ -337,6 +337,7 @@ a.tag:hover{border-style:solid}
 .cashline{margin-top:16px;font:700 16px 'Karla';color:#574833;text-align:center}
 .cashline a{display:inline-block;margin-left:4px;padding:6px 14px;border-radius:99px;background:#e8f6ec;border:1.5px solid #6bbf8a;color:#1a6b3a;font-weight:800;text-decoration:none}
 .cashline a:hover{background:#d3efdc}
+.cashline__note{margin-top:6px;font-size:12.5px;text-align:center;color:#8a744e}
 
 /* ticket states (waiting / confirmed / used) */
 .pass{margin-top:6px;padding:20px 16px 18px;border-radius:16px;text-align:center;background:linear-gradient(180deg,#fffaf0,#fff1d6);border:2px solid #d8a24a;position:relative}
@@ -743,7 +744,8 @@ a.tag:hover{border-style:solid}
             <p class="err">Please choose Vegan or Not Vegan.</p>
           </div>
           <button class="send" type="submit" id="sendBtn">Pay</button>
-          <p class="cashline">Want to pay with cash? <a data-wa href="https://wa.me/359882093176?text=Hi%21%20I%27d%20like%20to%20pay%20for%20my%20Cultural%20Event%20ticket%20with%20cash." target="_blank" rel="noopener">Msg us</a></p>
+          <p class="cashline">Want to pay with cash? <a data-wa data-cash="form" href="https://wa.me/359882093176?text=Hi%21%20I%27d%20like%20to%20pay%20for%20my%20Cultural%20Event%20ticket%20with%20cash." target="_blank" rel="noopener">Msg us</a></p>
+          <p class="cashline__note">Fill in your details above first. Tapping this reserves your seat and opens WhatsApp.</p>
         </form>
 
         <div class="done" id="done" hidden>
@@ -796,7 +798,7 @@ a.tag:hover{border-style:solid}
               </li>
             </ol>
             <button class="send paidbtn" id="paidBtn" type="button">✓ Paid!</button>
-            <p class="cashline">Want to pay with cash? <a data-wa href="https://wa.me/359882093176?text=Hi%21%20I%27d%20like%20to%20pay%20for%20my%20Cultural%20Event%20ticket%20with%20cash." target="_blank" rel="noopener">Msg us</a></p>
+            <p class="cashline">Want to pay with cash? <a data-wa data-cash="pay" href="https://wa.me/359882093176?text=Hi%21%20I%27d%20like%20to%20pay%20for%20my%20Cultural%20Event%20ticket%20with%20cash." target="_blank" rel="noopener">Msg us</a></p>
           </div>
 
           <div id="stateBox" hidden></div>
@@ -1030,6 +1032,12 @@ function ticketHTML(d,withAgain){
       +where+note+again+'</div>';
   }
   var amount=d.price||(d.tier==='prereg'?PRICE.prereg:PRICE.early);
+  if(d.cash){
+    return '<div class="pass wait"><span class="pass__stamp">💵 CASH TICKET</span><p class="pass__big">Your seat is reserved!</p>'
+      +'<p class="pass__name">'+name+'</p><p class="pass__ref">Your reference</p><p class="pass__code">'+code+'</p>'
+      +'<p class="pass__msg"><b>Pay at the door:</b> bring <b>€'+amount+' in cash</b>. Your ticket will show as paid once we’ve received your cash.</p>'
+      +where+note+help+again+'</div>';
+  }
   var payBox='<div class="paycheck"><p class="paycheck__h">Haven’t sent the payment yet?</p>'
     +'<p class="paycheck__t">Send <b>€'+amount+'</b> to <a class="tag" href="https://revolut.me/siddiquico" target="_blank" rel="noopener">@siddiquico</a> and put <b>'+code+'</b> as the reference note.</p>'
     +'<a class="revopen" href="https://revolut.me/siddiquico" target="_blank" rel="noopener">Open in Revolut</a></div>';
@@ -1084,8 +1092,8 @@ document.querySelectorAll('[data-prereg]').forEach(function(a){
   });
 });
 
-form.addEventListener('submit',function(e){
-  e.preventDefault();
+/* reads + validates the form; returns the entry, or null (and shows what's wrong) */
+function readForm(){
   var email=$('#fEmail').value.trim();
   var name=$('#fName').value.trim();
   var year=$('#fYear').value;
@@ -1100,16 +1108,50 @@ form.addEventListener('submit',function(e){
   if(!EMAIL_RE.test(email)){$('#fEmailW').classList.add('bad');bad=bad||$('#fEmail');}
   if(name.length<2){$('#fNameW').classList.add('bad');bad=bad||$('#fName');}
   if(!vegan){$('#fVeganW').classList.add('bad');bad=bad||document.querySelector('input[name="vegan"]');}
-  if(bad){bad.focus();return;}
+  if(bad){bad.focus();return null}
+  return {email:email,name:name,year:year,background:background,phone:phone,vegan:vegan,prereg:preMode};
+}
 
+/* creates the (hidden, unpaid) ticket, then hands the result to onDone */
+function register(entry,onDone){
   send.classList.add('busy');
-  api('/api/register',{email:email,name:name,year:year,background:background,phone:phone,vegan:vegan,prereg:preMode}).then(function(res){
+  api('/api/register',entry).then(function(res){
     send.classList.remove('busy');
     if(res.status===404&&res.data.error==='not_prereg'){$('#pregFail').hidden=false;return}
     if(!res.ok){alert((res.data.error||'Could not create your ticket.')+' Please try again.');return}
-    var d=res.data;d.email=email;d.name=d.name||name;
-    present(d);
+    var d=res.data;d.email=entry.email;d.name=d.name||entry.name;
+    onDone(d);
   }).catch(function(){send.classList.remove('busy');alert('Could not reach the server. Please try again.')});
+}
+
+form.addEventListener('submit',function(e){
+  e.preventDefault();
+  var entry=readForm();
+  if(entry)register(entry,present);
+});
+
+/* ---------- pay with cash: opens WhatsApp AND sends a cash request to the organiser ---------- */
+function cashRequest(d){
+  api('/api/cash',{code:d.code,email:d.email}).then(function(res){
+    if(res.ok&&res.data.cash){d.status='pending';d.cash=true}
+    present(d);
+  }).catch(function(){present(d)});
+}
+document.addEventListener('click',function(e){
+  var a=e.target.closest('[data-cash]');
+  if(!a)return;
+  e.preventDefault();
+  if(a.dataset.cash==='form'){
+    var entry=readForm();
+    if(!entry)return; /* fill in your details first so the seat can be reserved */
+    window.open(a.href,'_blank','noopener');
+    register(entry,function(d){
+      if(d.status==='draft'||d.status==='pending')cashRequest(d);else present(d);
+    });
+  }else if(current){
+    window.open(a.href,'_blank','noopener');
+    cashRequest(current);
+  }
 });
 
 function present(d){

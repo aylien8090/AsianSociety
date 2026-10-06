@@ -7,8 +7,8 @@ export async function onRequestPost({ request, env }) {
   const email = String(body.email || "").trim().toLowerCase();
   if (!/^\S+@\S+\.\S+$/.test(email)) return json({ error: "Enter a valid email." }, 400);
   await ensureSchema(env);
-  const t = await env.TICKETS_DB.prepare("SELECT code, name, status, tier, used_at, note FROM tickets WHERE lower(email) = ? ORDER BY created_at DESC LIMIT 1").bind(email).first();
+  const t = await env.TICKETS_DB.prepare("SELECT code, name, status, tier, used_at, note, pay_method FROM tickets WHERE lower(email) = ? ORDER BY created_at DESC LIMIT 1").bind(email).first();
   if (!t) return json({ found: false });
   const tier = tierName(t.tier);
-  return json({ found: true, code: t.code, name: t.name, status: t.status, tier, price: PRICES[tier], used: !!t.used_at, note: t.note || "" });
+  return json({ found: true, code: t.code, name: t.name, status: t.status, tier, price: PRICES[tier], used: !!t.used_at, note: t.note || "", cash: t.pay_method === "cash" });
 }
