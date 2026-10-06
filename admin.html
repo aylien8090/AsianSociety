@@ -363,7 +363,7 @@ function render() {
       <div class="act"><div class="btns">${main}</div>
         <div class="btns">
           <button class="mini" data-code="${c}" data-do="msg">Message${t.note ? '<i class="note-dot"></i>' : ''}</button>
-          <select class="mini-sel" data-kind="pay" data-code="${c}" aria-label="Payment method"><option value="">Payment…</option><option value="revolut">→ Revolut</option><option value="cash">→ Cash (pay at door)</option></select>
+          <select class="mini-sel" data-kind="pay" data-code="${c}" aria-label="Payment method"><option value="">Payment…</option><option value="revolut">→ Revolut</option><option value="cash">→ Cash</option></select>
           <select class="mini-sel" data-kind="tier" data-code="${c}" aria-label="Ticket type"><option value="">Ticket type…</option><option value="early">Early bird €8</option><option value="prereg">Pre-reg €7</option><option value="team">Team member (free)</option></select>
           <select class="mini-sel" data-code="${c}" aria-label="Change status"><option value="">Change…</option><option value="pending">→ Pending</option><option value="paid">→ Paid</option><option value="emailed">→ Sent</option></select>
           <button class="mini del" data-code="${c}" data-do="del">Delete</button>
