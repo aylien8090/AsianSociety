@@ -255,9 +255,9 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
 const $ = s => document.querySelector(s);
 const password = $('#password');
 const STATUS_LABEL = { draft: 'Not paid yet', pending: 'Pending', paid: 'Paid', emailed: 'Sent' };
-const PRICES = { prereg: 7, early: 8, regular: 10, team: 0 };
-const TIER_LABEL = { prereg: 'Pre-reg €7', early: 'Early bird €8', regular: 'Regular €10', team: 'Team member (free)' };
-const tierOf = t => (t.tier === 'prereg' || t.tier === 'team' || t.tier === 'regular') ? t.tier : 'early';
+const PRICES = { prereg: 7, early: 8, regular: 10, team: 0, teamdisc: 6 };
+const TIER_LABEL = { prereg: 'Pre-reg €7', early: 'Early bird €8', regular: 'Regular €10', team: 'Team member (free)', teamdisc: 'Team price €6' };
+const tierOf = t => ['prereg', 'team', 'teamdisc', 'regular'].includes(t.tier) ? t.tier : 'early';
 let msgCode = null;
 let tickets = [], known = new Set(), firstLoad = true, audio, soundOn = true, filter = 'all', query = '', freshCodes = new Set();
 
@@ -320,7 +320,7 @@ function render() {
   const used = confirmed.filter(t => t.used_at);
   const cashDue = pending.filter(t => t.pay_method === 'cash');
   const count = k => confirmed.filter(t => tierOf(t) === k).length;
-  const nPre = count('prereg'), nTeam = count('team'), nRegular = count('regular'), nEarly = count('early');
+  const nPre = count('prereg'), nTeam = count('team'), nTeamDisc = count('teamdisc'), nRegular = count('regular'), nEarly = count('early');
 
   $('#nTotal').textContent = live.length;
   $('#nPending').textContent = pending.length;
@@ -329,9 +329,9 @@ function render() {
   $('#nUsed').textContent = used.length;
   $('#nUsedOf').textContent = `of ${confirmed.length} confirmed`;
   $('#nConfirmed').textContent = confirmed.length;
-  $('#revenue').textContent = '€' + (nPre * PRICES.prereg + nEarly * PRICES.early + nRegular * PRICES.regular + nTeam * PRICES.team);
+  $('#revenue').textContent = '€' + (nPre * PRICES.prereg + nEarly * PRICES.early + nRegular * PRICES.regular + nTeamDisc * PRICES.teamdisc + nTeam * PRICES.team);
   const nVegan = confirmed.filter(t => t.vegan === 'yes').length;
-  $('#moneySplit').textContent = confirmed.length ? `(${nEarly} × €${PRICES.early} + ${nPre} × €${PRICES.prereg}${nRegular ? ` + ${nRegular} × €${PRICES.regular}` : ''}${nTeam ? ` + ${nTeam} team free` : ''}) · 🌱 ${nVegan} vegan food` : '';
+  $('#moneySplit').textContent = confirmed.length ? `(${nEarly} × €${PRICES.early} + ${nPre} × €${PRICES.prereg}${nRegular ? ` + ${nRegular} × €${PRICES.regular}` : ''}${nTeamDisc ? ` + ${nTeamDisc} × €${PRICES.teamdisc} team` : ''}${nTeam ? ` + ${nTeam} team free` : ''}) · 🌱 ${nVegan} vegan food` : '';
   $('#summary').textContent = `Updated ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · checks every 15s`;
   bars($('#years'), confirmed.map(t => t.year));
   bars($('#tiers'), confirmed.map(t => TIER_LABEL[tierOf(t)]));
@@ -359,13 +359,13 @@ function render() {
       <div class="who">
         <strong>${esc(t.name)}</strong> <span class="badge ${t.status}">${STATUS_LABEL[t.status] || esc(t.status)}</span>${t.used_at ? ' <span class="badge used">Checked in</span>' : ''}
         <div class="mail">${esc(t.email)}</div>
-        <div class="meta"><span class="tag tier ${tierOf(t) === 'prereg' ? 'pre' : tierOf(t) === 'team' ? 'team' : ''}">${TIER_LABEL[tierOf(t)]}</span><span class="tag">${esc(t.year)}</span><span class="tag">${esc(t.background)}</span>${t.pay_method === 'cash' ? '<span class="tag cash">💵 Cash</span>' : ''}${t.vegan === 'yes' ? '<span class="tag vegan">🌱 Vegan food</span>' : ''}${phone}<span class="tag">${ago(t.created_at)}</span></div>
+        <div class="meta"><span class="tag tier ${tierOf(t) === 'prereg' ? 'pre' : (tierOf(t) === 'team' || tierOf(t) === 'teamdisc') ? 'team' : ''}">${TIER_LABEL[tierOf(t)]}</span><span class="tag">${esc(t.year)}</span><span class="tag">${esc(t.background)}</span>${t.pay_method === 'cash' ? '<span class="tag cash">💵 Cash</span>' : ''}${t.vegan === 'yes' ? '<span class="tag vegan">🌱 Vegan food</span>' : ''}${phone}<span class="tag">${ago(t.created_at)}</span></div>
       </div>
       <div class="act"><div class="btns">${main}</div>
         <div class="btns">
           <button class="mini" data-code="${c}" data-do="msg">Message${t.note ? '<i class="note-dot"></i>' : ''}</button>
           <select class="mini-sel" data-kind="pay" data-code="${c}" aria-label="Payment method"><option value="">Payment…</option><option value="revolut">→ Revolut</option><option value="cash">→ Cash</option></select>
-          <select class="mini-sel" data-kind="tier" data-code="${c}" aria-label="Ticket type"><option value="">Ticket type…</option><option value="early">Early bird €8</option><option value="prereg">Pre-reg €7</option><option value="regular">Regular €10</option><option value="team">Team member (free)</option></select>
+          <select class="mini-sel" data-kind="tier" data-code="${c}" aria-label="Ticket type"><option value="">Ticket type…</option><option value="early">Early bird €8</option><option value="prereg">Pre-reg €7</option><option value="regular">Regular €10</option><option value="teamdisc">Team price €6</option><option value="team">Team member (free)</option></select>
           <select class="mini-sel" data-code="${c}" aria-label="Change status"><option value="">Change…</option><option value="pending">→ Pending</option><option value="paid">→ Paid</option><option value="emailed">→ Sent</option></select>
           <button class="mini del" data-code="${c}" data-do="del">Delete</button>
         </div>
@@ -579,7 +579,7 @@ $('#list').onchange = e => {
   if (!s || !s.value) return;
   const v = s.value; s.value = '';
   if (s.dataset.kind === 'pay') update(s.dataset.code, 'set_pay', { method: v }).then(ok => ok && toast(v === 'cash' ? 'Marked as cash. It stays unpaid until you press "Cash received".' : 'Switched back to Revolut'));
-  else if (s.dataset.kind === 'tier') update(s.dataset.code, 'set_tier', { tier: v }).then(ok => ok && toast(v === 'team' ? 'Marked as team member: free ticket' : 'Ticket type changed'));
+  else if (s.dataset.kind === 'tier') update(s.dataset.code, 'set_tier', { tier: v }).then(ok => ok && toast(v === 'team' ? 'Marked as team member: free ticket' : v === 'teamdisc' ? 'Team price set: €6, they still pay it' : 'Ticket type changed'));
   else update(s.dataset.code, 'set_status', { status: v });
 };
 

@@ -1193,6 +1193,7 @@ function present(d){
     var tn=$('#tierNote');
     if(d.tier==='prereg'){tn.textContent='Pre-registered: 30% off the normal €10';tn.className='step__sub tiernote';tn.hidden=false}
     else if(d.tier==='early'){tn.textContent='Early bird: 20% off the normal €10';tn.className='step__sub';tn.hidden=false}
+    else if(d.tier==='teamdisc'){tn.textContent='Team member price';tn.className='step__sub tiernote';tn.hidden=false}
     else{tn.hidden=true}
     $('#ticketCode').textContent=d.code;
     resetCopy();
