@@ -240,13 +240,13 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
 </dialog>
 <dialog id="msgDlg">
   <h3 id="msgTitle">Message</h3>
-  <p class="hint">This shows on their ticket page when they check with their email. You can also email it to them.</p>
+  <p class="hint">This shows on their ticket page when they check with their email. You can also copy it to send on WhatsApp or anywhere.</p>
   <textarea id="msgText" maxlength="1000" placeholder="e.g. We couldn't find your payment yet. Please message us on WhatsApp."></textarea>
   <div class="dlg-btns">
     <button class="ghost" id="msgCancel" type="button">Cancel</button>
     <button class="ghost" id="msgClear" type="button">Clear message</button>
     <button class="ghost" id="msgSave" type="button">Save</button>
-    <button class="primary" id="msgEmail" type="button">Save &amp; email (Outlook)</button>
+    <button class="primary" id="msgEmail" type="button">Save &amp; copy message</button>
   </div>
 </dialog>
 <div class="toasts" id="toasts" aria-live="polite"></div>
@@ -350,8 +350,8 @@ function render() {
     if (isConfirmed) main += t.used_at
       ? `<button class="mini" data-code="${c}" data-do="unuse">Undo check-in</button>`
       : `<button class="go door" data-code="${c}" data-do="use">✓ Check in</button>`;
-    if (t.status === 'paid') main += `<button class="go mail" data-code="${c}" data-do="mail">✉ Email ticket</button>`;
-    if (t.status === 'emailed') main += `<button class="mini" data-code="${c}" data-do="mail">✉ Email again</button>`;
+    if (t.status === 'paid') main += `<button class="go mail" data-code="${c}" data-do="mail">📋 Copy ticket message</button>`;
+    if (t.status === 'emailed') main += `<button class="mini" data-code="${c}" data-do="mail">📋 Copy again</button>`;
     const digits = String(t.phone || '').replace(/\D/g, '');
     const phone = digits ? `<span class="tag"><a href="https://wa.me/${digits}" target="_blank" rel="noopener">📱 ${esc(t.phone)}</a></span>` : '';
     return `<article class="ticket ${t.status} ${t.used_at ? 'used' : ''} ${freshCodes.has(t.code) ? 'fresh' : ''}">
@@ -407,18 +407,26 @@ async function update(code, action, extra = {}) {
   return true;
 }
 
-// Opens a ready-to-send draft in Outlook on the web (Hotmail / Outlook.com account).
-const gmailUrl = (t, sub, body) => 'https://outlook.live.com/mail/0/deeplink/compose?to=' + encodeURIComponent(t.email) + '&subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
 const ticketPage = () => location.origin + '/#ticket';
 
-// "Your ticket is ready" email: sends them to the Already-got-a-ticket box on the site.
-function gmail(t) {
-  const body = 'Hi ' + t.name + ',\n\nGood news: your payment is confirmed and your ticket is ready!\n\nView your ticket here:\n' + ticketPage() + '\n(Type in this email address when asked: ' + t.email + ')\n\nCome dressed in your cultural clothes. We can\'t wait to see you!\n\nAsian Society';
-  return gmailUrl(t, 'Your Cultural Event ticket is ready', body);
+// Copies text to the clipboard so you can paste it into WhatsApp, Instagram, email, anywhere.
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {}
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove();
+  return ok;
 }
-function gmailMessage(t, note) {
-  const body = 'Hi ' + t.name + ',\n\n' + note + '\n\nYou can also see this on your ticket page:\n' + ticketPage() + '\n(Type in this email address when asked: ' + t.email + ')\n\nAsian Society';
-  return gmailUrl(t, 'About your Cultural Event ticket', body);
+
+// "Your ticket is ready" message: sends them to the Already-got-a-ticket box on the site.
+function readyMessage(t) {
+  return 'Hi ' + t.name + ',\n\nGood news: your payment is confirmed and your ticket is ready! 🎟️\n\nView your ticket here:\n' + ticketPage() + '\n(Type in the email you registered with: ' + t.email + ')\n\nCome dressed in your cultural clothes. We can\'t wait to see you!\n\nAsian Society';
+}
+function customMessage(t, note) {
+  return 'Hi ' + t.name + ',\n\n' + note + '\n\nYou can also see this on your ticket page:\n' + ticketPage() + '\n(Type in the email you registered with: ' + t.email + ')\n\nAsian Society';
 }
 
 /* message dialog */
@@ -440,8 +448,8 @@ $('#msgClear').onclick = async () => { $('#msgText').value = ''; if (await saveM
 $('#msgEmail').onclick = async () => {
   const note = $('#msgText').value.trim(), t = tickets.find(x => x.code === msgCode);
   if (!note) { toast('Write a message first.', true); return; }
-  window.open(gmailMessage(t, note), '_blank', 'noopener');
-  if (await saveMsg(note)) dlg.close();
+  const copied = await copyText(customMessage(t, note));
+  if (await saveMsg(note)) { dlg.close(); toast(copied ? 'Message saved and copied. Paste it into WhatsApp or anywhere.' : 'Message saved, but copying failed. Select the text and copy it yourself.', !copied); }
 };
 
 function logout() {
@@ -550,9 +558,12 @@ $('#list').onclick = async e => {
   } else if (b.dataset.do === 'unuse') {
     if (await update(code, 'unmark_used')) toast(`Check-in undone for ${t.name}`);
   } else if (b.dataset.do === 'mail') {
-    window.open(gmail(t), '_blank', 'noopener');
-    if (t.status !== 'emailed') await update(code, 'mark_emailed');
-    toast('Outlook opened — press Send there');
+    const copied = await copyText(readyMessage(t));
+    if (!copied) { toast('Could not copy. Try again.', true); }
+    else {
+      if (t.status !== 'emailed') await update(code, 'mark_emailed');
+      toast('Message copied. Paste it into WhatsApp or anywhere.');
+    }
   } else if (b.dataset.do === 'del') {
     if (confirm(`Permanently delete ${code} (${t.name})?\nThis also frees up ${t.email} so it can be used to register again.\nThis cannot be undone.`)) {
       const r = await api('/api/admin/tickets/' + encodeURIComponent(code), { method: 'DELETE' });
