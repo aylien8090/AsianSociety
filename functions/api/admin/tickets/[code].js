@@ -28,7 +28,7 @@ export async function onRequestPatch({ request, env, params }) {
   }
   if (body.action === "set_tier") {
     const tier = String(body.tier || "");
-    if (!["early", "prereg", "team"].includes(tier)) return json({ error: "Invalid ticket type" }, 400);
+    if (!["early", "prereg", "regular", "team"].includes(tier)) return json({ error: "Invalid ticket type" }, 400);
     await env.TICKETS_DB.prepare("UPDATE tickets SET tier = ? WHERE code = ?").bind(tier, params.code).run();
     // A free team ticket has nothing to pay, so it is confirmed straight away.
     if (tier === "team" && (ticket.status === "pending" || ticket.status === "draft")) {

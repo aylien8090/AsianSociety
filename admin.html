@@ -255,9 +255,9 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
 const $ = s => document.querySelector(s);
 const password = $('#password');
 const STATUS_LABEL = { draft: 'Not paid yet', pending: 'Pending', paid: 'Paid', emailed: 'Sent' };
-const PRICES = { prereg: 7, early: 8, team: 0 };
-const TIER_LABEL = { prereg: 'Pre-reg €7', early: 'Early bird €8', team: 'Team member (free)' };
-const tierOf = t => (t.tier === 'prereg' || t.tier === 'team') ? t.tier : 'early';
+const PRICES = { prereg: 7, early: 8, regular: 10, team: 0 };
+const TIER_LABEL = { prereg: 'Pre-reg €7', early: 'Early bird €8', regular: 'Regular €10', team: 'Team member (free)' };
+const tierOf = t => (t.tier === 'prereg' || t.tier === 'team' || t.tier === 'regular') ? t.tier : 'early';
 let msgCode = null;
 let tickets = [], known = new Set(), firstLoad = true, audio, soundOn = true, filter = 'all', query = '', freshCodes = new Set();
 
@@ -319,7 +319,8 @@ function render() {
   const confirmed = live.filter(t => t.status === 'paid' || t.status === 'emailed');
   const used = confirmed.filter(t => t.used_at);
   const cashDue = pending.filter(t => t.pay_method === 'cash');
-  const nPre = confirmed.filter(t => tierOf(t) === 'prereg').length, nTeam = confirmed.filter(t => tierOf(t) === 'team').length, nEarly = confirmed.length - nPre - nTeam;
+  const count = k => confirmed.filter(t => tierOf(t) === k).length;
+  const nPre = count('prereg'), nTeam = count('team'), nRegular = count('regular'), nEarly = count('early');
 
   $('#nTotal').textContent = live.length;
   $('#nPending').textContent = pending.length;
@@ -328,9 +329,9 @@ function render() {
   $('#nUsed').textContent = used.length;
   $('#nUsedOf').textContent = `of ${confirmed.length} confirmed`;
   $('#nConfirmed').textContent = confirmed.length;
-  $('#revenue').textContent = '€' + (nPre * PRICES.prereg + nEarly * PRICES.early + nTeam * PRICES.team);
+  $('#revenue').textContent = '€' + (nPre * PRICES.prereg + nEarly * PRICES.early + nRegular * PRICES.regular + nTeam * PRICES.team);
   const nVegan = confirmed.filter(t => t.vegan === 'yes').length;
-  $('#moneySplit').textContent = confirmed.length ? `(${nEarly} × €${PRICES.early} + ${nPre} × €${PRICES.prereg}${nTeam ? ` + ${nTeam} team free` : ''}) · 🌱 ${nVegan} vegan food` : '';
+  $('#moneySplit').textContent = confirmed.length ? `(${nEarly} × €${PRICES.early} + ${nPre} × €${PRICES.prereg}${nRegular ? ` + ${nRegular} × €${PRICES.regular}` : ''}${nTeam ? ` + ${nTeam} team free` : ''}) · 🌱 ${nVegan} vegan food` : '';
   $('#summary').textContent = `Updated ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · checks every 15s`;
   bars($('#years'), confirmed.map(t => t.year));
   bars($('#tiers'), confirmed.map(t => TIER_LABEL[tierOf(t)]));
@@ -364,7 +365,7 @@ function render() {
         <div class="btns">
           <button class="mini" data-code="${c}" data-do="msg">Message${t.note ? '<i class="note-dot"></i>' : ''}</button>
           <select class="mini-sel" data-kind="pay" data-code="${c}" aria-label="Payment method"><option value="">Payment…</option><option value="revolut">→ Revolut</option><option value="cash">→ Cash</option></select>
-          <select class="mini-sel" data-kind="tier" data-code="${c}" aria-label="Ticket type"><option value="">Ticket type…</option><option value="early">Early bird €8</option><option value="prereg">Pre-reg €7</option><option value="team">Team member (free)</option></select>
+          <select class="mini-sel" data-kind="tier" data-code="${c}" aria-label="Ticket type"><option value="">Ticket type…</option><option value="early">Early bird €8</option><option value="prereg">Pre-reg €7</option><option value="regular">Regular €10</option><option value="team">Team member (free)</option></select>
           <select class="mini-sel" data-code="${c}" aria-label="Change status"><option value="">Change…</option><option value="pending">→ Pending</option><option value="paid">→ Paid</option><option value="emailed">→ Sent</option></select>
           <button class="mini del" data-code="${c}" data-do="del">Delete</button>
         </div>

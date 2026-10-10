@@ -3,19 +3,20 @@
 <head>
 <script>if (location.hostname.endsWith('github.io')) location.replace('https://asiansociety.pages.dev' + location.pathname.replace(/^\/AsianSociety/, '') + location.search + location.hash);</script>
 <meta charset="UTF-8">
+<script>document.documentElement.className+=(Date.now()>new Date('2026-10-11T23:59:59+03:00').getTime()?' late':' early');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#141234">
 <title>Cultural Event — 17 October · Asian Society, Trakia University</title>
-<meta name="description" content="Cultural Night, 17 October in Stara Zagora. Dress up in your cultural clothes! Best dressed competition, prizes, games, food and snacks, free henna. Early bird tickets on sale now — limited spots.">
+<meta name="description" content="Cultural Night, 17 October in Stara Zagora. Dress up in your cultural clothes! Best dressed competition, prizes, games, food and snacks, free henna. Tickets on sale now — limited spots.">
 <meta property="og:title" content="Cultural Event — 17 October · Tickets on sale now">
-<meta property="og:description" content="Dress up in your cultural clothes! Early bird tickets are 20% off, only until 9th October. Limited spots.">
+<meta property="og:description" content="Dress up in your cultural clothes! Tickets on sale now. Limited spots.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://asiansociety.pages.dev/">
 <meta property="og:image" content="https://asiansociety.pages.dev/Images/linkpreview.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="630">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Cultural Event, 17 October, 6PM–10PM. Early bird tickets 20% off, only €8.">
+<meta property="og:image:alt" content="Cultural Event, 17 October, 6PM–10PM, Stara Zagora.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://asiansociety.pages.dev/Images/linkpreview.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%AE%3C/text%3E%3C/svg%3E">
@@ -32,6 +33,7 @@
   --paper:#f7ecd7; --ink:#2b2115;
 }
 [hidden]{display:none!important}
+.late [data-early-only],.early [data-late-only]{display:none!important}
 html{scroll-behavior:smooth}
 body{background:#0a0920;font-family:'Karla',sans-serif;color:var(--cream);
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
@@ -122,8 +124,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .dl{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:22px;padding:12px 26px 11px;
   border-radius:18px;background:linear-gradient(180deg,#d63a1c,#a82a12);color:#fff7ea;
   border:2px solid var(--gold-hi);box-shadow:0 10px 28px rgba(200,55,25,.45),0 0 0 4px rgba(255,207,126,.12)}
-.dl__top{font:800 12px 'Karla';letter-spacing:.2em}
-.dl__date{font:900 clamp(26px,8vw,36px)/1.05 'Fraunces',serif;letter-spacing:.02em;color:#fff}
+.dl__top{font:800 11.5px/1.35 'Karla';letter-spacing:.12em;text-align:center}
+.dl__date{font:900 clamp(24px,7.2vw,34px)/1.05 'Fraunces',serif;letter-spacing:.02em;color:#fff;text-align:center}
 .dl__left{font:800 12.5px 'Karla';letter-spacing:.08em;color:#ffe2a8}
 .dl + .cta{margin-top:18px}
 .cd:empty{display:none}
@@ -299,6 +301,7 @@ a.tier:hover,a.tier:focus-visible{transform:scale(1.02);border-color:var(--gold-
 .preg__btns{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px}
 .preg__btns .linkbtn{margin-top:0}
 
+.halal{text-transform:none;letter-spacing:0;font:700 12.5px 'Karla';color:#1a6b3a}
 /* yes / no pills */
 .yn{display:flex;gap:10px;margin-top:8px}
 .yn__opt{position:relative;flex:1;margin:0!important;cursor:pointer}
@@ -570,16 +573,17 @@ a.tag:hover{border-style:solid}
         </span>
       </a>
       <p class="chip up" style="--d:1.25s">TICKETS ON SALE NOW · LIMITED SPOTS</p>
-      <div class="dl pop" style="--d:1.3s">
-        <span class="dl__top">⏰ EARLY BIRD ENDS</span>
-        <span class="dl__date">9TH OCTOBER</span>
+      <div class="dl pop" style="--d:1.3s" data-early-only>
+        <span class="dl__top">⏰ EXTENDED FOR THE WEEKEND · LAST CHANCE</span>
+        <span class="dl__date">ENDS 11TH OCTOBER</span>
         <span class="dl__left cd"></span>
       </div>
       <a class="cta pop" style="--d:1.35s" href="#join">GET YOUR TICKETS NOW!
         <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l7 7 7-7"/></svg>
       </a>
-      <p class="fine up" style="--d:1.5s"><b>EARLY BIRD: 20% OFF</b> <s>€10</s> <b>€8</b><br>Spots are limited, so grab yours while they last.</p>
-      <p class="herolinks up" style="--d:1.6s"><a class="hlink" href="#ticket">Already got a ticket?</a><a class="hlink" href="#join" data-prereg>Pre-registered? 30% off</a></p>
+      <p class="fine up" style="--d:1.5s" data-early-only><b>EARLY BIRD: 20% OFF</b> <s>€10</s> <b>€8</b><br>Last chance! From the 12th tickets are €10. Spots are limited.</p>
+      <p class="fine up" style="--d:1.5s" data-late-only><b>TICKETS: €10</b><br>Spots are limited, so grab yours while they last.</p>
+      <p class="herolinks up" style="--d:1.6s"><a class="hlink" href="#ticket">Already got a ticket?</a><a class="hlink" href="#join" data-prereg data-early-only>Pre-registered? 30% off</a></p>
       <a class="cue fade" style="--d:1.7s" href="#onnight" aria-label="See what's on the night">
         <svg class="cue__i" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l8 8 8-8"/></svg>
       </a>
@@ -641,13 +645,17 @@ a.tag:hover{border-style:solid}
     <!-- ═══════════ TICKET PRICES ═══════════ -->
     <section class="tickets" id="prices">
       <h2 class="tickets__h rv">TICKETS</h2>
-      <div class="dlbar rv" style="--d:.05s"><b>⏰ Early bird ends 9th October!</b><span class="cd"></span></div>
-      <div class="tiers rv" style="--d:.1s">
+      <div class="dlbar rv" style="--d:.05s" data-early-only><b>⏰ Extended for the weekend! Last chance, ends 11th October</b><span class="cd"></span></div>
+      <div class="tiers rv" style="--d:.1s" data-late-only>
+        <div class="tier now"><div><p class="tier__n">Ticket</p><p class="tier__d">Limited spots</p></div><p class="tier__p">€10</p></div>
+      </div>
+      <div class="tiers rv" style="--d:.1s" data-early-only>
         <div class="tier old"><div><p class="tier__n">Normal price</p><p class="tier__d">What tickets cost after the early bird</p></div><p class="tier__p">€10</p></div>
-        <a class="tier now" id="tierEarly" href="#join" data-early><div><p class="tier__n">Early bird<span class="tier__tag">ON NOW</span></p><p class="tier__d">Only until 9th October! Limited spots</p><span class="tier__go" id="earlyGo" hidden>Tap to switch back →</span></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">20% OFF</span></p><p class="tier__p">€8</p></div></a>
+        <a class="tier now" id="tierEarly" href="#join" data-early><div><p class="tier__n">Early bird<span class="tier__tag">ON NOW</span></p><p class="tier__d">Extended for the weekend! Only until 11th October</p><span class="tier__go" id="earlyGo" hidden>Tap to switch back →</span></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">20% OFF</span></p><p class="tier__p">€8</p></div></a>
         <a class="tier first" id="tierFirst" href="#join" data-prereg><div><p class="tier__n">First release<span class="tier__tag" hidden>YOURS</span></p><p class="tier__d">Only for people who pre-registered</p><span class="tier__go">Pre-registered? Tap here →</span></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">30% OFF</span></p><p class="tier__p">€7</p></div></a>
       </div>
-      <p class="tickets__note rv" style="--d:.15s">Normal tickets are <b>€10</b>. Early bird tickets are <b>20% off</b>, just <b>€8</b>, and <b>only until 9th October</b>. Our first release was <b>30% off</b> (<b>€7</b>) and was for everyone who pre-registered. If that's you, tap <b>“First release”</b> above to get it. Spots are limited and early bird ends when they're gone.</p>
+      <p class="tickets__note rv" style="--d:.15s" data-early-only>Normal tickets are <b>€10</b>. Early bird tickets are <b>20% off</b>, just <b>€8</b>, and have been <b>extended for the weekend, ending Sunday 11th October</b>. Pre-registered? You get <b>30% off</b> (<b>€7</b>): tap <b>“First release”</b> above. After that, tickets are €10. Spots are limited.</p>
+      <p class="tickets__note rv" style="--d:.15s" data-late-only>Spots are limited, so grab your ticket while they last.</p>
     </section>
 
     <!-- ═══════════ GET A TICKET ═══════════ -->
@@ -671,14 +679,14 @@ a.tag:hover{border-style:solid}
         </div>
 
         <div id="formTop">
-          <div class="dlbar dlbar--card"><b>⏰ Early bird ends 9th October!</b><span class="cd"></span></div>
+          <div class="dlbar dlbar--card" data-early-only><b>⏰ Extended for the weekend! Ends 11th October</b><span class="cd"></span></div>
           <div class="priceline" id="priceLine">
             <span class="priceline__now" id="plNow">€8</span>
             <span class="priceline__txt"><b id="plLabel">Early bird</b> <s id="plOld">€10</s><br><span id="plSub">Early bird tickets are only until 9th October! Limited spots.</span></span>
           </div>
-          <button class="preg" id="pregBtn" type="button" aria-pressed="false">Already pre-registered? <u>Click here</u> to get your €7 ticket</button>
-          <p class="preg__note" id="pregNote" hidden>Enter the <b>same email you pre-registered with</b> below and we'll give you the €7 first-release price.</p>
-          <div class="preg__fail" id="pregFail" hidden>
+          <button class="preg" id="pregBtn" type="button" aria-pressed="false" data-early-only>Already pre-registered? <u>Click here</u> to get your €7 ticket</button>
+          <p class="preg__note" id="pregNote" hidden data-early-only>Enter the <b>same email you pre-registered with</b> below and we'll give you the €7 first-release price.</p>
+          <div class="preg__fail" id="pregFail" hidden data-early-only>
             <p>We couldn't find that email on the pre-registration list. Check for typos, or message us and we'll sort it.</p>
             <div class="preg__btns">
               <a class="wa-inline" data-wa href="https://wa.me/359882093176" target="_blank" rel="noopener">Message us on WhatsApp</a>
@@ -736,7 +744,7 @@ a.tag:hover{border-style:solid}
             <div class="ctl"><input id="fBackground" name="background" type="text" autocomplete="off" placeholder="e.g. Desi, Mideast, Türk, Bulgarian…"></div>
           </div>
           <div class="f" id="fVeganW">
-            <label>Opt for vegan food?<span class="req">*</span></label>
+            <label>Opt for vegan food? <span class="halal">(Non vegan is also halal)</span><span class="req">*</span></label>
             <div class="yn" role="radiogroup" aria-label="Opt for vegan food?">
               <label class="yn__opt"><input type="radio" name="vegan" value="yes"><span>🌱 Vegan</span></label>
               <label class="yn__opt"><input type="radio" name="vegan" value="no"><span>Not Vegan</span></label>
@@ -872,7 +880,14 @@ var $=function(s){return document.querySelector(s)};
 var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* Prices are decided by the server (functions/api/_shared.js); these are only used for display. */
-var PRICE={prereg:7,early:8};
+var PRICE={prereg:7,early:8,regular:10};
+
+/* Early bird / pre-registered prices end at the end of Sunday 11 Oct (Bulgarian time).
+   From 12 Oct the page shows ONLY the €10 ticket: every trace of the cheaper
+   options is removed from the page. (functions/api/_shared.js enforces the same date.) */
+var EARLY_END=new Date('2026-10-11T23:59:59+03:00').getTime();
+var LATE=Date.now()>EARLY_END;
+document.querySelectorAll(LATE?'[data-early-only]':'[data-late-only]').forEach(function(el){el.remove()});
 var WA_LINK='https://wa.me/359882093176';
 var MAPS_LINK='https://maps.app.goo.gl/PGVZ2q4MvKAYjRC27';
 
@@ -978,9 +993,9 @@ if(hs){
   });
 }
 
-/* ---------- early-bird countdown (ends end of 9 Oct, Bulgarian time) ---------- */
+/* ---------- early-bird countdown (ends end of 11 Oct, Bulgarian time) ---------- */
 (function(){
-  var END=new Date('2026-10-09T23:59:59+03:00').getTime();
+  var END=EARLY_END;
   function tick(){
     var ms=END-Date.now(),txt='';
     if(ms>0){
@@ -1058,12 +1073,20 @@ document.querySelectorAll('input[name="vegan"]').forEach(function(r){
 ['fEmail','fName'].forEach(function(id){
   document.getElementById(id).addEventListener('input',function(){
     this.closest('.f').classList.remove('bad');
-    $('#pregFail').hidden=true;
+    if($('#pregFail'))$('#pregFail').hidden=true;
   });
 });
 
 function updatePriceLine(){
   var pl=$('#priceLine');
+  if(LATE){
+    pl.classList.remove('pre');
+    $('#plNow').textContent='€'+PRICE.regular;
+    $('#plLabel').textContent='Ticket';
+    if($('#plOld'))$('#plOld').remove();
+    $('#plSub').textContent='Limited spots. Grab yours now.';
+    return;
+  }
   pl.classList.toggle('pre',preMode);
   $('#plNow').textContent='€'+(preMode?PRICE.prereg:PRICE.early);
   $('#plLabel').textContent=preMode?'First release · 30% OFF':'Early bird · 20% OFF';
@@ -1074,14 +1097,20 @@ function updatePriceLine(){
   $('#earlyGo').hidden=!preMode;
   $('#tierFirst .tier__go').hidden=preMode;
   $('#plOld').textContent='€10';
-  $('#plSub').textContent=preMode?'For pre-registered people. We check your email when you tap Pay.':'Early bird tickets are only until 9th October! Limited spots.';
+  $('#plSub').textContent=preMode?'For pre-registered people. We check your email when you tap Pay.':'Extended for the weekend! Ends 11th October. Limited spots.';
   $('#pregBtn').setAttribute('aria-pressed',preMode?'true':'false');
   $('#pregBtn').innerHTML=preMode?'Pre-registered: <u>30% off</u> applied. Tap to switch back':'Already pre-registered? <u>Click here</u> for 30% off (€7)';
   $('#pregNote').hidden=!preMode;
 }
-function setPre(on){preMode=on;$('#pregFail').hidden=true;updatePriceLine()}
-$('#pregBtn').addEventListener('click',function(){setPre(!preMode)});
-$('#pregSkip').addEventListener('click',function(){setPre(false);form.requestSubmit?form.requestSubmit():send.click()});
+function setPre(on){
+  if(LATE){preMode=false;return}
+  preMode=on;$('#pregFail').hidden=true;updatePriceLine();
+}
+if(!LATE){
+  $('#pregBtn').addEventListener('click',function(){setPre(!preMode)});
+  $('#pregSkip').addEventListener('click',function(){setPre(false);form.requestSubmit?form.requestSubmit():send.click()});
+}
+updatePriceLine();
 document.querySelectorAll('[data-early]').forEach(function(a){
   a.addEventListener('click',function(){if(!form.hidden)setPre(false)});
 });
@@ -1163,7 +1192,8 @@ function present(d){
     $('#ticketPrice').textContent='€'+d.price;
     var tn=$('#tierNote');
     if(d.tier==='prereg'){tn.textContent='Pre-registered: 30% off the normal €10';tn.className='step__sub tiernote';tn.hidden=false}
-    else{tn.textContent='Early bird: 20% off the normal €10';tn.className='step__sub';tn.hidden=false}
+    else if(d.tier==='early'){tn.textContent='Early bird: 20% off the normal €10';tn.className='step__sub';tn.hidden=false}
+    else{tn.hidden=true}
     $('#ticketCode').textContent=d.code;
     resetCopy();
     $('#payStep').hidden=false;$('#stateBox').hidden=true;

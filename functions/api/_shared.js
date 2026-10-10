@@ -5,8 +5,14 @@ export function json(data, status = 200, headers = {}) {
 }
 
 // Ticket prices in euros per release. "prereg" = first release (people who pre-registered), "early" = early bird.
-export const PRICES = { prereg: 7, early: 8, team: 0 };
-export const tierOf = tier => (tier === "prereg" || tier === "team") ? tier : "early";
+export const PRICES = { prereg: 7, early: 8, regular: 10, team: 0 };
+// Tickets with no tier (older registrations) count as early bird.
+export const tierOf = tier => (tier === "prereg" || tier === "team" || tier === "regular") ? tier : "early";
+
+// The pre-registered (€7) and early bird (€8) prices end at the end of Sunday 11 Oct, Bulgarian time.
+// After that every new ticket is the regular €10 one. (index.html uses the same moment to hide the old prices.)
+export const EARLY_BIRD_ENDS = Date.parse("2026-10-11T23:59:59+03:00");
+export const earlyBirdOn = () => Date.now() <= EARLY_BIRD_ENDS;
 
 // Adds the newer columns/tables on first use so no manual database step is needed.
 let schemaReady;
