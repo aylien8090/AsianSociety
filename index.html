@@ -686,7 +686,7 @@ a.tag:hover{border-style:solid}
       <div class="dlbar rv" style="--d:.05s" data-early-only><b>⏰ Extended for the weekend! Last chance, ends 11th October</b><span class="cd"></span></div>
       <div class="dlbar rv" style="--d:.05s" data-ten-only><b>⏰ €10 tickets end Thursday 15th at 2PM</b><span class="cd"></span></div>
       <div class="tiers rv" style="--d:.1s" data-ten-only>
-        <a class="tier now" href="#join"><div><p class="tier__n">Ticket<span class="tier__tag">ON NOW</span></p><p class="tier__d">Last chance at this price</p></div><p class="tier__p">€10</p></a>
+        <a class="tier now" href="#join"><div><p class="tier__n">Discount price<span class="tier__tag">ON NOW</span></p><p class="tier__d">Last chance at this price</p></div><div class="tier__r"><p class="tier__disc"><span class="tier__off">ONLY</span></p><p class="tier__p">€10</p></div></a>
         <div class="tier old"><div><p class="tier__n">From Thursday 2PM</p><p class="tier__d">Price goes up</p></div><p class="tier__p" style="text-decoration:none;opacity:.75">€15</p></div>
       </div>
       <div class="tiers rv" style="--d:.1s" data-fifteen-only>
@@ -1164,7 +1164,7 @@ function updatePriceLine(){
   if(LATE){
     pl.classList.remove('pre');
     $('#plNow').textContent='€'+(PHASE==='ten'?PRICE.regular:PRICE.late);
-    $('#plLabel').textContent=PHASE==='ten'?'Ticket · last chance at €10':'Ticket';
+    $('#plLabel').textContent=PHASE==='ten'?'Discount price · ONLY €10':'Ticket';
     if($('#plOld'))$('#plOld').remove();
     $('#plSub').textContent=PHASE==='ten'?'Goes up to €15 on Thursday at 2PM. Limited spots.':'The event is this Saturday. Limited spots.';
     return;
