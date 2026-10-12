@@ -1,4 +1,4 @@
-import { code, json, ensureSchema, PRICES, tierOf, earlyBirdOn } from "./_shared";
+import { code, json, ensureSchema, PRICES, tierOf, earlyBirdOn, tenEuroOn } from "./_shared";
 
 export async function onRequestPost({ request, env }) {
   let body;
@@ -18,7 +18,7 @@ export async function onRequestPost({ request, env }) {
   const vegan = body.vegan === "yes" ? "yes" : body.vegan === "no" ? "no" : "";
   if (!vegan) return json({ error: "Please choose Vegan or Not Vegan." }, 400);
 
-  let tier = earlyBirdOn() ? "early" : "regular";
+  let tier = earlyBirdOn() ? "early" : tenEuroOn() ? "regular" : "late";
   if (body.prereg && earlyBirdOn()) {
     const listed = await env.TICKETS_DB.prepare("SELECT 1 AS ok FROM prereg WHERE email = ?").bind(email).first();
     if (!listed) return json({ error: "not_prereg" }, 404);

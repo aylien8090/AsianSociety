@@ -3,7 +3,7 @@
 <head>
 <script>if (location.hostname.endsWith('github.io')) location.replace('https://asiansociety.pages.dev' + location.pathname.replace(/^\/AsianSociety/, '') + location.search + location.hash);</script>
 <meta charset="UTF-8">
-<script>document.documentElement.className+=(Date.now()>new Date('2026-10-11T23:59:59+03:00').getTime()?' late':' early');</script>
+<script>(function(){var n=Date.now(),p=n<=new Date('2026-10-11T23:59:59+03:00').getTime()?'early':n<=new Date('2026-10-15T14:00:00+03:00').getTime()?'ten':'fifteen';document.documentElement.className+=' '+p+(p==='early'?'':' late');})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#141234">
 <title>Cultural Event — 17 October · Asian Society, Trakia University</title>
@@ -12,13 +12,13 @@
 <meta property="og:description" content="Dress up in your cultural clothes! Tickets on sale now. Limited spots.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://asiansociety.pages.dev/">
-<meta property="og:image" content="https://asiansociety.pages.dev/Images/linkpreview.jpg">
+<meta property="og:image" content="https://asiansociety.pages.dev/Images/linkpreview-v3.jpg">
 <meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="630">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Cultural Event, 17 October, 6PM–10PM, Stara Zagora.">
+<meta property="og:image:width" content="800">
+<meta property="og:image:height" content="800">
+<meta property="og:image:alt" content="Your last chance to get tickets: by 2PM, 15th October. Trakia University Asian Society.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://asiansociety.pages.dev/Images/linkpreview.jpg">
+<meta name="twitter:image" content="https://asiansociety.pages.dev/Images/linkpreview-v3.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%AE%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +33,7 @@
   --paper:#f7ecd7; --ink:#2b2115;
 }
 [hidden]{display:none!important}
-.late [data-early-only],.early [data-late-only]{display:none!important}
+.late [data-early-only],.early [data-late-only],.early [data-ten-only],.early [data-fifteen-only],.ten [data-fifteen-only],.fifteen [data-ten-only]{display:none!important}
 html{scroll-behavior:smooth}
 body{background:#0a0920;font-family:'Karla',sans-serif;color:var(--cream);
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
@@ -135,6 +135,33 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .dlbar b{font:900 17px 'Karla'}
 .dlbar .cd{font:800 12.5px 'Karla';letter-spacing:.06em;color:#ffe2a8}
 .dlbar--card{margin-top:16px}
+
+/* urgency: top bar, event countdown, extra CTAs, sticky button */
+.topbar{position:sticky;top:0;z-index:150;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px 10px;
+  padding:9px 12px;background:linear-gradient(180deg,#d63a1c,#a82a12);color:#fff7ea;text-align:center;text-decoration:none;
+  font:700 13px/1.3 'Karla';box-shadow:0 4px 14px rgba(0,0,0,.35);border-bottom:1.5px solid var(--gold-hi)}
+.topbar b{font-weight:800}
+.topbar .cd{font-weight:800;color:#ffe2a8;background:rgba(0,0,0,.25);border-radius:99px;padding:2px 9px}
+.topbar u{font-weight:800;color:var(--gold-hi);text-underline-offset:3px}
+.topbar--sale{background:linear-gradient(180deg,#2c6b46,#1f4f33)}
+.evcount{margin-top:14px;font:800 15px 'Karla';letter-spacing:.06em;color:var(--gold-hi)}
+.ctarow{text-align:center;padding:6px 0 4px}
+.ctarow .cta{margin-top:22px}
+.ctarow__sub{margin-top:12px;font:800 13.5px 'Karla';color:var(--gold-soft)}
+.finalcta{padding:34px 22px 10px;text-align:center;border-top:1px solid rgba(216,162,74,.18)}
+.finalcta__t{font:900 28px 'Fraunces',serif;color:var(--gold-hi)}
+.finalcta__s{margin-top:8px;font-size:15px;color:var(--cream-dim)}
+.finalcta__s b{color:var(--gold-hi)}
+.finalcta .cta{margin-top:20px}
+@media(min-width:600px){.stickycta{left:calc(50% - 270px + 14px)!important}}
+.stickycta{position:fixed;left:14px;width:calc(100% - 98px);bottom:calc(14px + env(safe-area-inset-bottom));z-index:39;max-width:400px;
+  display:flex;align-items:center;justify-content:center;gap:8px;height:52px;padding:0 16px;border-radius:99px;
+  background:linear-gradient(180deg,var(--red-hi),var(--red));color:#fff7ea;text-decoration:none;
+  font:800 15px 'Karla';letter-spacing:.04em;box-shadow:0 8px 22px rgba(200,55,25,.5),inset 0 1px 0 rgba(255,255,255,.25);
+  animation:stickyPulse 2.6s ease-in-out infinite}
+.stickycta__p{font-weight:700;font-size:12.5px;color:#ffe2a8}
+@keyframes stickyPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@media(prefers-reduced-motion:reduce){.stickycta{animation:none}}
 .cue{margin-top:22px;color:rgba(233,200,135,.75)}
 .cue__i{width:20px;height:12px;animation:cueb 2.2s ease-in-out infinite}
 @keyframes cueb{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
@@ -453,6 +480,10 @@ a.tag:hover{border-style:solid}
 
 <div class="stage">
 
+  <!-- urgent bar that stays at the top while scrolling -->
+  <a class="topbar" href="#join" data-ten-only><b>⏰ €10 tickets end Thursday 2PM, then €15</b><span class="cd"></span><u>Get yours →</u></a>
+  <a class="topbar topbar--sale" href="#join" data-fifteen-only><b>🎟️ Tickets on sale · Event is this Saturday 17th</b><u>Get yours →</u></a>
+
   <!-- ═══════════ THE NIGHT SCENE ═══════════ -->
   <header class="hero" id="top">
     <div class="glow" aria-hidden="true"></div>
@@ -573,6 +604,12 @@ a.tag:hover{border-style:solid}
         </span>
       </a>
       <p class="chip up" style="--d:1.25s">TICKETS ON SALE NOW · LIMITED SPOTS</p>
+      <p class="evcount up" style="--d:1.28s" data-late-only><span class="ev"></span></p>
+      <div class="dl pop" style="--d:1.3s" data-ten-only>
+        <span class="dl__top">⏰ LAST CHANCE AT €10</span>
+        <span class="dl__date">ENDS THURSDAY 2PM</span>
+        <span class="dl__left cd"></span>
+      </div>
       <div class="dl pop" style="--d:1.3s" data-early-only>
         <span class="dl__top">⏰ EXTENDED FOR THE WEEKEND · LAST CHANCE</span>
         <span class="dl__date">ENDS 11TH OCTOBER</span>
@@ -582,7 +619,8 @@ a.tag:hover{border-style:solid}
         <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l7 7 7-7"/></svg>
       </a>
       <p class="fine up" style="--d:1.5s" data-early-only><b>EARLY BIRD: 20% OFF</b> <s>€10</s> <b>€8</b><br>Last chance! From the 12th tickets are €10. Spots are limited.</p>
-      <p class="fine up" style="--d:1.5s" data-late-only><b>TICKETS: €10</b><br>Spots are limited, so grab yours while they last.</p>
+      <p class="fine up" style="--d:1.5s" data-ten-only><b>TICKETS: €10</b>, then <b>€15</b> from Thursday 15th at 2PM.<br>Spots are limited. Don't leave it too late!</p>
+      <p class="fine up" style="--d:1.5s" data-fifteen-only><b>TICKETS: €15</b><br>The event is this Saturday. Spots are limited, so grab yours now.</p>
       <p class="herolinks up" style="--d:1.6s"><a class="hlink" href="#ticket">Already got a ticket?</a><a class="hlink" href="#join" data-prereg data-early-only>Pre-registered? 30% off</a></p>
       <a class="cue fade" style="--d:1.7s" href="#onnight" aria-label="See what's on the night">
         <svg class="cue__i" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l8 8 8-8"/></svg>
@@ -646,8 +684,13 @@ a.tag:hover{border-style:solid}
     <section class="tickets" id="prices">
       <h2 class="tickets__h rv">TICKETS</h2>
       <div class="dlbar rv" style="--d:.05s" data-early-only><b>⏰ Extended for the weekend! Last chance, ends 11th October</b><span class="cd"></span></div>
-      <div class="tiers rv" style="--d:.1s" data-late-only>
-        <div class="tier now"><div><p class="tier__n">Ticket</p><p class="tier__d">Limited spots</p></div><p class="tier__p">€10</p></div>
+      <div class="dlbar rv" style="--d:.05s" data-ten-only><b>⏰ €10 tickets end Thursday 15th at 2PM</b><span class="cd"></span></div>
+      <div class="tiers rv" style="--d:.1s" data-ten-only>
+        <a class="tier now" href="#join"><div><p class="tier__n">Ticket<span class="tier__tag">ON NOW</span></p><p class="tier__d">Last chance at this price</p></div><p class="tier__p">€10</p></a>
+        <div class="tier old"><div><p class="tier__n">From Thursday 2PM</p><p class="tier__d">Price goes up</p></div><p class="tier__p" style="text-decoration:none;opacity:.75">€15</p></div>
+      </div>
+      <div class="tiers rv" style="--d:.1s" data-fifteen-only>
+        <a class="tier now" href="#join"><div><p class="tier__n">Ticket<span class="tier__tag">ON SALE</span></p><p class="tier__d">Limited spots</p></div><p class="tier__p">€15</p></a>
       </div>
       <div class="tiers rv" style="--d:.1s" data-early-only>
         <div class="tier old"><div><p class="tier__n">Normal price</p><p class="tier__d">What tickets cost after the early bird</p></div><p class="tier__p">€10</p></div>
@@ -655,7 +698,8 @@ a.tag:hover{border-style:solid}
         <a class="tier first" id="tierFirst" href="#join" data-prereg><div><p class="tier__n">First release<span class="tier__tag" hidden>YOURS</span></p><p class="tier__d">Only for people who pre-registered</p><span class="tier__go">Pre-registered? Tap here →</span></div><div class="tier__r"><p class="tier__disc"><s>€10</s><span class="tier__off">30% OFF</span></p><p class="tier__p">€7</p></div></a>
       </div>
       <p class="tickets__note rv" style="--d:.15s" data-early-only>Normal tickets are <b>€10</b>. Early bird tickets are <b>20% off</b>, just <b>€8</b>, and have been <b>extended for the weekend, ending Sunday 11th October</b>. Pre-registered? You get <b>30% off</b> (<b>€7</b>): tap <b>“First release”</b> above. After that, tickets are €10. Spots are limited.</p>
-      <p class="tickets__note rv" style="--d:.15s" data-late-only>Spots are limited, so grab your ticket while they last.</p>
+      <p class="tickets__note rv" style="--d:.15s" data-ten-only>This is your <b>last chance to get a ticket for €10</b>. From <b>Thursday 15th at 2PM</b> tickets are <b>€15</b>. Spots are limited, so don't wait.</p>
+      <p class="tickets__note rv" style="--d:.15s" data-fifteen-only>The event is this Saturday and spots are limited, so grab your ticket while they last.</p>
     </section>
 
     <!-- ═══════════ GET A TICKET ═══════════ -->
@@ -679,6 +723,7 @@ a.tag:hover{border-style:solid}
         </div>
 
         <div id="formTop">
+          <div class="dlbar dlbar--card" data-ten-only><b>⏰ €10 ends Thursday 2PM. Then €15</b><span class="cd"></span></div>
           <div class="dlbar dlbar--card" data-early-only><b>⏰ Extended for the weekend! Ends 11th October</b><span class="cd"></span></div>
           <div class="priceline" id="priceLine">
             <span class="priceline__now" id="plNow">€8</span>
@@ -867,6 +912,7 @@ a.tag:hover{border-style:solid}
       <p class="foot__c"><a href="https://maps.app.goo.gl/PGVZ2q4MvKAYjRC27" target="_blank" rel="noopener">International Youth Center, bul. “Tsar Simeon Veliki” 55 · Open in Maps</a></p>
     </footer>
   </main>
+  <a class="stickycta" id="stickyCta" href="#join" data-late-only hidden>🎟️ Get my ticket <span class="stickycta__p"></span></a>
   <a class="wa-float" data-wa href="https://wa.me/359882093176" target="_blank" rel="noopener" aria-label="Questions? Message us on WhatsApp +359 88 209 3176">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.200Zm4.500-6.100c-.2-.1-1.500-.7-1.700-.8-.2-.1-.4-.1-.6.100l-.8 1c-.1.200-.3.200-.5.100a6.700 6.700 0 0 1-3.300-2.900c-.2-.4.200-.4.700-1.300.1-.2 0-.3 0-.5l-.8-1.800c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.100-.7.300-.2.300-.9.900-.9 2.200s.9 2.500 1.100 2.700c.1.200 1.800 2.800 4.400 3.900 1.600.7 2.300.8 3.100.7.500-.1 1.500-.6 1.700-1.200.2-.6.2-1.100.2-1.200-.1-.1-.3-.2-.5-.3Z"/></svg>
     <span class="wa-float__txt">Questions?</span>
@@ -880,14 +926,22 @@ var $=function(s){return document.querySelector(s)};
 var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* Prices are decided by the server (functions/api/_shared.js); these are only used for display. */
-var PRICE={prereg:7,early:8,regular:10};
+var PRICE={prereg:7,early:8,regular:10,late:15};
 
-/* Early bird / pre-registered prices end at the end of Sunday 11 Oct (Bulgarian time).
-   From 12 Oct the page shows ONLY the €10 ticket: every trace of the cheaper
-   options is removed from the page. (functions/api/_shared.js enforces the same date.) */
+/* Price phases (Bulgarian time). functions/api/_shared.js enforces the same dates.
+     early   until the end of Sun 11 Oct   €8 / €7 pre-registered
+     ten     until Thu 15 Oct, 2PM         €10, urgent "last chance" messaging
+     fifteen after that                    €15
+   Anything that doesn't belong to the current phase is removed from the page. */
 var EARLY_END=new Date('2026-10-11T23:59:59+03:00').getTime();
-var LATE=Date.now()>EARLY_END;
-document.querySelectorAll(LATE?'[data-early-only]':'[data-late-only]').forEach(function(el){el.remove()});
+var TEN_END=new Date('2026-10-15T14:00:00+03:00').getTime();
+var EVENT_START=new Date('2026-10-17T18:00:00+03:00').getTime();
+var PHASE=Date.now()<=EARLY_END?'early':Date.now()<=TEN_END?'ten':'fifteen';
+var LATE=PHASE!=='early';
+var KEEP={early:['early'],ten:['late','ten'],fifteen:['late','fifteen']}[PHASE];
+['early','late','ten','fifteen'].forEach(function(k){
+  if(KEEP.indexOf(k)<0)document.querySelectorAll('[data-'+k+'-only]').forEach(function(el){el.remove()});
+});
 var WA_LINK='https://wa.me/359882093176';
 var MAPS_LINK='https://maps.app.goo.gl/PGVZ2q4MvKAYjRC27';
 
@@ -993,18 +1047,46 @@ if(hs){
   });
 }
 
-/* ---------- early-bird countdown (ends end of 11 Oct, Bulgarian time) ---------- */
+/* ---------- countdowns: price deadline + days until the event ---------- */
 (function(){
-  var END=EARLY_END;
+  var END=PHASE==='early'?EARLY_END:PHASE==='ten'?TEN_END:0;
   function tick(){
-    var ms=END-Date.now(),txt='';
-    if(ms>0){
-      var d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);
-      txt=d>1?d+' days left':d===1?'1 day left':h>0?h+' hours left':'last hour!';
+    var now=Date.now();
+    /* when a price deadline passes while the page is open, reload to show the new price */
+    if(END&&now>END){location.reload();return}
+    var txt='';
+    if(END){
+      var ms=END-now,d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4),s=Math.floor(ms%6e4/1e3);
+      txt=(d>=1?d+'d ':'')+(d>=1||h>=1?h+'h ':'')+m+'m '+s+'s left';
     }
     document.querySelectorAll('.cd').forEach(function(el){el.textContent=txt});
+
+    var ev=EVENT_START-now,evTxt='';
+    if(ev>0){
+      var ed=Math.floor(ev/864e5),eh=Math.floor(ev%864e5/36e5);
+      evTxt=ed>=2?'🔥 Only '+ed+' days to go!':ed===1?'🔥 Only 1 day to go!':eh>=1?'🔥 The event starts in '+eh+' hours!':'🔥 The event starts very soon!';
+    }
+    document.querySelectorAll('.ev').forEach(function(el){el.textContent=evTxt});
   }
-  tick();setInterval(tick,6e4);
+  tick();setInterval(tick,1e3);
+})();
+
+/* ---------- sticky "Get my ticket" button: shows while scrolling, hides at the form ---------- */
+(function(){
+  var btn=$('#stickyCta'),join=$('#join'),top=$('#top');
+  if(!btn)return;
+  var p=btn.querySelector('.stickycta__p');
+  if(p)p.textContent=PHASE==='ten'?'· €10 till Thu 2PM':'· €'+PRICE.late;
+  function check(){
+    var y=window.scrollY||0,vh=window.innerHeight;
+    var jr=join?join.getBoundingClientRect():null;
+    var heroH=top?top.offsetHeight:600;
+    var atForm=jr&&jr.top<vh*0.85&&jr.bottom>vh*0.1;
+    btn.hidden=!(y>heroH*0.7)||atForm;
+  }
+  window.addEventListener('scroll',check,{passive:true});
+  window.addEventListener('resize',check);
+  check();
 })();
 
 /* ---------- helpers ---------- */
@@ -1081,10 +1163,10 @@ function updatePriceLine(){
   var pl=$('#priceLine');
   if(LATE){
     pl.classList.remove('pre');
-    $('#plNow').textContent='€'+PRICE.regular;
-    $('#plLabel').textContent='Ticket';
+    $('#plNow').textContent='€'+(PHASE==='ten'?PRICE.regular:PRICE.late);
+    $('#plLabel').textContent=PHASE==='ten'?'Ticket · last chance at €10':'Ticket';
     if($('#plOld'))$('#plOld').remove();
-    $('#plSub').textContent='Limited spots. Grab yours now.';
+    $('#plSub').textContent=PHASE==='ten'?'Goes up to €15 on Thursday at 2PM. Limited spots.':'The event is this Saturday. Limited spots.';
     return;
   }
   pl.classList.toggle('pre',preMode);
