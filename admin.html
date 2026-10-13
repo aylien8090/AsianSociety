@@ -208,7 +208,7 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
     </div>
 
     <div class="toolbar">
-      <div class="search"><input id="search" type="search" placeholder="Search name, email or code…" aria-label="Search"></div>
+      <div class="search"><input id="search" type="search" placeholder="Search name, email or code (finds everyone)…" aria-label="Search"></div>
       <div class="tabs" id="tabs"></div>
     </div>
 
@@ -341,7 +341,9 @@ function render() {
 
   const q = query.trim().toLowerCase();
   const pool = filter === 'draft' ? drafts : filter === 'used' ? used : filter === 'cash' ? cashDue : filter === 'all' ? live : live.filter(t => t.status === filter);
-  const shown = pool.filter(t => !q || [t.code, t.name, t.email, t.phone].some(x => (x || '').toLowerCase().includes(q)));
+  const matches = t => [t.code, t.name, t.email, t.phone].some(x => (x || '').toLowerCase().includes(q));
+  // People who registered but never tapped "Paid!" stay hidden, but a search finds them so you can still mark them paid.
+  const shown = pool.filter(t => !q || matches(t)).concat(q && filter === 'all' ? drafts.filter(matches) : []);
 
   $('#list').innerHTML = shown.length ? shown.map(t => {
     const c = esc(t.code), isConfirmed = t.status === 'paid' || t.status === 'emailed';
