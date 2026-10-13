@@ -7,9 +7,10 @@ export function json(data, status = 200, headers = {}) {
 // Ticket prices in euros per release. "prereg" = first release (people who pre-registered), "early" = early bird.
 // team = free team member ticket, teamdisc = team member price (€6, still has to be paid).
 // regular = €10 (until Thursday 15 Oct 2PM), late = €15 (after that).
-export const PRICES = { prereg: 7, early: 8, regular: 10, late: 15, team: 0, teamdisc: 6 };
+// referral = €3 ticket you can set by hand for people who were referred.
+export const PRICES = { prereg: 7, early: 8, regular: 10, late: 15, team: 0, teamdisc: 6, referral: 3 };
 // Tickets with no tier (older registrations) count as early bird.
-export const tierOf = tier => ["prereg", "team", "teamdisc", "regular", "late"].includes(tier) ? tier : "early";
+export const tierOf = tier => ["prereg", "team", "teamdisc", "regular", "late", "referral"].includes(tier) ? tier : "early";
 
 // The pre-registered (€7) and early bird (€8) prices end at the end of Sunday 11 Oct, Bulgarian time.
 // After that every new ticket is the regular €10 one. (index.html uses the same moment to hide the old prices.)
