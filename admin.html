@@ -336,7 +336,7 @@ function render() {
   bars($('#years'), confirmed.map(t => t.year));
   bars($('#tiers'), confirmed.map(t => TIER_LABEL[tierOf(t)]));
 
-  const tabs = [['all', 'All', live.length], ['pending', 'Pending', pending.length], ['cash', '💵 Cash to collect', cashDue.length], ['paid', 'Paid', paid.length], ['emailed', 'Sent', sent.length], ['used', 'Checked in', used.length]];
+  const tabs = [['all', 'All', live.length], ['pending', 'Pending', pending.length], ['cash', '💵 Cash to collect', cashDue.length], ['paid', 'Paid', paid.length], ['emailed', 'Sent', sent.length], ['used', 'Checked in', used.length], ['draft', 'Not tapped Paid', drafts.length]];
   $('#tabs').innerHTML = tabs.map(([k, l, n]) => `<button class="tab ${filter === k ? 'on' : ''}" data-tab="${k}">${l}<b>${n}</b></button>`).join('');
 
   const q = query.trim().toLowerCase();
