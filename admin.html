@@ -326,6 +326,7 @@ button.big:disabled{opacity:.35;cursor:not-allowed}
           <div id="trTeams"></div>
           <div class="trfoot">
             <label>Points per correct answer <input id="trPoints" type="number" min="1" max="1000" value="1"></label>
+            <label title="Every phone counts down together, so nobody gets a head start">Get-ready countdown (seconds) <input id="trReady" type="number" min="0" max="10" step="0.5" value="3"></label>
             <button class="ghost" id="trResetScores">Reset all scores</button>
           </div>
         </div>
@@ -767,7 +768,7 @@ function renderTrivia() {
   const now = $('#trNow');
   now.className = 'trnow ' + (s.phase === 'open' ? 'open' : s.phase === 'answering' ? 'answering' : '');
   let k = 'Buzzers closed', v = 'Press New question to start', e = '';
-  if (s.phase === 'open') { k = 'Buzzers open'; v = '🔔 Waiting for a team to buzz…'; }
+  if (s.phase === 'open') { k = 'Buzzers open'; v = s.opensInMs > 0 ? '⏳ Opening in ' + Math.ceil(s.opensInMs / 1000) + 's…' : '🔔 Waiting for a team to buzz…'; }
   if (s.phase === 'answering' && s.buzzed) { k = s.event === 'pass' ? 'Passed to' : 'First to buzz'; v = s.buzzed.name; }
   if (s.event === 'correct' && s.eventTeam && s.phase === 'idle') e = `✅ ${s.eventTeam.name} got it right (+${s.points})`;
   if (s.event === 'incorrect' && s.eventTeam && s.phase === 'open') e = `❌ ${s.eventTeam.name} got it wrong. Buzzers are open for the others.`;
@@ -788,6 +789,7 @@ function renderTrivia() {
     return `<div class="trow ${hot ? 'hot' : ''} ${tried ? 'tried' : ''}"><span class="tn">${esc(t.name)}${hot ? ' 🎤' : ''}${tried ? ' (tried)' : ''}</span><button data-act="adj" data-id="${t.id}" data-d="-1">−1</button><span class="sc">${t.score}</span><button data-act="adj" data-id="${t.id}" data-d="1">+1</button><button class="rm" data-act="rm" data-id="${t.id}" title="Remove team">✕</button></div>`;
   }).join('') : '<p class="hint2">No teams yet. Add the team names above, then tell everyone to open the buzzer page on their phone.</p>';
   const pts = $('#trPoints'); if (document.activeElement !== pts) pts.value = s.points;
+  const rdy = $('#trReady'); if (document.activeElement !== rdy) rdy.value = s.readyMs / 1000;
 }
 $('#trNew').onclick = () => trCall('new_question');
 $('#trClose').onclick = () => trCall('close');
@@ -802,6 +804,7 @@ $('#trTeams').onclick = e => {
 };
 $('#trAddForm').onsubmit = async e => { e.preventDefault(); const n = $('#trAddName').value.trim(); if (!n) return; if (await trCall('add_team', { name: n })) { $('#trAddName').value = ''; $('#trAddName').focus(); } };
 $('#trPoints').onchange = () => trCall('set_points', { points: Number($('#trPoints').value) });
+$('#trReady').onchange = () => trCall('set_ready', { seconds: Number($('#trReady').value) });
 $('#trResetScores').onclick = () => { if (confirm('Set every team score back to 0?')) trCall('reset_scores'); };
 // keyboard shortcuts for the host: N new question, C correct, X incorrect, Esc close, 1-9 pass to that team
 document.addEventListener('keydown', e => {

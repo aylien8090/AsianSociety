@@ -38,6 +38,11 @@ export function ensureSchema(env) {
     await db.prepare("CREATE TABLE IF NOT EXISTS trivia_teams (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL UNIQUE, score INTEGER NOT NULL DEFAULT 0)").run();
     await db.prepare("CREATE TABLE IF NOT EXISTS trivia_attempts (round INTEGER NOT NULL, team_id INTEGER NOT NULL, PRIMARY KEY (round, team_id))").run();
     await db.prepare("CREATE TABLE IF NOT EXISTS trivia_state (id INTEGER PRIMARY KEY CHECK (id = 1), round INTEGER NOT NULL DEFAULT 0, phase TEXT NOT NULL DEFAULT 'idle', buzzed_team INTEGER, points INTEGER NOT NULL DEFAULT 1, event TEXT, event_team INTEGER, event_at TEXT)").run();
+    // open_at = the moment (server clock, ms) the buzzers really go live; ready_ms = the "get ready" countdown length
+    for (const column of ["open_at INTEGER NOT NULL DEFAULT 0", "ready_ms INTEGER NOT NULL DEFAULT 3000"]) {
+      try { await db.prepare("ALTER TABLE trivia_state ADD COLUMN " + column).run(); }
+      catch (error) { if (!/duplicate column/i.test(String(error.message))) throw error; }
+    }
     await db.prepare("INSERT OR IGNORE INTO trivia_state (id) VALUES (1)").run();
   })().catch(error => { schemaReady = null; throw error; });
   return schemaReady;
@@ -48,11 +53,13 @@ export const SALES_OPEN = false;
 
 // Everything the trivia screens need in one go.
 export async function triviaSnapshot(db) {
-  const st = await db.prepare("SELECT round, phase, buzzed_team, points, event, event_team, event_at FROM trivia_state WHERE id = 1").first();
+  const st = await db.prepare("SELECT round, phase, buzzed_team, points, event, event_team, event_at, open_at, ready_ms FROM trivia_state WHERE id = 1").first();
+  const nowMs = Date.now();
   const { results } = await db.prepare("SELECT t.id, t.name, t.score, EXISTS(SELECT 1 FROM trivia_attempts a WHERE a.round = ? AND a.team_id = t.id) AS tried FROM trivia_teams t ORDER BY t.score DESC, lower(t.name)").bind(st.round).all();
   const teams = results.map(t => ({ id: t.id, name: t.name, score: t.score, tried: !!t.tried }));
   const byId = id => teams.find(t => t.id === id) || null;
-  return { round: st.round, phase: st.phase, points: st.points, buzzed: st.buzzed_team ? byId(st.buzzed_team) : null, event: st.event || null, eventTeam: st.event_team ? byId(st.event_team) : null, eventAt: st.event_at || null, teams };
+  // opensInMs: how long until the buzzers go live, so every phone can count down to the SAME moment
+  return { round: st.round, phase: st.phase, points: st.points, opensInMs: Math.max(0, st.open_at - nowMs), readyMs: st.ready_ms, buzzed: st.buzzed_team ? byId(st.buzzed_team) : null, event: st.event || null, eventTeam: st.event_team ? byId(st.event_team) : null, eventAt: st.event_at || null, teams };
 }
 
 export function code() {

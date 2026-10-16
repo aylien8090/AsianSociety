@@ -60,7 +60,12 @@ function render(s) {
   const st = $('#stage'), kicker = $('#kicker'), big = $('#big'), small = $('#small');
   st.className = 'stage';
   const ev = s.event, evTeam = s.eventTeam;
-  if (s.phase === 'open') {
+  const waitMs = openAtPerf - performance.now();
+  if (s.phase === 'open' && waitMs > 0) {
+    kicker.textContent = 'NEXT QUESTION';
+    big.textContent = 'GET READY… ' + Math.ceil(waitMs / 1000);
+    small.textContent = 'Buzzers open for everyone together';
+  } else if (s.phase === 'open') {
     st.classList.add('open');
     kicker.textContent = 'QUESTION';
     big.textContent = '🔔 BUZZERS OPEN!';
@@ -88,10 +93,17 @@ function render(s) {
   }).join('') : '<p class="empty">Teams will appear here.</p>';
 }
 
+let openAtPerf = 0, last = null;
 async function poll() {
-  try { const r = await fetch('/api/trivia?_=' + Date.now(), { cache: 'no-store' }); if (r.ok) render(await r.json()); } catch (e) {}
+  try {
+    const t0 = performance.now();
+    const r = await fetch('/api/trivia?_=' + Date.now(), { cache: 'no-store' });
+    const t1 = performance.now();
+    if (r.ok) { last = await r.json(); openAtPerf = (t0 + t1) / 2 + last.opensInMs; render(last); }
+  } catch (e) {}
   setTimeout(poll, 800);
 }
+setInterval(() => { if (last && last.phase === 'open' && performance.now() < openAtPerf + 150) render(last); }, 100);
 poll();
 </script>
 </body>

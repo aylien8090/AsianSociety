@@ -17,10 +17,11 @@ export async function onRequestPost({ request, env }) {
   const db = env.TICKETS_DB;
   const exists = await db.prepare("SELECT 1 AS ok FROM trivia_teams WHERE id = ?").bind(team).first();
   if (!exists) return json({ error: "bad_team" }, 404);
+  // buzzing before the get-ready countdown ends does not count
   const result = await db.prepare(
     "UPDATE trivia_state SET phase = 'answering', buzzed_team = ?, event = NULL, event_team = NULL " +
-    "WHERE id = 1 AND phase = 'open' AND buzzed_team IS NULL " +
+    "WHERE id = 1 AND phase = 'open' AND buzzed_team IS NULL AND open_at <= ? " +
     "AND NOT EXISTS (SELECT 1 FROM trivia_attempts a WHERE a.round = trivia_state.round AND a.team_id = ?)"
-  ).bind(team, team).run();
+  ).bind(team, Date.now(), team).run();
   return json({ won: result.meta.changes === 1 });
 }

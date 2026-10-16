@@ -12,7 +12,8 @@ export async function onRequestPost({ request, env }) {
   let body; try { body = await request.json(); } catch { return json({ error: "Invalid request" }, 400); }
   await ensureSchema(env);
   const db = env.TICKETS_DB;
-  const st = await db.prepare("SELECT round, phase, buzzed_team, points FROM trivia_state WHERE id = 1").first();
+  const st = await db.prepare("SELECT round, phase, buzzed_team, points, ready_ms FROM trivia_state WHERE id = 1").first();
+  const openAt = Date.now() + st.ready_ms; // buzzers go live for everyone at this exact moment
   const teamId = Number(body.team);
   const now = "CURRENT_TIMESTAMP";
 
@@ -31,7 +32,7 @@ export async function onRequestPost({ request, env }) {
       break;
     case "new_question":
       await db.prepare("DELETE FROM trivia_attempts").run();
-      await db.prepare(`UPDATE trivia_state SET round = round + 1, phase = 'open', buzzed_team = NULL, event = NULL, event_team = NULL, event_at = ${now} WHERE id = 1`).run();
+      await db.prepare(`UPDATE trivia_state SET round = round + 1, phase = 'open', open_at = ?, buzzed_team = NULL, event = NULL, event_team = NULL, event_at = ${now} WHERE id = 1`).bind(openAt).run();
       break;
     case "close":
       await db.prepare("UPDATE trivia_state SET phase = 'idle', buzzed_team = NULL, event = NULL, event_team = NULL WHERE id = 1").run();
@@ -46,7 +47,7 @@ export async function onRequestPost({ request, env }) {
       if (st.phase !== "answering" || !st.buzzed_team) return json({ error: "No team is answering right now." }, 400);
       await db.prepare("INSERT OR IGNORE INTO trivia_attempts (round, team_id) VALUES (?, ?)").bind(st.round, st.buzzed_team).run();
       // buzzers open again for the other teams
-      await db.prepare(`UPDATE trivia_state SET phase = 'open', event = 'incorrect', event_team = buzzed_team, buzzed_team = NULL, event_at = ${now} WHERE id = 1`).run();
+      await db.prepare(`UPDATE trivia_state SET phase = 'open', open_at = ?, event = 'incorrect', event_team = buzzed_team, buzzed_team = NULL, event_at = ${now} WHERE id = 1`).bind(openAt).run();
       break;
     }
     case "pass": {
@@ -65,6 +66,11 @@ export async function onRequestPost({ request, env }) {
     case "set_points": {
       const points = Math.max(1, Math.min(1000, Math.trunc(Number(body.points) || 1)));
       await db.prepare("UPDATE trivia_state SET points = ? WHERE id = 1").bind(points).run();
+      break;
+    }
+    case "set_ready": {
+      const seconds = Math.max(0, Math.min(10, Number(body.seconds) || 0));
+      await db.prepare("UPDATE trivia_state SET ready_ms = ? WHERE id = 1").bind(Math.round(seconds * 1000)).run();
       break;
     }
     case "reset_scores":

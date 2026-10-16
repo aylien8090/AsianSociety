@@ -71,14 +71,23 @@ const urlTeam = new URLSearchParams(location.search).get('team');
 
 function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 
+let openAtPerf = 0; // when the buzzers go live, on this phone's own clock (performance.now)
+function applyState(s, t0, t1) {
+  state = s;
+  openAtPerf = (t0 + t1) / 2 + s.opensInMs; // the server worked out opensInMs about halfway through the request
+}
 async function poll() {
   try {
+    const t0 = performance.now();
     const r = await fetch('/api/trivia?_=' + Date.now(), { cache: 'no-store' });
-    if (r.ok) { state = await r.json(); render(); }
+    const t1 = performance.now();
+    if (r.ok) { applyState(await r.json(), t0, t1); render(); }
   } catch (e) {}
   const fast = state && (state.phase === 'open' || state.phase === 'answering');
-  timer = setTimeout(poll, document.hidden ? 4000 : fast ? 700 : 2000);
+  timer = setTimeout(poll, document.hidden ? 4000 : fast ? 700 : 1000);
 }
+// keeps the 3-2-1 countdown ticking smoothly
+setInterval(() => { if (state && state.phase === 'open' && performance.now() < openAtPerf + 150) render(); }, 100);
 
 function chooseTeam(t) {
   myTeam = { id: t.id, name: t.name };
@@ -115,7 +124,11 @@ function render() {
   ev.innerHTML = '';
   const buzzed = state.buzzed;
 
-  if (state.phase === 'open' && !me.tried) {
+  const waitMs = openAtPerf - performance.now();
+  if (state.phase === 'open' && !me.tried && waitMs > 0) {
+    setMood('s-wait'); btn.disabled = true;
+    status.textContent = 'GET READY… ' + Math.ceil(waitMs / 1000); hint.textContent = 'Buzzers open for everyone at the same time.';
+  } else if (state.phase === 'open' && !me.tried) {
     setMood('s-open'); btn.disabled = false; btn.classList.add('live');
     status.textContent = ''; hint.textContent = lastBuzzResult || 'Buzzers are open. Tap fast!';
   } else if (state.phase === 'open' && me.tried) {
@@ -144,7 +157,7 @@ $('#pick').onclick = e => {
 $('#change').onclick = () => { myTeam = null; try { localStorage.removeItem('asoc_team'); } catch (e) {} render(); };
 
 async function buzz() {
-  if (buzzing || !myTeam || $('#buzz').disabled) return;
+  if (buzzing || !myTeam || $('#buzz').disabled || performance.now() < openAtPerf) return;
   buzzing = true;
   if (navigator.vibrate) navigator.vibrate(40);
   $('#buzz').disabled = true;
@@ -154,7 +167,7 @@ async function buzz() {
     lastBuzzResult = d.won ? 'won' : 'late';
   } catch (e) { lastBuzzResult = ''; }
   buzzing = false;
-  try { const r = await fetch('/api/trivia?_=' + Date.now(), { cache: 'no-store' }); if (r.ok) { state = await r.json(); } } catch (e) {}
+  try { const t0 = performance.now(); const r = await fetch('/api/trivia?_=' + Date.now(), { cache: 'no-store' }); const t1 = performance.now(); if (r.ok) applyState(await r.json(), t0, t1); } catch (e) {}
   render();
 }
 // pointerdown = instant, no waiting for the finger to lift
