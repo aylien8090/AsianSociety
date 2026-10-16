@@ -54,18 +54,10 @@ button{font:inherit;cursor:pointer;border:0}
     <p class="rules" id="doneText"></p>
   </section>
 
-  <!-- step 1: who are you -->
-  <section class="card" id="who" hidden>
-    <p class="hi">Who are you?</p>
-    <p class="rules">Tap your own name. This is only so you can't vote for yourself. Your vote stays anonymous. Can't see your name? Ask the team to check you in at the door.</p>
-    <input id="q1" type="search" placeholder="Search your name…" aria-label="Search your name">
-    <div class="list" id="list1"></div>
-  </section>
-
   <!-- step 2: the ballot -->
   <section class="card" id="ballot" hidden>
-    <div class="top"><p class="hi" id="hi"></p><button class="link" id="notMe" type="button">Not you?</button></div>
-    <p class="rules">Tap the name of the person you think is best dressed. You only get <b>one vote</b> and it's final.</p>
+    <p class="hi">Who is best dressed?</p>
+    <p class="rules">Tap the name of the person you think has the best outfit. You get <b>one vote</b> and it's final.</p>
     <input id="q2" type="search" placeholder="Search names…" aria-label="Search names">
     <div class="list" id="list2"></div>
   </section>
@@ -102,34 +94,23 @@ function deviceId() {
   return memoryId;
 }
 const device = deviceId();
-let people = [], open = true, voted = false, me = null, pending = null, timer = null;
-try { me = localStorage.getItem('asoc_me') || null; } catch (e) {}
+let people = [], open = true, voted = false, pending = null, timer = null;
+try { localStorage.removeItem('asoc_me'); } catch (e) {} /* leftover from an older version of this page */
 
 async function call(body) {
   const r = await fetch('/api/vote', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ device, ...body }) });
   return { ok: r.ok, d: await r.json().catch(() => ({})) };
 }
-function show(id) { ['loading', 'done', 'who', 'ballot'].forEach(s => $('#' + s).hidden = s !== id); }
+function show(id) { ['loading', 'done', 'ballot'].forEach(s => $('#' + s).hidden = s !== id); }
 function dupTag(p, list) { return list.filter(x => x.name.toLowerCase() === p.name.toLowerCase()).length > 1 ? ` <small>(${esc(p.code.slice(-2))})</small>` : ''; }
 
 function render() {
   if (voted) { $('#doneTitle').textContent = 'Thanks! Your vote is in 🏆'; $('#doneText').textContent = 'Winners are announced at the end of the night.'; return show('done'); }
   if (!open) { $('#doneTitle').textContent = 'Voting is closed'; $('#doneText').textContent = 'Thanks for taking part!'; return show('done'); }
-  const mine = people.find(p => p.code === me);
-  if (!mine) {
-    me = null;
-    const q = $('#q1').value.trim().toLowerCase();
-    const shown = people.filter(p => !q || p.name.toLowerCase().includes(q));
-    $('#list1').innerHTML = shown.length ? shown.map(p => `<button class="cand" data-code="${esc(p.code)}">${esc(p.name)}${dupTag(p, people)}</button>`).join('')
-      : '<p class="rules">' + (people.length ? 'No names match.' : 'Nobody is checked in yet. Check in at the door first, then come back.') + '</p>';
-    return show('who');
-  }
-  $('#hi').textContent = 'Hi ' + mine.name.split(' ')[0] + '!';
-  const others = people.filter(p => p.code !== me);
   const q = $('#q2').value.trim().toLowerCase();
-  const shown = others.filter(p => !q || p.name.toLowerCase().includes(q));
-  $('#list2').innerHTML = shown.length ? shown.map(p => `<button class="cand" data-code="${esc(p.code)}">${esc(p.name)}${dupTag(p, others)}</button>`).join('')
-    : '<p class="rules">No names match. More people appear as they get checked in.</p>';
+  const shown = people.filter(p => !q || p.name.toLowerCase().includes(q));
+  $('#list2').innerHTML = shown.length ? shown.map(p => `<button class="cand" data-code="${esc(p.code)}">${esc(p.name)}${dupTag(p, people)}</button>`).join('')
+    : '<p class="rules">' + (people.length ? 'No names match.' : 'Nobody is on the list yet. Names appear as people arrive.') + '</p>';
   show('ballot');
 }
 
@@ -143,12 +124,6 @@ async function load() {
   } catch (e) {}
 }
 
-$('#list1').onclick = e => {
-  const b = e.target.closest('.cand'); if (!b) return;
-  me = b.dataset.code; try { localStorage.setItem('asoc_me', me); } catch (x) {}
-  $('#q2').value = ''; render();
-};
-$('#notMe').onclick = () => { me = null; try { localStorage.removeItem('asoc_me'); } catch (x) {} $('#q1').value = ''; render(); };
 $('#list2').onclick = e => {
   const b = e.target.closest('.cand'); if (!b) return;
   pending = people.find(p => p.code === b.dataset.code);
@@ -161,16 +136,16 @@ $('#yes').onclick = async () => {
   if (!pending) return;
   $('#yes').disabled = true;
   try {
-    const { ok, d } = await call({ action: 'vote', me, candidate: pending.code });
+    const { ok, d } = await call({ action: 'vote', candidate: pending.code });
     $('#confirm').hidden = true;
     if (ok) { voted = true; if (navigator.vibrate) navigator.vibrate(40); render(); }
     else if (d.error === 'already_voted') { voted = true; render(); toast('This phone has already voted.'); }
     else if (d.error === 'closed') { open = false; render(); }
-    else toast(d.error === 'self' ? "You can't vote for yourself!" : 'Could not save your vote. Try again.');
+    else toast('Could not save your vote. Try again.');
   } catch (e) { $('#confirm').hidden = true; toast('Could not reach the server. Try again.'); }
   $('#yes').disabled = false; pending = null;
 };
-$('#q1').oninput = render; $('#q2').oninput = render;
+$('#q2').oninput = render;
 
 load();
 timer = setInterval(load, 15000);
