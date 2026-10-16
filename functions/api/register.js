@@ -1,4 +1,4 @@
-import { code, json, ensureSchema, PRICES, tierOf, earlyBirdOn, tenEuroOn } from "./_shared";
+import { code, json, ensureSchema, PRICES, tierOf, earlyBirdOn, tenEuroOn, SALES_OPEN } from "./_shared";
 
 export async function onRequestPost({ request, env }) {
   let body;
@@ -14,6 +14,9 @@ export async function onRequestPost({ request, env }) {
     const tier = tierOf(existing.tier);
     return json({ existing: true, code: existing.code, name: existing.name, status: existing.status, tier, price: PRICES[tier], used: !!existing.used_at, note: existing.note || "", cash: existing.pay_method === "cash" });
   }
+
+  // Ticket sales are closed: people who already have a ticket still get it back above, but no new tickets are made.
+  if (!SALES_OPEN) return json({ error: "Ticket sales are closed." }, 403);
 
   const vegan = body.vegan === "yes" ? "yes" : body.vegan === "no" ? "no" : "";
   if (!vegan) return json({ error: "Please choose Vegan or Not Vegan." }, 400);
