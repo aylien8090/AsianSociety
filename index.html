@@ -9,7 +9,7 @@
 <title>Cultural Event · 17 October, 6PM · Asian Society, Trakia University</title>
 <meta name="description" content="Cultural Event, Saturday 17 October, 6PM to 10PM at the International Youth Center, Stara Zagora. Dress up in your cultural clothes! Ticket sales are closed. See you there!">
 <meta property="og:title" content="Cultural Event · Saturday 17 October, 6PM">
-<meta property="og:description" content="International Youth Center, Stara Zagora. Dress up in your cultural clothes! Starts at 6PM sharp, food at 7PM sharp. Ticket sales are closed.">
+<meta property="og:description" content="International Youth Center, Stara Zagora. Dress up in your cultural clothes! Starts at 6PM sharp. Ticket sales are closed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://asiansociety.pages.dev/">
 <meta property="og:image" content="https://asiansociety.pages.dev/Images/linkpreview-v3.jpg">
@@ -147,6 +147,12 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .topbar u{font-weight:800;color:var(--gold-hi);text-underline-offset:3px}
 .topbar--sale{background:linear-gradient(180deg,#2c6b46,#1f4f33)}
 .evcount{margin-top:14px;font:800 15px 'Karla';letter-spacing:.06em;color:var(--gold-hi)}
+.votebtn{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:12px;padding:12px 22px;max-width:360px;width:100%;border-radius:16px;
+  background:linear-gradient(180deg,#f2b04e,#d98d2b);color:#2a1d0a;text-decoration:none;text-align:center;
+  box-shadow:0 8px 22px rgba(217,141,43,.4),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .3s cubic-bezier(.2,1.6,.4,1)}
+.votebtn:hover,.votebtn:focus-visible{transform:scale(1.03)}
+.votebtn__t{font:900 16px 'Karla';letter-spacing:.08em}
+.votebtn__s{font:700 12.5px 'Karla';opacity:.8}
 .sharp{margin-top:16px;padding:12px 16px;max-width:360px;border-radius:14px;background:rgba(255,207,126,.12);border:1.5px solid rgba(255,207,126,.55);font-size:15px;line-height:1.5;color:var(--cream)}
 .sharp b{color:var(--gold-hi)}
 .agenda{padding:44px 22px 12px;text-align:center}
@@ -158,6 +164,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .agenda__list li{display:flex;gap:14px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(216,162,74,.22)}
 .agenda__list li.hl{background:rgba(216,162,74,.16);border:1.5px solid var(--gold-hi)}
 .agenda__list .t{flex:none;min-width:74px;font:900 16px 'Karla';color:var(--gold-hi)}
+.agenda__list .t.dot{min-width:74px;text-align:center;color:var(--gold-soft);opacity:.7}
 .agenda__list .w{font:700 16px/1.4 'Karla';color:var(--cream)}
 .agenda__list .w em{font-style:normal;font-weight:900;font-size:12px;letter-spacing:.1em;color:#fff;background:var(--red);border-radius:99px;padding:2px 9px;margin-left:6px;vertical-align:2px}
 .agenda__list .w small{display:block;font-weight:400;font-size:13.5px;color:var(--cream-dim);margin-top:2px}
@@ -623,12 +630,16 @@ a.tag:hover{border-style:solid}
           <em>Tap to open in Maps →</em>
         </span>
       </a>
+      <a class="votebtn up" style="--d:1.2s" href="/vote" data-closed-only>
+        <span class="votebtn__t">🏆 VOTE BEST DRESSED →</span>
+        <span class="votebtn__s">Anonymous. One vote per phone</span>
+      </a>
       <p class="chip up" style="--d:1.25s" data-open-only>TICKETS ON SALE NOW · LIMITED SPOTS</p>
       <p class="chip up" style="--d:1.25s" data-closed-only>TICKET SALES ARE CLOSED · SEE YOU THERE!</p>
       <p class="evcount up" style="--d:1.28s"><span class="ev"></span></p>
       <div class="sharp up" style="--d:1.3s" data-closed-only>
         <p><b>🕕 The event starts at 6PM sharp!</b></p>
-        <p><b>🍽️ Food is served at 7PM sharp</b>, first come, first served!</p>
+        <p><b>🍽️ Food is first come, first served</b>, so don't be late!</p>
       </div>
       <div class="dl pop" style="--d:1.3s" data-ten-only>
         <span class="dl__top">⏰ LAST CHANCE AT €10</span>
@@ -709,23 +720,18 @@ a.tag:hover{border-style:solid}
     <!-- ═══════════ AGENDA ═══════════ -->
     <section class="agenda" id="agenda">
       <h2 class="agenda__h rv">THE PLAN</h2>
-      <p class="agenda__lead rv"><b>6PM sharp!</b> We start on time. <b>Food at 7PM sharp</b>, first come, first served.</p>
+      <p class="agenda__lead rv"><b>6PM sharp!</b> We start on time, so please don't be late. Food is <b>first come, first served</b>.</p>
       <ol class="agenda__list rv" style="--d:.1s">
         <li class="hl"><span class="t">6:00 PM</span><span class="w">Event starts <em>SHARP!</em></span></li>
-        <li><span class="t">6:20 PM</span><span class="w">Opening</span></li>
-        <li><span class="t">6:30 PM</span><span class="w">Get-to-know-you Bingo <small>Remember everyone's names, you'll need them to vote!</small></span></li>
-        <li class="hl"><span class="t">7:00 PM</span><span class="w">Food is served <em>SHARP!</em> <small>First come, first served. Plus a little surprise 🎁</small></span></li>
-        <li><span class="t">8:00 PM</span><span class="w">Trivia with music</span></li>
-        <li><span class="t">8:40 PM</span><span class="w">Desserts &amp; Chai</span></li>
-        <li><span class="t">9:00 PM</span><span class="w">Musical Chairs</span></li>
-        <li><span class="t">9:30 PM</span><span class="w">Final scores &amp; Best Dressed awards 🏆</span></li>
-        <li><span class="t">10:00 PM</span><span class="w">End</span></li>
+        <li><span class="t dot">•</span><span class="w">Opening</span></li>
+        <li><span class="t dot">•</span><span class="w">Get-to-know-you Bingo <small>Remember everyone's names, you'll need them to vote!</small></span></li>
+        <li><span class="t dot">•</span><span class="w">Food <small>First come, first served. Plus a little surprise 🎁</small></span></li>
+        <li><span class="t dot">•</span><span class="w">Trivia with music</span></li>
+        <li><span class="t dot">•</span><span class="w">Desserts &amp; Chai</span></li>
+        <li><span class="t dot">•</span><span class="w">Musical Chairs</span></li>
+        <li><span class="t dot">•</span><span class="w">Final scores &amp; Best Dressed awards 🏆</span></li>
+        <li class="hl"><span class="t">10:00 PM</span><span class="w">End</span></li>
       </ol>
-      <div class="votebox rv" style="--d:.15s" data-closed-only>
-        <p class="votebox__t">🏆 Vote for Best Dressed</p>
-        <p class="votebox__s">Once you're checked in at the door you can vote for the best outfit of the night. You can't vote for yourself.</p>
-        <a class="cta" href="/vote">VOTE BEST DRESSED →</a>
-      </div>
     </section>
 
     <!-- ═══════════ TICKET PRICES ═══════════ -->
