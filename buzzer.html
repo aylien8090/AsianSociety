@@ -64,12 +64,26 @@ h1{font:900 28px 'Fraunces',serif;color:var(--gold)}
 
 <script>
 const $ = s => document.querySelector(s);
-let state = null, myTeam = null, buzzing = false, lastBuzzResult = '', timer = null;
+let state = null, myTeam = null, buzzing = false, lastBuzzResult = '', timer = null, pickNote = '', urlTried = false, claiming = false;
+
+/* a random id for this phone, so a team can only be held by one phone at a time */
+function makeId() { const a = new Uint8Array(18); crypto.getRandomValues(a); return btoa(String.fromCharCode(...a)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+let memoryId = null;
+function deviceId() {
+  try { let d = localStorage.getItem('asoc_buzz_device'); if (!d) { d = makeId(); localStorage.setItem('asoc_buzz_device', d); } return d; } catch (e) {}
+  const m = document.cookie.match(/(?:^|; )asoc_buzz_device=([^;]+)/);
+  if (m) return m[1];
+  memoryId = memoryId || makeId();
+  try { document.cookie = 'asoc_buzz_device=' + memoryId + '; max-age=86400; path=/; SameSite=Lax'; } catch (e) {}
+  return memoryId;
+}
+const device = deviceId();
 
 try { myTeam = JSON.parse(localStorage.getItem('asoc_team') || 'null'); } catch (e) {}
 const urlTeam = new URLSearchParams(location.search).get('team');
 
 function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function forgetTeam() { myTeam = null; try { localStorage.removeItem('asoc_team'); } catch (e) {} }
 
 let openAtPerf = 0; // when the buzzers go live, on this phone's own clock (performance.now)
 function applyState(s, t0, t1) {
@@ -79,7 +93,7 @@ function applyState(s, t0, t1) {
 async function poll() {
   try {
     const t0 = performance.now();
-    const r = await fetch('/api/trivia?_=' + Date.now(), { cache: 'no-store' });
+    const r = await fetch('/api/trivia?device=' + encodeURIComponent(device) + '&_=' + Date.now(), { cache: 'no-store' });
     const t1 = performance.now();
     if (r.ok) { applyState(await r.json(), t0, t1); render(); }
   } catch (e) {}
@@ -89,29 +103,56 @@ async function poll() {
 // keeps the 3-2-1 countdown ticking smoothly
 setInterval(() => { if (state && state.phase === 'open' && performance.now() < openAtPerf + 150) render(); }, 100);
 
-function chooseTeam(t) {
-  myTeam = { id: t.id, name: t.name };
-  try { localStorage.setItem('asoc_team', JSON.stringify(myTeam)); } catch (e) {}
-  lastBuzzResult = '';
+async function refresh() {
+  try {
+    const t0 = performance.now();
+    const r = await fetch('/api/trivia?device=' + encodeURIComponent(device) + '&_=' + Date.now(), { cache: 'no-store' });
+    const t1 = performance.now();
+    if (r.ok) applyState(await r.json(), t0, t1);
+  } catch (e) {}
+}
+let claimedAt = 0;
+// ask the server for the team; only one phone per team (unless the host allowed more)
+async function pickTeam(t) {
+  if (claiming) return;
+  claiming = true;
+  try {
+    const r = await fetch('/api/trivia', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'claim', team: t.id, device }) });
+    if (r.ok) {
+      myTeam = { id: t.id, name: t.name }; pickNote = ''; claimedAt = performance.now();
+      try { localStorage.setItem('asoc_team', JSON.stringify(myTeam)); } catch (e) {}
+      lastBuzzResult = '';
+      await refresh();
+    } else {
+      pickNote = r.status === 409 ? t.name + ' already has a phone connected. If that is a mistake, ask the host to release the team.' : 'Could not join that team. Try again.';
+    }
+  } catch (e) { pickNote = 'Could not reach the server. Try again.'; }
+  claiming = false;
   render();
 }
-
 function setMood(cls) { document.body.className = cls; }
 
 function render() {
   if (!state) return;
-  // match saved team / ?team= link against the teams the host created
-  if (myTeam && !state.teams.find(t => t.id === myTeam.id)) myTeam = null;
-  if (!myTeam && urlTeam) {
+  // the saved team must still exist, and this phone must still hold it (the host can release it, or allow more phones)
+  if (myTeam) {
+    const t = state.teams.find(t => t.id === myTeam.id);
+    if (!t) forgetTeam();
+    else if (!t.multi && 'mine' in state && state.mine !== myTeam.id && performance.now() - claimedAt > 3000) { forgetTeam(); pickNote = 'The host released ' + t.name + '. Pick your team again.'; }
+  }
+  if (!myTeam && urlTeam && !urlTried) {
     const t = state.teams.find(t => t.name.toLowerCase() === urlTeam.toLowerCase());
-    if (t) { chooseTeam(t); return; }
+    if (t) { urlTried = true; pickTeam(t); return; }
   }
   if (!myTeam) {
     $('#buzzBox').hidden = true; $('#pickBox').hidden = false; $('#change').hidden = true;
     $('#teamName').textContent = ''; $('#score').textContent = '';
     setMood('s-wait');
-    $('#pick').innerHTML = state.teams.map(t => `<button data-id="${t.id}">${esc(t.name)}</button>`).join('');
-    $('#pickHint').textContent = state.teams.length ? '' : 'Waiting for the host to add teams…';
+    $('#pick').innerHTML = state.teams.map(t => {
+      const inUse = t.taken && !t.multi && state.mine !== t.id;
+      return `<button data-id="${t.id}" ${inUse ? 'disabled style="opacity:.45"' : ''}>${esc(t.name)}${inUse ? ' · 📱 in use' : ''}</button>`;
+    }).join('');
+    $('#pickHint').textContent = pickNote || (state.teams.length ? 'One phone per team. Pick your team.' : 'Waiting for the host to add teams…');
     return;
   }
   const me = state.teams.find(t => t.id === myTeam.id);
@@ -152,9 +193,17 @@ $('#pick').onclick = e => {
   const b = e.target.closest('button');
   if (!b) return;
   const t = state.teams.find(t => t.id === Number(b.dataset.id));
-  if (t) chooseTeam(t);
+  if (t && !b.disabled) pickTeam(t);
 };
-$('#change').onclick = () => { myTeam = null; try { localStorage.removeItem('asoc_team'); } catch (e) {} render(); };
+// "change team" gives the team back so another phone (or this one) can pick again
+$('#change').onclick = async () => {
+  if (!myTeam) return;
+  if (!confirm('Leave this team on this phone?')) return;
+  const leaving = myTeam;
+  forgetTeam(); pickNote = ''; urlTried = true;
+  try { await fetch('/api/trivia', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'leave', team: leaving.id, device }) }); } catch (e) {}
+  render();
+};
 
 async function buzz() {
   if (buzzing || !myTeam || $('#buzz').disabled || performance.now() < openAtPerf) return;
@@ -162,12 +211,13 @@ async function buzz() {
   if (navigator.vibrate) navigator.vibrate(40);
   $('#buzz').disabled = true;
   try {
-    const r = await fetch('/api/trivia', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'buzz', team: myTeam.id }) });
+    const r = await fetch('/api/trivia', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'buzz', team: myTeam.id, device }) });
     const d = await r.json().catch(() => ({}));
+    if (d.error === 'not_your_team') { const nm = myTeam.name; forgetTeam(); pickNote = nm + ' is connected on another phone. Ask the host to release it.'; }
     lastBuzzResult = d.won ? 'won' : 'late';
   } catch (e) { lastBuzzResult = ''; }
   buzzing = false;
-  try { const t0 = performance.now(); const r = await fetch('/api/trivia?_=' + Date.now(), { cache: 'no-store' }); const t1 = performance.now(); if (r.ok) applyState(await r.json(), t0, t1); } catch (e) {}
+  try { const t0 = performance.now(); const r = await fetch('/api/trivia?device=' + encodeURIComponent(device) + '&_=' + Date.now(), { cache: 'no-store' }); const t1 = performance.now(); if (r.ok) applyState(await r.json(), t0, t1); } catch (e) {}
   render();
 }
 // pointerdown = instant, no waiting for the finger to lift

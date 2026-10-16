@@ -30,6 +30,17 @@ export async function onRequestPost({ request, env }) {
       await db.prepare("DELETE FROM trivia_attempts WHERE team_id = ?").bind(teamId).run();
       if (st.buzzed_team === teamId) await db.prepare("UPDATE trivia_state SET phase = 'open', buzzed_team = NULL WHERE id = 1").run();
       break;
+    case "release_team":
+      // frees the team so a different phone can take it (the old phone is sent back to the team list)
+      await db.prepare("UPDATE trivia_teams SET device = NULL WHERE id = ?").bind(teamId).run();
+      break;
+    case "release_all":
+      // kicks every phone out of every team (and turns "allow more phones" off), so everyone has to pick their team again
+      await db.prepare("UPDATE trivia_teams SET device = NULL, multi = 0").run();
+      break;
+    case "toggle_multi":
+      await db.prepare("UPDATE trivia_teams SET multi = 1 - multi WHERE id = ?").bind(teamId).run();
+      break;
     case "new_question":
       await db.prepare("DELETE FROM trivia_attempts").run();
       await db.prepare(`UPDATE trivia_state SET round = round + 1, phase = 'open', open_at = ?, buzzed_team = NULL, event = NULL, event_team = NULL, event_at = ${now} WHERE id = 1`).bind(openAt).run();

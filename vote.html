@@ -31,6 +31,10 @@ button{font:inherit;cursor:pointer;border:0}
 .back{display:block;text-align:center;margin-top:22px;color:var(--muted);font-size:14px}
 .center{text-align:center;padding:10px 4px}
 .big{font:900 26px/1.2 'Fraunces',serif;color:var(--gold);margin-bottom:8px}
+.mine{margin:10px 0 4px;padding:11px 14px;border-radius:12px;background:rgba(127,216,162,.15);border:1px solid rgba(127,216,162,.45);color:var(--green);font-weight:800}
+.change{margin-top:12px;padding:12px 18px;border-radius:12px;background:rgba(255,255,255,.08);color:var(--cream);font:700 15px 'Karla'}
+.cand.on{background:rgba(127,216,162,.18);border-color:var(--green)}
+.cand .tick{color:var(--green);font-weight:800;font-size:14px}
 .confirm{position:fixed;inset:0;background:rgba(8,6,24,.78);display:flex;align-items:center;justify-content:center;padding:20px;z-index:20}
 .confirm__box{width:100%;max-width:380px;background:#2e2546;border:1px solid rgba(216,162,74,.5);border-radius:20px;padding:24px 20px;text-align:center}
 .confirm__box .big{font-size:24px}
@@ -52,13 +56,16 @@ button{font:inherit;cursor:pointer;border:0}
   <section class="card center" id="done" hidden>
     <p class="big" id="doneTitle"></p>
     <p class="rules" id="doneText"></p>
+    <p class="mine" id="doneMine" hidden></p>
+    <button class="change" id="changeVote" type="button" hidden>Made a mistake? Change my vote</button>
   </section>
 
   <!-- step 2: the ballot -->
   <section class="card" id="ballot" hidden>
     <p class="hi">Who is best dressed?</p>
-    <p class="rules">Tap the name of the person you think has the best outfit. You get <b>one vote</b> and it's final.</p>
-    <input id="q2" type="search" placeholder="Search names…" aria-label="Search names">
+    <p class="rules" id="ballotRules">Tap the name of the person you think has the best outfit. You get <b>one vote</b>, and you can change it until voting closes.</p>
+    <button class="link" id="keep" type="button" hidden>← Keep my current vote</button>
+    <input id="q2" type="search" placeholder="Search names…" aria-label="Search names" style="margin-top:8px">
     <div class="list" id="list2"></div>
   </section>
 
@@ -68,7 +75,7 @@ button{font:inherit;cursor:pointer;border:0}
 <div class="confirm" id="confirm" hidden>
   <div class="confirm__box">
     <p class="big" id="confirmName"></p>
-    <p class="rules" style="margin:0">Vote for this person as Best Dressed? You can't change it afterwards.</p>
+    <p class="rules" style="margin:0" id="confirmText">Vote for this person as Best Dressed?</p>
     <div class="confirm__row">
       <button class="yes" id="yes" type="button">Yes, vote!</button>
       <button class="no" id="no" type="button">Cancel</button>
@@ -94,7 +101,7 @@ function deviceId() {
   return memoryId;
 }
 const device = deviceId();
-let people = [], open = true, voted = false, pending = null, timer = null;
+let people = [], open = true, myVote = null, changing = false, pending = null, timer = null;
 try { localStorage.removeItem('asoc_me'); } catch (e) {} /* leftover from an older version of this page */
 
 async function call(body) {
@@ -105,12 +112,22 @@ function show(id) { ['loading', 'done', 'ballot'].forEach(s => $('#' + s).hidden
 function dupTag(p, list) { return list.filter(x => x.name.toLowerCase() === p.name.toLowerCase()).length > 1 ? ` <small>(${esc(p.code.slice(-2))})</small>` : ''; }
 
 function render() {
-  if (voted) { $('#doneTitle').textContent = 'Thanks! Your vote is in 🏆'; $('#doneText').textContent = 'Winners are announced at the end of the night.'; return show('done'); }
-  if (!open) { $('#doneTitle').textContent = 'Voting is closed'; $('#doneText').textContent = 'Thanks for taking part!'; return show('done'); }
+  const mine = people.find(p => p.code === myVote);
+  const mineLine = myVote ? 'Your vote: ' + (mine ? mine.name : 'saved') + ' ✓' : '';
+  $('#doneMine').textContent = mineLine; $('#doneMine').hidden = !mineLine;
+  if (!open) {
+    $('#doneTitle').textContent = 'Voting is closed'; $('#doneText').textContent = 'Thanks for taking part!';
+    $('#changeVote').hidden = true; return show('done');
+  }
+  if (myVote && !changing) {
+    $('#doneTitle').textContent = 'Thanks! Your vote is in 🏆'; $('#doneText').textContent = 'Winners are announced at the end of the night.';
+    $('#changeVote').hidden = false; return show('done');
+  }
   const q = $('#q2').value.trim().toLowerCase();
   const shown = people.filter(p => !q || p.name.toLowerCase().includes(q));
-  $('#list2').innerHTML = shown.length ? shown.map(p => `<button class="cand" data-code="${esc(p.code)}">${esc(p.name)}${dupTag(p, people)}</button>`).join('')
+  $('#list2').innerHTML = shown.length ? shown.map(p => `<button class="cand ${p.code === myVote ? 'on' : ''}" data-code="${esc(p.code)}">${esc(p.name)}${dupTag(p, people)}${p.code === myVote ? '<span class="tick">✓ Your vote</span>' : ''}</button>`).join('')
     : '<p class="rules">' + (people.length ? 'No names match.' : 'Nobody is on the list yet. Names appear as people arrive.') + '</p>';
+  $('#keep').hidden = !myVote;
   show('ballot');
 }
 
@@ -118,7 +135,7 @@ async function load() {
   try {
     const { ok, d } = await call({ action: 'people' });
     if (!ok) return;
-    people = d.people; open = d.open; voted = d.voted;
+    people = d.people; open = d.open; myVote = d.myVote;
     if (!$('#confirm').hidden) return; // don't redraw under an open confirmation
     render();
   } catch (e) {}
@@ -128,9 +145,13 @@ $('#list2').onclick = e => {
   const b = e.target.closest('.cand'); if (!b) return;
   pending = people.find(p => p.code === b.dataset.code);
   if (!pending) return;
+  if (pending.code === myVote) { toast("That's already your vote."); pending = null; return; }
   $('#confirmName').textContent = pending.name;
+  $('#confirmText').textContent = myVote ? 'Change your vote to this person?' : 'Vote for this person as Best Dressed?';
   $('#confirm').hidden = false;
 };
+$('#changeVote').onclick = () => { changing = true; $('#q2').value = ''; render(); };
+$('#keep').onclick = () => { changing = false; render(); };
 $('#no').onclick = () => { pending = null; $('#confirm').hidden = true; };
 $('#yes').onclick = async () => {
   if (!pending) return;
@@ -138,8 +159,7 @@ $('#yes').onclick = async () => {
   try {
     const { ok, d } = await call({ action: 'vote', candidate: pending.code });
     $('#confirm').hidden = true;
-    if (ok) { voted = true; if (navigator.vibrate) navigator.vibrate(40); render(); }
-    else if (d.error === 'already_voted') { voted = true; render(); toast('This phone has already voted.'); }
+    if (ok) { myVote = d.code; changing = false; if (navigator.vibrate) navigator.vibrate(40); render(); }
     else if (d.error === 'closed') { open = false; render(); }
     else toast('Could not save your vote. Try again.');
   } catch (e) { $('#confirm').hidden = true; toast('Could not reach the server. Try again.'); }

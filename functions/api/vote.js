@@ -4,7 +4,7 @@ import { json, ensureSchema } from "./_shared";
 //  - the list is everybody who has been CHECKED IN at the door
 //  - nobody types or picks anything about themselves
 //  - each DEVICE can vote once (a random id kept in the phone's browser)
-// Votes are final once cast. The dashboard only ever shows totals.
+// A phone can change its vote any time while voting is open (still only one vote per phone). The dashboard only ever shows totals.
 const CONFIRMED = "status IN ('paid','emailed')";
 const deviceOk = d => typeof d === "string" && /^[A-Za-z0-9_-]{16,64}$/.test(d);
 
@@ -26,18 +26,17 @@ export async function onRequestPost({ request, env }) {
     const candidate = String(body.candidate || "").trim().toUpperCase();
     const person = await db.prepare(`SELECT code, name FROM tickets WHERE code = ? AND used_at IS NOT NULL AND ${CONFIRMED}`).bind(candidate).first();
     if (!person) return json({ error: "bad_candidate" }, 400);
-    try {
-      // the device id is stored as the "voter", so nothing in the database says WHO voted
-      await db.prepare("INSERT INTO votes (voter_code, candidate_code, device) VALUES (?, ?, ?)").bind(body.device, person.code, body.device).run();
-    } catch (e) {
-      if (/UNIQUE/i.test(String(e.message))) return json({ error: "already_voted" }, 409);
-      throw e;
-    }
-    return json({ ok: true, name: person.name });
+    // the device id is stored as the "voter", so nothing in the database says WHO voted.
+    // A phone has exactly one vote; voting again just replaces it (so a mistake can be fixed).
+    await db.prepare(
+      "INSERT INTO votes (voter_code, candidate_code, device) VALUES (?, ?, ?) " +
+      "ON CONFLICT(voter_code) DO UPDATE SET candidate_code = excluded.candidate_code, created_at = CURRENT_TIMESTAMP"
+    ).bind(body.device, person.code, body.device).run();
+    return json({ ok: true, code: person.code, name: person.name });
   }
 
-  // default: the list of checked-in people + whether this device has already voted
+  // default: the list of checked-in people + this phone's current vote (if any)
   const { results } = await db.prepare(`SELECT code, name FROM tickets WHERE used_at IS NOT NULL AND ${CONFIRMED} ORDER BY lower(name)`).all();
-  const voted = await db.prepare("SELECT 1 AS ok FROM votes WHERE device = ?").bind(body.device).first();
-  return json({ open, people: results, voted: !!voted });
+  const mine = await db.prepare("SELECT candidate_code FROM votes WHERE device = ?").bind(body.device).first();
+  return json({ open, people: results, myVote: mine ? mine.candidate_code : null });
 }
