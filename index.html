@@ -3,20 +3,20 @@
 <head>
 <script>if (location.hostname.endsWith('github.io')) location.replace('https://asiansociety.pages.dev' + location.pathname.replace(/^\/AsianSociety/, '') + location.search + location.hash);</script>
 <meta charset="UTF-8">
-<script>(function(){var n=Date.now(),p=n<=new Date('2026-10-11T23:59:59+03:00').getTime()?'early':n<=new Date('2026-10-15T14:00:00+03:00').getTime()?'ten':'fifteen';document.documentElement.className+=' '+p+(p==='early'?'':' late');})();</script>
+<script>(function(){var TICKETS_CLOSED=true;var n=Date.now(),p=TICKETS_CLOSED?'closed':n<=new Date('2026-10-11T23:59:59+03:00').getTime()?'early':n<=new Date('2026-10-15T14:00:00+03:00').getTime()?'ten':'fifteen';document.documentElement.className+=' '+p+(p==='early'?'':' late');})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#141234">
-<title>Cultural Event: Last Chance for Tickets · 17 October · Asian Society</title>
-<meta name="description" content="Cultural Night, 17 October in Stara Zagora. Dress up in your cultural clothes! Best dressed competition, prizes, games, food and snacks, free henna. Tickets on sale now — limited spots.">
-<meta property="og:title" content="Cultural Event: Last Chance for Tickets!">
-<meta property="og:description" content="Last chance to get tickets: by 2PM, 15th October. 17 October, 6PM to 10PM. Dress up in your cultural clothes! Limited spots.">
+<title>Cultural Event · 17 October, 6PM · Asian Society, Trakia University</title>
+<meta name="description" content="Cultural Event, Saturday 17 October, 6PM to 10PM at the International Youth Center, Stara Zagora. Dress up in your cultural clothes! Ticket sales are closed. See you there!">
+<meta property="og:title" content="Cultural Event · Saturday 17 October, 6PM">
+<meta property="og:description" content="International Youth Center, Stara Zagora. Dress up in your cultural clothes! Starts at 6PM sharp, food at 7PM sharp. Ticket sales are closed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://asiansociety.pages.dev/">
 <meta property="og:image" content="https://asiansociety.pages.dev/Images/linkpreview-v3.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="800">
 <meta property="og:image:height" content="800">
-<meta property="og:image:alt" content="Your last chance to get tickets: by 2PM, 15th October. Trakia University Asian Society.">
+<meta property="og:image:alt" content="Asian Society Cultural Event, Saturday 17 October, Stara Zagora.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://asiansociety.pages.dev/Images/linkpreview-v3.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%AE%3C/text%3E%3C/svg%3E">
@@ -34,6 +34,8 @@
 }
 [hidden]{display:none!important}
 .late [data-early-only],.early [data-late-only],.early [data-ten-only],.early [data-fifteen-only],.ten [data-fifteen-only],.fifteen [data-ten-only]{display:none!important}
+.closed [data-early-only],.closed [data-late-only],.closed [data-ten-only],.closed [data-fifteen-only],.closed [data-open-only],.closed #prices,.closed #join{display:none!important}
+html:not(.closed) [data-closed-only]{display:none!important}
 html{scroll-behavior:smooth}
 body{background:#0a0920;font-family:'Karla',sans-serif;color:var(--cream);
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
@@ -145,6 +147,24 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .topbar u{font-weight:800;color:var(--gold-hi);text-underline-offset:3px}
 .topbar--sale{background:linear-gradient(180deg,#2c6b46,#1f4f33)}
 .evcount{margin-top:14px;font:800 15px 'Karla';letter-spacing:.06em;color:var(--gold-hi)}
+.sharp{margin-top:16px;padding:12px 16px;max-width:360px;border-radius:14px;background:rgba(255,207,126,.12);border:1.5px solid rgba(255,207,126,.55);font-size:15px;line-height:1.5;color:var(--cream)}
+.sharp b{color:var(--gold-hi)}
+.agenda{padding:44px 22px 12px;text-align:center}
+.agenda__h{font:800 22px 'Karla';letter-spacing:.24em;color:var(--gold-soft)}
+.agenda__h::after{content:"";display:block;width:34px;height:1px;background:rgba(216,162,74,.5);margin:12px auto 0}
+.agenda__lead{margin:16px auto 0;max-width:34ch;font-size:16px;color:var(--cream)}
+.agenda__lead b{color:var(--gold-hi)}
+.agenda__list{list-style:none;margin-top:18px;text-align:left;display:grid;gap:8px}
+.agenda__list li{display:flex;gap:14px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(216,162,74,.22)}
+.agenda__list li.hl{background:rgba(216,162,74,.16);border:1.5px solid var(--gold-hi)}
+.agenda__list .t{flex:none;min-width:74px;font:900 16px 'Karla';color:var(--gold-hi)}
+.agenda__list .w{font:700 16px/1.4 'Karla';color:var(--cream)}
+.agenda__list .w em{font-style:normal;font-weight:900;font-size:12px;letter-spacing:.1em;color:#fff;background:var(--red);border-radius:99px;padding:2px 9px;margin-left:6px;vertical-align:2px}
+.agenda__list .w small{display:block;font-weight:400;font-size:13.5px;color:var(--cream-dim);margin-top:2px}
+.votebox{margin-top:24px;padding:20px 16px;border-radius:18px;background:linear-gradient(180deg,rgba(194,51,24,.25),rgba(194,51,24,.1));border:1.5px solid rgba(255,207,126,.5)}
+.votebox__t{font:900 22px 'Fraunces',serif;color:var(--gold-hi)}
+.votebox__s{margin-top:6px;font-size:14.5px;color:var(--cream-dim)}
+.votebox .cta{margin-top:16px}
 .ctarow{text-align:center;padding:6px 0 4px}
 .ctarow .cta{margin-top:22px}
 .ctarow__sub{margin-top:12px;font:800 13.5px 'Karla';color:var(--gold-soft)}
@@ -603,8 +623,13 @@ a.tag:hover{border-style:solid}
           <em>Tap to open in Maps →</em>
         </span>
       </a>
-      <p class="chip up" style="--d:1.25s">TICKETS ON SALE NOW · LIMITED SPOTS</p>
-      <p class="evcount up" style="--d:1.28s" data-late-only><span class="ev"></span></p>
+      <p class="chip up" style="--d:1.25s" data-open-only>TICKETS ON SALE NOW · LIMITED SPOTS</p>
+      <p class="chip up" style="--d:1.25s" data-closed-only>TICKET SALES ARE CLOSED · SEE YOU THERE!</p>
+      <p class="evcount up" style="--d:1.28s"><span class="ev"></span></p>
+      <div class="sharp up" style="--d:1.3s" data-closed-only>
+        <p><b>🕕 The event starts at 6PM sharp!</b></p>
+        <p><b>🍽️ Food is served at 7PM sharp</b>, first come, first served!</p>
+      </div>
       <div class="dl pop" style="--d:1.3s" data-ten-only>
         <span class="dl__top">⏰ LAST CHANCE AT €10</span>
         <span class="dl__date">ENDS THURSDAY 2PM</span>
@@ -615,7 +640,8 @@ a.tag:hover{border-style:solid}
         <span class="dl__date">ENDS 11TH OCTOBER</span>
         <span class="dl__left cd"></span>
       </div>
-      <a class="cta pop" style="--d:1.35s" href="#join">GET YOUR TICKETS NOW!
+      <a class="cta pop" style="--d:1.35s" href="#ticket" data-closed-only>VIEW MY TICKET →</a>
+      <a class="cta pop" style="--d:1.35s" href="#join" data-open-only>GET YOUR TICKETS NOW!
         <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l7 7 7-7"/></svg>
       </a>
       <p class="fine up" style="--d:1.5s" data-early-only><b>EARLY BIRD: 20% OFF</b> <s>€10</s> <b>€8</b><br>Last chance! From the 12th tickets are €10. Spots are limited.</p>
@@ -677,6 +703,28 @@ a.tag:hover{border-style:solid}
           </li>
           
         </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════ AGENDA ═══════════ -->
+    <section class="agenda" id="agenda">
+      <h2 class="agenda__h rv">THE PLAN</h2>
+      <p class="agenda__lead rv"><b>6PM sharp!</b> We start on time. <b>Food at 7PM sharp</b>, first come, first served.</p>
+      <ol class="agenda__list rv" style="--d:.1s">
+        <li class="hl"><span class="t">6:00 PM</span><span class="w">Event starts <em>SHARP!</em></span></li>
+        <li><span class="t">6:20 PM</span><span class="w">Opening</span></li>
+        <li><span class="t">6:30 PM</span><span class="w">Get-to-know-you Bingo <small>Remember everyone's names, you'll need them to vote!</small></span></li>
+        <li class="hl"><span class="t">7:00 PM</span><span class="w">Food is served <em>SHARP!</em> <small>First come, first served. Plus a little surprise 🎁</small></span></li>
+        <li><span class="t">8:00 PM</span><span class="w">Trivia with music</span></li>
+        <li><span class="t">8:40 PM</span><span class="w">Desserts &amp; Chai</span></li>
+        <li><span class="t">9:00 PM</span><span class="w">Musical Chairs</span></li>
+        <li><span class="t">9:30 PM</span><span class="w">Final scores &amp; Best Dressed awards 🏆</span></li>
+        <li><span class="t">10:00 PM</span><span class="w">End</span></li>
+      </ol>
+      <div class="votebox rv" style="--d:.15s" data-closed-only>
+        <p class="votebox__t">🏆 Vote for Best Dressed</p>
+        <p class="votebox__s">Once you're checked in at the door you can vote for the best outfit of the night. You can't vote for yourself.</p>
+        <a class="cta" href="/vote">VOTE BEST DRESSED →</a>
       </div>
     </section>
 
@@ -936,12 +984,17 @@ var PRICE={prereg:7,early:8,regular:10,late:15};
 var EARLY_END=new Date('2026-10-11T23:59:59+03:00').getTime();
 var TEN_END=new Date('2026-10-15T14:00:00+03:00').getTime();
 var EVENT_START=new Date('2026-10-17T18:00:00+03:00').getTime();
-var PHASE=Date.now()<=EARLY_END?'early':Date.now()<=TEN_END?'ten':'fifteen';
+var TICKETS_CLOSED=true; /* ticket sales are closed. Set to false (and SALES_OPEN in _shared.js) to reopen */
+var PHASE=TICKETS_CLOSED?'closed':Date.now()<=EARLY_END?'early':Date.now()<=TEN_END?'ten':'fifteen';
 var LATE=PHASE!=='early';
-var KEEP={early:['early'],ten:['late','ten'],fifteen:['late','fifteen']}[PHASE];
-['early','late','ten','fifteen'].forEach(function(k){
+var KEEP={closed:['closed'],early:['early','open'],ten:['late','ten','open'],fifteen:['late','fifteen','open']}[PHASE];
+['early','late','ten','fifteen','open','closed'].forEach(function(k){
   if(KEEP.indexOf(k)<0)document.querySelectorAll('[data-'+k+'-only]').forEach(function(el){el.remove()});
 });
+if(PHASE==='closed'){
+  /* the buying sections stay inert and hidden; nothing on the page leads to them */
+  ['#prices','#join'].forEach(function(s){var el=document.querySelector(s);if(el)el.hidden=true});
+}
 var WA_LINK='https://wa.me/359882093176';
 var MAPS_LINK='https://maps.app.goo.gl/PGVZ2q4MvKAYjRC27';
 
@@ -1119,7 +1172,8 @@ function ticketHTML(d,withAgain){
   if(d.used){
     return '<div class="pass used"><span class="pass__stamp">CHECKED IN</span><p class="pass__big">This ticket has been used</p>'
       +'<p class="pass__name">'+name+'</p><p class="pass__ref">Reference</p><p class="pass__code">'+code+'</p>'
-      +'<p class="pass__msg">You were scanned in at the door. Enjoy the night!</p>'+note+help+'</div>';
+      +'<p class="pass__msg">You were scanned in at the door. Enjoy the night!</p>'
+      +'<a class="send" href="/vote" style="text-decoration:none">🏆 Vote for Best Dressed</a>'+note+help+'</div>';
   }
   if(d.status==='paid'||d.status==='emailed'){
     var team=d.tier==='team';
@@ -1360,6 +1414,10 @@ lookForm.addEventListener('submit',function(e){
       return;
     }
     d.email=email;rememberEmail(email);
+    if(d.status==='draft'&&PHASE==='closed'){
+      lookRes.innerHTML='<div class="pass wait"><p class="pass__big">Ticket sales are closed</p><p class="pass__msg">Hi '+esc(d.name)+', your ticket was never confirmed and online sales have now closed. If you have already paid, message us on WhatsApp with your reference <b>'+esc(d.code)+'</b> and we will sort it out.</p><a class="send" data-wa href="'+WA_LINK+'" target="_blank" rel="noopener" style="text-decoration:none">Message us on WhatsApp</a></div>';
+      return;
+    }
     if(d.status==='draft'){
       lookRes.innerHTML='<div class="pass wait"><p class="pass__big">Almost there, '+esc(d.name)+'!</p><p class="pass__msg">You’ve reserved a ticket but haven’t confirmed your payment yet.</p><button class="send" type="button" id="contPay">Continue to payment</button></div>';
       $('#contPay').addEventListener('click',function(){present(d)});

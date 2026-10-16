@@ -80,6 +80,63 @@ dialog::backdrop{background:rgba(5,3,15,.65)}
 dialog h3{font-size:20px;margin-bottom:4px}
 dialog p.hint{color:var(--muted);font-size:13px;margin:0 0 12px}
 dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid var(--line);border-radius:10px;padding:11px 13px;color:var(--cream);font:inherit;resize:vertical}
+.dlg-check{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;color:var(--cream);text-transform:none;letter-spacing:0}
+.dlg-check input{width:18px;height:18px;accent-color:var(--gold)}
+
+/* views: Tickets / Best Dressed / Trivia */
+.views{display:flex;gap:8px;margin:0 0 18px;flex-wrap:wrap}
+.vtab{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--muted);padding:11px 18px;border-radius:12px;font-weight:700;font-size:15px}
+.vtab.on{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
+.panel{background:rgba(37,29,61,.85);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.panel__head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.panel__head h2{font-size:24px}
+.panel__btns{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hint2{color:var(--muted);font-size:13.5px;margin-top:4px}
+.hint2 a{color:var(--gold)}
+.pill{padding:5px 12px;border-radius:99px;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.08);color:var(--muted)}
+.pill.on{background:rgba(127,216,162,.2);color:var(--green)}
+.pill.warn{background:rgba(242,195,107,.2);color:var(--amber)}
+.vstats{display:flex;gap:12px;margin:6px 0 16px}
+.vstats div{background:#17122b;border:1px solid var(--line);border-radius:12px;padding:10px 16px}
+.vstats strong{display:block;font:700 28px Georgia,serif;color:var(--gold)}
+.vstats span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.vrow{display:grid;grid-template-columns:34px minmax(110px,1.4fr) 3fr 40px;gap:10px;align-items:center;margin:7px 0;font-size:15px}
+.vrow .rank{color:var(--muted);font-weight:800;text-align:center}
+.vrow .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vrow .n{text-align:right;font-weight:800;color:var(--gold)}
+.vrow.first .nm{color:var(--gold);font-weight:800}
+.linkbtn2{background:none;border:0;color:var(--red);text-decoration:underline;cursor:pointer;font:inherit;padding:0}
+.trnow{text-align:center;padding:22px 12px;border-radius:16px;background:#17122b;border:2px solid var(--line);margin-bottom:14px}
+.trnow.open{border-color:var(--green);background:rgba(127,216,162,.1)}
+.trnow.answering{border-color:var(--gold);background:rgba(232,180,95,.12)}
+.trnow .k{font-size:12px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+.trnow .v{font:700 clamp(26px,5vw,44px)/1.15 Georgia,serif;margin-top:4px}
+.trnow .e{margin-top:8px;color:var(--muted);font-size:14px}
+.trctl{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+button.big{padding:18px 10px;font-size:17px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--cream);font-weight:800}
+button.big small{display:block;font-size:11px;font-weight:600;opacity:.6;margin-top:2px}
+button.big.go-open{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
+button.big.good{background:rgba(127,216,162,.25);border-color:var(--green);color:var(--green)}
+button.big.bad{background:rgba(255,154,138,.2);border-color:var(--red);color:var(--red)}
+button.big:disabled{opacity:.35;cursor:not-allowed}
+.trpass{margin-top:14px}
+.trpass__btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.trpass__btns button{background:rgba(156,194,255,.15);border:1px solid var(--blue);color:var(--blue);padding:11px 16px;font-weight:800;font-size:15px;border-radius:12px}
+.trteams{margin-top:18px}
+.trteams__head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.trteams__head h3{font-size:19px}
+.trAdd{display:flex;gap:8px}
+.trAdd input{width:200px}
+.trow{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:6px 0;border-radius:12px;background:#17122b;border:1px solid var(--line)}
+.trow.hot{border-color:var(--gold);background:rgba(232,180,95,.12)}
+.trow.tried{opacity:.55}
+.trow .tn{flex:1;font-weight:700;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trow .sc{font:700 24px Georgia,serif;color:var(--gold);min-width:44px;text-align:right}
+.trow button{padding:7px 12px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--cream);border-radius:9px;font-weight:800}
+.trow .rm{color:var(--red)}
+.trfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:14px}
+.trfoot input{width:80px;margin-left:8px}
+@media(max-width:700px){.trctl{grid-template-columns:1fr 1fr}.vrow{grid-template-columns:26px 1fr 40px}.vrow .bar{display:none}}
 .dlg-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:flex-end}
 .stat{padding:16px 18px;border-radius:var(--radius);background:rgba(37,29,61,.85);border:1px solid var(--line)}
 .stat span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -184,7 +241,7 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
       <div class="top-actions">
         <span class="live"><i class="dot"></i> Live</span>
         <button class="ghost" id="soundBtn" title="Play a ping when someone registers">🔔 Sound on</button>
-        <button class="ghost" id="teamBtn">＋ Team member</button>
+        <button class="ghost" id="teamBtn">＋ Add person</button>
         <button class="ghost" id="csvBtn">⬇ CSV</button>
         <button class="ghost" id="preBtn" title="Upload the pre-registration CSV (Email, Name columns)">⬆ Pre-reg list</button>
         <input type="file" id="preFile" accept=".csv,text/csv,text/plain" hidden>
@@ -192,6 +249,13 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
       </div>
     </div>
 
+    <nav class="views" id="views">
+      <button class="vtab on" data-view="Tickets">🎟️ Tickets</button>
+      <button class="vtab" data-view="Voting">🏆 Best Dressed</button>
+      <button class="vtab" data-view="Trivia">🧠 Trivia</button>
+    </nav>
+
+    <div id="viewTickets">
     <div class="stats">
       <div class="stat"><span>Registered</span><strong id="nTotal">0</strong><small>tapped “Paid!”</small></div>
       <div class="stat s-pending"><span>To check</span><strong id="nPending">0</strong><small>check Revolut</small></div>
@@ -213,18 +277,75 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
     </div>
 
     <div class="list" id="list"></div>
+    </div><!-- /viewTickets -->
+
+    <!-- ===== BEST DRESSED VOTING ===== -->
+    <div id="viewVoting" hidden>
+      <div class="panel">
+        <div class="panel__head">
+          <div><h2>🏆 Best Dressed voting</h2><p class="hint2">Everyone who is <b>checked in</b> can vote (and be voted for). Nobody can vote for themselves. Guests vote at <b id="voteUrl"></b></p></div>
+          <div class="panel__btns">
+            <span class="pill" id="voteState">…</span>
+            <button class="ghost" id="voteToggle">…</button>
+            <button class="ghost" id="voteRefresh">↻ Refresh</button>
+          </div>
+        </div>
+        <div class="vstats"><div><strong id="vIn">0</strong><span>checked in</span></div><div><strong id="vVoters">0</strong><span>have voted</span></div></div>
+        <div id="voteResults"></div>
+        <p class="hint2" style="margin-top:14px">Results are only shown here, not to guests. <button class="linkbtn2" id="voteReset">Reset all votes</button></p>
+      </div>
+    </div>
+
+    <!-- ===== TRIVIA HOST ===== -->
+    <div id="viewTrivia" hidden>
+      <div class="panel">
+        <div class="panel__head">
+          <div><h2>🧠 Team Trivia</h2><p class="hint2">TV screen: <a id="tvLink" target="_blank" rel="noopener"></a> · Team phones: <a id="buzzLink" target="_blank" rel="noopener"></a></p></div>
+          <div class="panel__btns"><span class="pill" id="trState">…</span></div>
+        </div>
+
+        <div class="trnow" id="trNow"></div>
+
+        <div class="trctl">
+          <button class="big go-open" id="trNew">▶ New question <small>N</small></button>
+          <button class="big" id="trClose">■ Close buzzers <small>Esc</small></button>
+          <button class="big good" id="trCorrect" disabled>✓ Correct <small>C</small></button>
+          <button class="big bad" id="trWrong" disabled>✗ Incorrect <small>X</small></button>
+        </div>
+
+        <div class="trpass" id="trPassBox" hidden>
+          <p class="hint2">Pass the question to:</p>
+          <div id="trPass" class="trpass__btns"></div>
+        </div>
+
+        <div class="trteams">
+          <div class="trteams__head">
+            <h3>Teams</h3>
+            <form id="trAddForm" class="trAdd"><input id="trAddName" type="text" maxlength="30" placeholder="New team name" autocomplete="off"><button class="primary" type="submit">Add team</button></form>
+          </div>
+          <div id="trTeams"></div>
+          <div class="trfoot">
+            <label>Points per correct answer <input id="trPoints" type="number" min="1" max="1000" value="1"></label>
+            <button class="ghost" id="trResetScores">Reset all scores</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
 <dialog id="teamDlg">
-  <h3>Add a team member</h3>
-  <p class="hint">Creates a free ticket that is already confirmed. They can view it on the site with their email.</p>
+  <h3>Add a person</h3>
+  <p class="hint">Adds someone by hand. They can view their ticket on the site with their email, and you can check them in.</p>
   <label class="dlg-field">Name<input id="teamName" type="text" autocomplete="off"></label>
   <label class="dlg-field">Email<input id="teamEmail" type="email" autocomplete="off"></label>
   <label class="dlg-field">Phone (optional)<input id="teamPhone" type="tel" autocomplete="off" placeholder="+359 88 123 4567"></label>
+  <label class="dlg-field">Ticket type<select id="teamTier"><option value="team">Team member (free)</option><option value="regular">Regular €10</option><option value="late">Late €15</option><option value="early">Early bird €8</option><option value="prereg">Pre-reg €7</option><option value="teamdisc">Team price €6</option><option value="referral">Referral €3</option></select></label>
   <label class="dlg-field">Vegan food?<select id="teamVegan"><option value="">Not set</option><option value="no">Not vegan</option><option value="yes">Vegan</option></select></label>
+  <label class="dlg-check"><input id="teamPaid" type="checkbox" checked> Already paid (confirmed)</label>
+  <label class="dlg-check"><input id="teamIn" type="checkbox"> Check them in now</label>
   <div class="dlg-btns">
     <button class="ghost" id="teamCancel" type="button">Cancel</button>
-    <button class="primary" id="teamGo" type="button">Add team member</button>
+    <button class="primary" id="teamGo" type="button">Add person</button>
   </div>
 </dialog>
 <dialog id="preDlg">
@@ -458,6 +579,7 @@ function logout() {
   try { sessionStorage.removeItem('asoc_pw'); } catch (e) {}
   password.value = ''; firstLoad = true; known = new Set(); tickets = [];
   $('#app').hidden = true; $('#login').hidden = false;
+  showView('Tickets');
 }
 
 /* events */
@@ -502,15 +624,15 @@ async function loadPreCount() {
 }
 /* add a team member (free, already confirmed) */
 const teamDlg = $('#teamDlg');
-$('#teamBtn').onclick = () => { ['teamName', 'teamEmail', 'teamPhone', 'teamVegan'].forEach(id => $('#' + id).value = ''); teamDlg.showModal(); $('#teamName').focus(); };
+$('#teamBtn').onclick = () => { ['teamName', 'teamEmail', 'teamPhone', 'teamVegan'].forEach(id => $('#' + id).value = ''); $('#teamTier').value = 'team'; $('#teamPaid').checked = true; $('#teamIn').checked = false; teamDlg.showModal(); $('#teamName').focus(); };
 $('#teamCancel').onclick = () => teamDlg.close();
 $('#teamGo').onclick = async () => {
   const b = $('#teamGo'); b.disabled = true;
   try {
-    const r = await api('/api/admin/tickets', { method: 'POST', body: JSON.stringify({ name: $('#teamName').value, email: $('#teamEmail').value, phone: $('#teamPhone').value, vegan: $('#teamVegan').value }) });
+    const r = await api('/api/admin/tickets', { method: 'POST', body: JSON.stringify({ name: $('#teamName').value, email: $('#teamEmail').value, phone: $('#teamPhone').value, vegan: $('#teamVegan').value, tier: $('#teamTier').value, paid: $('#teamPaid').checked, checkedIn: $('#teamIn').checked }) });
     const d = await r.json().catch(() => ({}));
-    if (!r.ok) toast(d.error || 'Could not add team member.', true);
-    else { toast(`Team member added: ${d.code}`); teamDlg.close(); await load(); }
+    if (!r.ok) toast(d.error || 'Could not add that person.', true);
+    else { toast(`Added: ${d.code}`); teamDlg.close(); await load(); }
   } catch (x) { toast('Could not reach the server.', true); }
   b.disabled = false;
 };
@@ -584,6 +706,115 @@ $('#list').onchange = e => {
   else if (s.dataset.kind === 'tier') update(s.dataset.code, 'set_tier', { tier: v }).then(ok => ok && toast(v === 'team' ? 'Marked as team member: free ticket' : v === 'teamdisc' ? 'Team price set: €6, they still pay it' : v === 'referral' ? 'Referral price set: €3, they still pay it' : 'Ticket type changed'));
   else update(s.dataset.code, 'set_status', { status: v });
 };
+
+/* ===================== views: Tickets / Best Dressed / Trivia ===================== */
+let view = 'Tickets', trTimer = null, trState = null, voteTimer = null, voteIsOpen = true;
+$('#voteUrl').textContent = location.host + '/vote';
+$('#tvLink').href = '/tv'; $('#tvLink').textContent = location.host + '/tv';
+$('#buzzLink').href = '/buzzer'; $('#buzzLink').textContent = location.host + '/buzzer';
+
+function showView(v) {
+  view = v;
+  ['Tickets', 'Voting', 'Trivia'].forEach(n => { $('#view' + n).hidden = n !== v; });
+  document.querySelectorAll('.vtab').forEach(b => b.classList.toggle('on', b.dataset.view === v));
+  clearTimeout(trTimer); clearInterval(voteTimer);
+  if (v === 'Voting') { loadVotes(); voteTimer = setInterval(loadVotes, 10000); }
+  if (v === 'Trivia') pollTrivia();
+}
+$('#views').onclick = e => { const b = e.target.closest('.vtab'); if (b) showView(b.dataset.view); };
+
+/* ---- best dressed ---- */
+function renderVotes(d) {
+  voteIsOpen = d.open;
+  $('#voteState').textContent = d.open ? 'Voting open' : 'Voting closed';
+  $('#voteState').className = 'pill ' + (d.open ? 'on' : 'warn');
+  $('#voteToggle').textContent = d.open ? '⏸ Close voting' : '▶ Open voting';
+  $('#vIn').textContent = d.checkedIn; $('#vVoters').textContent = d.voters;
+  const max = Math.max(1, ...d.results.map(r => r.votes));
+  const medal = ['🥇', '🥈', '🥉'];
+  $('#voteResults').innerHTML = d.results.length ? d.results.map((r, i) =>
+    `<div class="vrow ${i === 0 && r.votes > 0 ? 'first' : ''}"><span class="rank">${r.votes > 0 && medal[i] ? medal[i] : i + 1}</span><span class="nm">${esc(r.name)}</span><div class="bar"><i style="width:${r.votes / max * 100}%"></i></div><span class="n">${r.votes}</span></div>`
+  ).join('') : '<p class="hint2">Nobody is checked in yet. People appear here as you check them in on the Tickets tab.</p>';
+}
+async function loadVotes() {
+  try { const r = await api('/api/admin/votes'); const d = await r.json(); if (r.ok) renderVotes(d); else toast(d.error || 'Could not load votes.', true); }
+  catch (e) { toast('Could not reach the server.', true); }
+}
+async function votesAction(action) {
+  const r = await api('/api/admin/votes', { method: 'POST', body: JSON.stringify({ action }) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { toast(d.error || 'Could not do that.', true); return; }
+  renderVotes(d);
+}
+$('#voteToggle').onclick = () => votesAction(voteIsOpen ? 'close' : 'open');
+$('#voteRefresh').onclick = loadVotes;
+$('#voteReset').onclick = () => { if (confirm('Delete ALL votes? This cannot be undone.')) votesAction('reset').then(() => toast('All votes cleared.')); };
+
+/* ---- trivia host ---- */
+async function trCall(action, extra = {}) {
+  const r = await api('/api/admin/trivia', { method: 'POST', body: JSON.stringify({ action, ...extra }) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { toast(d.error || 'That did not work.', true); return null; }
+  trState = d; renderTrivia(); return d;
+}
+async function pollTrivia() {
+  if (view !== 'Trivia') return;
+  try { const r = await api('/api/admin/trivia'); if (r.ok) { trState = await r.json(); renderTrivia(); } } catch (e) {}
+  trTimer = setTimeout(pollTrivia, 1000);
+}
+function renderTrivia() {
+  const s = trState; if (!s) return;
+  const now = $('#trNow');
+  now.className = 'trnow ' + (s.phase === 'open' ? 'open' : s.phase === 'answering' ? 'answering' : '');
+  let k = 'Buzzers closed', v = 'Press New question to start', e = '';
+  if (s.phase === 'open') { k = 'Buzzers open'; v = '🔔 Waiting for a team to buzz…'; }
+  if (s.phase === 'answering' && s.buzzed) { k = s.event === 'pass' ? 'Passed to' : 'First to buzz'; v = s.buzzed.name; }
+  if (s.event === 'correct' && s.eventTeam && s.phase === 'idle') e = `✅ ${s.eventTeam.name} got it right (+${s.points})`;
+  if (s.event === 'incorrect' && s.eventTeam && s.phase === 'open') e = `❌ ${s.eventTeam.name} got it wrong. Buzzers are open for the others.`;
+  now.innerHTML = `<div class="k">${esc(k)}</div><div class="v">${esc(v)}</div>${e ? `<div class="e">${esc(e)}</div>` : ''}`;
+  $('#trState').textContent = s.phase === 'idle' ? 'Idle' : s.phase === 'open' ? 'Buzzers open' : 'Answering';
+  $('#trState').className = 'pill ' + (s.phase === 'idle' ? '' : s.phase === 'open' ? 'on' : 'warn');
+  const answering = s.phase === 'answering' && s.buzzed;
+  $('#trCorrect').disabled = !answering; $('#trWrong').disabled = !answering;
+  $('#trCorrect').firstChild.textContent = `✓ Correct (+${s.points}) `;
+
+  const passTargets = s.teams.filter(t => !(s.buzzed && s.buzzed.id === t.id));
+  $('#trPassBox').hidden = !(s.phase === 'open' || s.phase === 'answering') || !passTargets.length;
+  $('#trPass').innerHTML = passTargets.map((t, i) => `<button data-id="${t.id}">${i < 9 ? (i + 1) + ' · ' : ''}${esc(t.name)}</button>`).join('');
+
+  $('#trTeams').innerHTML = s.teams.length ? s.teams.map(t => {
+    const hot = s.buzzed && s.buzzed.id === t.id;
+    const tried = s.phase === 'open' && t.tried;
+    return `<div class="trow ${hot ? 'hot' : ''} ${tried ? 'tried' : ''}"><span class="tn">${esc(t.name)}${hot ? ' 🎤' : ''}${tried ? ' (tried)' : ''}</span><button data-act="adj" data-id="${t.id}" data-d="-1">−1</button><span class="sc">${t.score}</span><button data-act="adj" data-id="${t.id}" data-d="1">+1</button><button class="rm" data-act="rm" data-id="${t.id}" title="Remove team">✕</button></div>`;
+  }).join('') : '<p class="hint2">No teams yet. Add the team names above, then tell everyone to open the buzzer page on their phone.</p>';
+  const pts = $('#trPoints'); if (document.activeElement !== pts) pts.value = s.points;
+}
+$('#trNew').onclick = () => trCall('new_question');
+$('#trClose').onclick = () => trCall('close');
+$('#trCorrect').onclick = () => trCall('correct');
+$('#trWrong').onclick = () => trCall('incorrect');
+$('#trPass').onclick = e => { const b = e.target.closest('button'); if (b) trCall('pass', { team: Number(b.dataset.id) }); };
+$('#trTeams').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const id = Number(b.dataset.id);
+  if (b.dataset.act === 'adj') trCall('adjust', { team: id, delta: Number(b.dataset.d) });
+  if (b.dataset.act === 'rm' && confirm('Remove this team?')) trCall('remove_team', { team: id });
+};
+$('#trAddForm').onsubmit = async e => { e.preventDefault(); const n = $('#trAddName').value.trim(); if (!n) return; if (await trCall('add_team', { name: n })) { $('#trAddName').value = ''; $('#trAddName').focus(); } };
+$('#trPoints').onchange = () => trCall('set_points', { points: Number($('#trPoints').value) });
+$('#trResetScores').onclick = () => { if (confirm('Set every team score back to 0?')) trCall('reset_scores'); };
+// keyboard shortcuts for the host: N new question, C correct, X incorrect, Esc close, 1-9 pass to that team
+document.addEventListener('keydown', e => {
+  if (view !== 'Trivia' || e.ctrlKey || e.metaKey || e.altKey) return;
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+  const k = e.key.toLowerCase();
+  if (k === 'n') trCall('new_question');
+  else if (k === 'c' && !$('#trCorrect').disabled) trCall('correct');
+  else if (k === 'x' && !$('#trWrong').disabled) trCall('incorrect');
+  else if (e.key === 'Escape') trCall('close');
+  else if (/^[1-9]$/.test(e.key)) { const b = $('#trPass').querySelectorAll('button')[Number(e.key) - 1]; if (b && !$('#trPassBox').hidden) trCall('pass', { team: Number(b.dataset.id) }); }
+});
 
 setInterval(() => { if (!$('#app').hidden) load().catch(() => {}); }, 15000);
 

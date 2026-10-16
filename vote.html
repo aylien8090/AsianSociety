@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#141234">
+<meta name="robots" content="noindex">
+<title>Vote: Best Dressed · Asian Society</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;900&family=Karla:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+:root{--night:#141234;--card:#2e2546;--cream:#f4e9d4;--muted:#b9acd0;--gold:#ffcf7e;--red:#c23318;--green:#7fd8a2}
+body{min-height:100vh;background:linear-gradient(180deg,#141234,#241a38 60%,#43306b);color:var(--cream);font:16px/1.5 'Karla',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+main{max-width:520px;margin:0 auto;padding:26px 16px 80px}
+h1{font:900 30px/1.15 'Fraunces',serif;color:var(--gold);text-align:center}
+.sub{text-align:center;color:var(--muted);margin:6px 0 22px}
+.card{background:rgba(46,37,70,.9);border:1px solid rgba(216,162,74,.35);border-radius:18px;padding:20px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+label{display:block;font:800 12px 'Karla';letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+input[type=email],input[type=search]{width:100%;padding:13px 14px;border-radius:12px;border:1px solid #66567d;background:#19142c;color:var(--cream);font:inherit;font-size:17px}
+button{font:inherit;cursor:pointer;border:0}
+.go{width:100%;margin-top:14px;padding:15px;border-radius:12px;background:linear-gradient(180deg,#e0502c,#c23318);color:#fff7ea;font:800 16px 'Karla';letter-spacing:.06em;text-transform:uppercase}
+.go:disabled{opacity:.6}
+.msg{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:15px;line-height:1.5}
+.msg.bad{background:#fde8e3;color:#7a2312}
+.msg.info{background:rgba(255,207,126,.15);color:var(--gold)}
+.hi{font:900 22px 'Fraunces',serif;margin-bottom:4px}
+.rules{color:var(--muted);font-size:14px;margin-bottom:14px}
+.mine{margin:12px 0;padding:12px 14px;border-radius:12px;background:rgba(127,216,162,.15);border:1px solid rgba(127,216,162,.45);color:var(--green);font-weight:800}
+.list{display:grid;gap:8px;margin-top:12px}
+.cand{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;padding:14px 16px;border-radius:14px;background:#211a35;border:1.5px solid #4d3e66;color:var(--cream);font:700 17px 'Karla'}
+.cand small{color:var(--muted);font-weight:400}
+.cand:active{transform:scale(.98)}
+.cand.on{background:rgba(127,216,162,.18);border-color:var(--green)}
+.cand .tick{color:var(--green);font-weight:800}
+.closed .cand{opacity:.6;pointer-events:none}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.link{background:none;color:var(--muted);text-decoration:underline;font-size:14px}
+.back{display:block;text-align:center;margin-top:22px;color:var(--muted);font-size:14px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#f6ecd8;color:#241a38;padding:12px 18px;border-radius:12px;font-weight:800;box-shadow:0 10px 26px rgba(0,0,0,.4);z-index:10;max-width:90vw;text-align:center}
+</style>
+</head>
+<body>
+<main>
+  <h1>🏆 Best Dressed</h1>
+  <p class="sub">Vote for the person with the best outfit tonight!</p>
+
+  <section class="card" id="login">
+    <form id="loginForm">
+      <label for="email">The email on your ticket</label>
+      <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+      <button class="go" id="goBtn" type="submit">Continue</button>
+    </form>
+    <div id="loginMsg"></div>
+    <p class="rules" style="margin-top:14px">Only people who are checked in at the door can vote. Not checked in yet? Show your ticket to the team.</p>
+  </section>
+
+  <section class="card" id="ballot" hidden>
+    <div class="top"><p class="hi" id="hi"></p><button class="link" id="out" type="button">Not you?</button></div>
+    <p class="rules" id="rules">Tap a name to vote. You can't vote for yourself, and you can change your vote any time until voting closes.</p>
+    <div id="mine"></div>
+    <input id="q" type="search" placeholder="Search names…" aria-label="Search names">
+    <div class="list" id="list"></div>
+    <div id="ballotMsg"></div>
+  </section>
+
+  <a class="back" href="/">← Back to the event page</a>
+</main>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+const $ = s => document.querySelector(s);
+let email = '', candidates = [], myVote = null, open = true, timer;
+
+function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function toast(t) { const el = $('#toast'); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 2600); }
+async function call(body) {
+  const r = await fetch('/api/vote', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, ...body }) });
+  const d = await r.json().catch(() => ({}));
+  return { ok: r.ok, status: r.status, d };
+}
+const ERR = {
+  no_ticket: "We couldn't find a ticket for that email. Check for typos.",
+  not_confirmed: "Your ticket isn't confirmed yet, so you can't vote. Message us on WhatsApp.",
+  not_checked_in: "You're not checked in yet. Show your ticket to the team at the door, then try again.",
+  closed: 'Voting is closed.',
+  self: "You can't vote for yourself!",
+  bad_candidate: "That person isn't checked in.",
+  bad_email: 'That email address looks wrong.'
+};
+
+function render() {
+  const names = {};
+  candidates.forEach(c => names[c.name.toLowerCase()] = (names[c.name.toLowerCase()] || 0) + 1);
+  const q = $('#q').value.trim().toLowerCase();
+  const shown = candidates.filter(c => !q || c.name.toLowerCase().includes(q));
+  $('#list').innerHTML = shown.length ? shown.map(c => {
+    const dup = names[c.name.toLowerCase()] > 1 ? ` <small>(${esc(c.code.slice(-2))})</small>` : '';
+    return `<button class="cand ${c.code === myVote ? 'on' : ''}" data-code="${esc(c.code)}">${esc(c.name)}${dup}${c.code === myVote ? '<span class="tick">✓ Your vote</span>' : ''}</button>`;
+  }).join('') : '<p class="rules">No names match. Others appear here as they get checked in.</p>';
+  const mine = candidates.find(c => c.code === myVote);
+  $('#mine').innerHTML = mine ? `<div class="mine">Your vote: ${esc(mine.name)} ✓</div>` : '';
+  $('#ballot').classList.toggle('closed', !open);
+  $('#rules').textContent = open
+    ? "Tap a name to vote. You can't vote for yourself, and you can change your vote any time until voting closes."
+    : 'Voting is closed. Thanks for voting!';
+}
+
+async function load(showErrors) {
+  const { ok, d } = await call({ action: 'list' });
+  if (!ok) {
+    if (showErrors) $('#loginMsg').innerHTML = `<div class="msg bad">${esc(ERR[d.error] || 'Something went wrong. Try again.')}</div>`;
+    return false;
+  }
+  candidates = d.candidates; myVote = d.myVote; open = d.open;
+  $('#hi').textContent = 'Hi ' + d.name.split(' ')[0] + '!';
+  $('#login').hidden = true; $('#ballot').hidden = false;
+  render();
+  return true;
+}
+
+$('#loginForm').onsubmit = async e => {
+  e.preventDefault();
+  email = $('#email').value.trim().toLowerCase();
+  $('#loginMsg').innerHTML = '';
+  $('#goBtn').disabled = true;
+  try {
+    if (await load(true)) {
+      try { localStorage.setItem('asoc_email', email); } catch (x) {}
+      clearInterval(timer); timer = setInterval(() => load(false), 20000);
+    }
+  } catch (x) { $('#loginMsg').innerHTML = '<div class="msg bad">Could not reach the server. Try again.</div>'; }
+  $('#goBtn').disabled = false;
+};
+
+$('#list').onclick = async e => {
+  const b = e.target.closest('.cand');
+  if (!b) return;
+  const code = b.dataset.code;
+  const { ok, d } = await call({ action: 'vote', candidate: code });
+  if (!ok) { toast(ERR[d.error] || 'Could not save your vote.'); if (d.error === 'closed') { open = false; render(); } return; }
+  myVote = code; render();
+  toast('Vote saved: ' + d.name + ' ✓');
+  if (navigator.vibrate) navigator.vibrate(30);
+};
+$('#q').oninput = render;
+$('#out').onclick = () => { clearInterval(timer); $('#ballot').hidden = true; $('#login').hidden = false; try { localStorage.removeItem('asoc_email'); } catch (x) {} };
+
+try { const s = localStorage.getItem('asoc_email'); if (s) { $('#email').value = s; email = s; load(false).then(ok => { if (ok) timer = setInterval(() => load(false), 20000); }).catch(() => {}); } } catch (e) {}
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Trivia · TV screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;900&family=Karla:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--cream:#f4e9d4;--muted:#b9acd0;--gold:#ffcf7e}
+html,body{height:100%}
+body{background:radial-gradient(1200px 700px at 50% -10%,#43306b,#141234 60%);color:var(--cream);font:20px/1.3 'Karla',system-ui,sans-serif;overflow:hidden}
+.screen{height:100%;display:grid;grid-template-columns:1.6fr 1fr;gap:3vw;padding:3vw}
+.stage{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:28px;padding:3vw;transition:background .3s,box-shadow .3s;background:rgba(255,255,255,.04);border:2px solid rgba(255,207,126,.25)}
+.stage.open{background:rgba(35,140,80,.28);border-color:#59d68a;box-shadow:0 0 90px rgba(80,220,140,.35)}
+.stage.answering{background:rgba(220,130,30,.25);border-color:var(--gold);box-shadow:0 0 90px rgba(255,200,100,.35)}
+.stage.correct{background:rgba(35,140,80,.35);border-color:#59d68a}
+.stage.incorrect{background:rgba(190,50,30,.3);border-color:#ff7a5c}
+.kicker{font:800 2.2vw 'Karla';letter-spacing:.3em;color:var(--gold)}
+.big{font:900 8.5vw/1.05 'Fraunces',serif;margin:1.2vw 0;word-break:break-word}
+.stage.open .big{animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.small{font-size:2.4vw;color:var(--cream)}
+.join{margin-top:2.6vw;color:var(--muted);font-size:1.8vw}
+.join b{color:var(--gold);font-size:2.2vw}
+.board{display:flex;flex-direction:column;gap:1.2vh;justify-content:center}
+.board h2{font:900 3vw 'Fraunces',serif;color:var(--gold);margin-bottom:1vh}
+.row{position:relative;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:1.6vh 1.6vw;border-radius:16px;background:rgba(255,255,255,.06);font:800 2.4vw 'Karla';overflow:hidden}
+.row .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:1}
+.row .pts{z-index:1;font:900 3vw 'Fraunces',serif;color:var(--gold)}
+.row .fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,rgba(255,207,126,.28),rgba(255,207,126,.05));z-index:0;transition:width .5s}
+.row.hot{outline:3px solid var(--gold);background:rgba(255,207,126,.18)}
+.row.tried{opacity:.55}
+.empty{color:var(--muted);font-size:2vw}
+@media (max-aspect-ratio:1/1){.screen{grid-template-columns:1fr;grid-template-rows:auto 1fr}.big{font-size:14vw}.kicker{font-size:4vw}.small{font-size:4.5vw}.join{font-size:3.2vw}.join b{font-size:4vw}.row{font-size:5vw}.row .pts{font-size:6vw}.board h2{font-size:6vw}}
+</style>
+</head>
+<body>
+<div class="screen">
+  <div class="stage" id="stage">
+    <div class="kicker" id="kicker">TEAM TRIVIA</div>
+    <div class="big" id="big">Get ready…</div>
+    <div class="small" id="small"></div>
+    <div class="join">Phones: open <b id="url"></b></div>
+  </div>
+  <div class="board">
+    <h2>Scoreboard</h2>
+    <div id="rows"></div>
+  </div>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+$('#url').textContent = location.host + '/buzzer';
+function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+function render(s) {
+  const st = $('#stage'), kicker = $('#kicker'), big = $('#big'), small = $('#small');
+  st.className = 'stage';
+  const ev = s.event, evTeam = s.eventTeam;
+  if (s.phase === 'open') {
+    st.classList.add('open');
+    kicker.textContent = 'QUESTION';
+    big.textContent = '🔔 BUZZERS OPEN!';
+    small.textContent = ev === 'incorrect' && evTeam ? evTeam.name + ' got it wrong. Anyone else?' : 'First to buzz gets to answer';
+  } else if (s.phase === 'answering' && s.buzzed) {
+    st.classList.add('answering');
+    kicker.textContent = ev === 'pass' ? 'PASSED TO' : 'FIRST TO BUZZ';
+    big.textContent = s.buzzed.name;
+    small.textContent = 'Answer now!';
+  } else if (ev === 'correct' && evTeam) {
+    st.classList.add('correct');
+    kicker.textContent = 'CORRECT!';
+    big.textContent = '✅ ' + evTeam.name;
+    small.textContent = '+' + s.points + ' point' + (s.points === 1 ? '' : 's');
+  } else {
+    kicker.textContent = 'TEAM TRIVIA';
+    big.textContent = 'Get ready…';
+    small.textContent = '';
+  }
+  const max = Math.max(1, ...s.teams.map(t => t.score));
+  $('#rows').innerHTML = s.teams.length ? s.teams.map(t => {
+    const hot = s.buzzed && s.buzzed.id === t.id;
+    const tried = s.phase === 'open' && t.tried;
+    return `<div class="row ${hot ? 'hot' : ''} ${tried ? 'tried' : ''}"><span class="fill" style="width:${Math.max(0, t.score) / max * 100}%"></span><span class="name">${esc(t.name)}</span><span class="pts">${t.score}</span></div>`;
+  }).join('') : '<p class="empty">Teams will appear here.</p>';
+}
+
+async function poll() {
+  try { const r = await fetch('/api/trivia?_=' + Date.now(), { cache: 'no-store' }); if (r.ok) render(await r.json()); } catch (e) {}
+  setTimeout(poll, 800);
+}
+poll();
+</script>
+</body>
+</html>
