@@ -36,6 +36,8 @@ export function ensureSchema(env) {
     try { await db.prepare("ALTER TABLE votes ADD COLUMN device TEXT").run(); }
     catch (error) { if (!/duplicate column/i.test(String(error.message))) throw error; }
     await db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS votes_device ON votes(device)").run(); // one vote per device
+    // votes the organiser adds by hand (on top of the phone votes)
+    await db.prepare("CREATE TABLE IF NOT EXISTS manual_votes (candidate_code TEXT PRIMARY KEY, votes INTEGER NOT NULL DEFAULT 0)").run();
     await db.prepare("CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)").run();
     // team trivia buzzer
     await db.prepare("CREATE TABLE IF NOT EXISTS trivia_teams (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL UNIQUE, score INTEGER NOT NULL DEFAULT 0)").run();

@@ -101,6 +101,11 @@ dialog textarea{width:100%;min-height:120px;background:#17122b;border:1px solid 
 .vstats strong{display:block;font:700 28px Georgia,serif;color:var(--gold)}
 .vstats span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .vrow{display:grid;grid-template-columns:34px minmax(110px,1.4fr) 3fr 40px;gap:10px;align-items:center;margin:7px 0;font-size:15px}
+.vedit .vrow{grid-template-columns:34px minmax(110px,1.4fr) 3fr 40px 84px}
+.vrow .vman{color:var(--muted);font-size:12px;font-weight:400}
+.vbtns{display:flex;gap:6px;justify-content:flex-end}
+.vbtns button{width:36px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--cream);font-weight:800;font-size:18px;padding:0}
+.vbtns button:hover{border-color:var(--gold)}
 .vrow .rank{color:var(--muted);font-weight:800;text-align:center}
 .vrow .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vrow .n{text-align:right;font-weight:800;color:var(--gold)}
@@ -142,7 +147,7 @@ button.big:disabled{opacity:.35;cursor:not-allowed}
 .trow button{font-size:13px}
 .trfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:14px}
 .trfoot input{width:80px;margin-left:8px}
-@media(max-width:700px){.trctl{grid-template-columns:1fr 1fr}.vrow{grid-template-columns:26px 1fr 40px}.vrow .bar{display:none}}
+@media(max-width:700px){.trctl{grid-template-columns:1fr 1fr}.vrow{grid-template-columns:26px 1fr 34px}.vedit .vrow{grid-template-columns:26px 1fr 34px 82px}.vrow .bar{display:none}}
 .dlg-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:flex-end}
 .stat{padding:16px 18px;border-radius:var(--radius);background:rgba(37,29,61,.85);border:1px solid var(--line)}
 .stat span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -726,6 +731,7 @@ function showView(v) {
   ['Tickets', 'Voting', 'Trivia'].forEach(n => { $('#view' + n).hidden = n !== v; });
   document.querySelectorAll('.vtab').forEach(b => b.classList.toggle('on', b.dataset.view === v));
   clearTimeout(trTimer); clearInterval(voteTimer);
+  if (typeof setVoteEdit === 'function' && voteEdit) setVoteEdit(false); // the hidden edit buttons switch off when you leave the tab
   // Best Dressed does not refresh by itself: it loads once when you open the tab, then only when you press ↻ Refresh
   if (v === 'Voting') loadVotes();
   if (v === 'Trivia') pollTrivia();
@@ -739,12 +745,29 @@ function renderVotes(d) {
   $('#voteState').className = 'pill ' + (d.open ? 'on' : 'warn');
   $('#voteToggle').textContent = d.open ? '⏸ Close voting' : '▶ Open voting';
   $('#vIn').textContent = d.checkedIn; $('#vVoters').textContent = d.voters;
+  lastVotes = d;
   const max = Math.max(1, ...d.results.map(r => r.votes));
   const medal = ['🥇', '🥈', '🥉'];
+  // Plain bars with the total only. Nothing on screen says votes can be adjusted; the ＋/− buttons only exist
+  // while the hidden edit switch (Shift+E on this tab) is on.
+  $('#voteResults').classList.toggle('vedit', voteEdit);
   $('#voteResults').innerHTML = d.results.length ? d.results.map((r, i) =>
-    `<div class="vrow ${i === 0 && r.votes > 0 ? 'first' : ''}"><span class="rank">${r.votes > 0 && medal[i] ? medal[i] : i + 1}</span><span class="nm">${esc(r.name)}</span><div class="bar"><i style="width:${r.votes / max * 100}%"></i></div><span class="n">${r.votes}</span></div>`
+    `<div class="vrow ${i === 0 && r.votes > 0 ? 'first' : ''}"><span class="rank">${r.votes > 0 && medal[i] ? medal[i] : i + 1}</span><span class="nm">${esc(r.name)}</span><div class="bar"><i style="width:${r.votes / max * 100}%"></i></div><span class="n">${r.votes}</span>${voteEdit ? `<span class="vbtns"><button data-code="${esc(r.code)}" data-d="-1">−</button><button data-code="${esc(r.code)}" data-d="1">＋</button></span>` : ''}</div>`
   ).join('') : '<p class="hint2">Nobody is checked in yet. People appear here as you check them in on the Tickets tab.</p>';
 }
+// hidden switch: press Shift+E on the Best Dressed tab to show/hide the ＋/− buttons. It switches itself off after 25 seconds.
+let lastVotes = null, voteEdit = false, voteEditTimer = null;
+function setVoteEdit(on) {
+  voteEdit = on; clearTimeout(voteEditTimer);
+  if (on) voteEditTimer = setTimeout(() => setVoteEdit(false), 25000);
+  if (lastVotes) renderVotes(lastVotes);
+}
+document.addEventListener('keydown', e => {
+  if (view !== 'Voting' || !e.shiftKey || e.ctrlKey || e.metaKey || e.altKey || e.key !== 'E') return;
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+  e.preventDefault(); setVoteEdit(!voteEdit);
+});
 async function loadVotes() {
   try { const r = await api('/api/admin/votes'); const d = await r.json(); if (r.ok) renderVotes(d); else toast(d.error || 'Could not load votes.', true); }
   catch (e) { toast('Could not reach the server.', true); }
@@ -755,6 +778,15 @@ async function votesAction(action) {
   if (!r.ok) { toast(d.error || 'Could not do that.', true); return; }
   renderVotes(d);
 }
+// add / take away votes by hand for one person
+$('#voteResults').onclick = async e => {
+  const b = e.target.closest('button[data-code]'); if (!b) return;
+  const r = await api('/api/admin/votes', { method: 'POST', body: JSON.stringify({ action: 'manual', code: b.dataset.code, delta: Number(b.dataset.d) }) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { toast(d.error || 'Could not change that.', true); return; }
+  renderVotes(d);
+  setVoteEdit(true); // keep the buttons up for another 25s after each change
+};
 $('#voteToggle').onclick = () => votesAction(voteIsOpen ? 'close' : 'open');
 $('#voteRefresh').onclick = loadVotes;
 $('#voteReset').onclick = () => { if (confirm('Delete ALL votes? This cannot be undone.')) votesAction('reset').then(() => toast('All votes cleared.')); };
