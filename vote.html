@@ -167,8 +167,13 @@ $('#yes').onclick = async () => {
 };
 $('#q2').oninput = render;
 
-load();
-timer = setInterval(load, 15000);
+/* keeps the request count low: checks every 20s while choosing, every 60s once voted/closed, and not at all while the tab is hidden */
+function loop() {
+  if (!document.hidden) load();
+  timer = setTimeout(loop, (myVote || !open) ? 60000 : 20000);
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+load().then(() => { timer = setTimeout(loop, 20000); });
 </script>
 </body>
 </html>

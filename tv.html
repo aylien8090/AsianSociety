@@ -93,14 +93,32 @@ function render(s) {
   }).join('') : '<p class="empty">Teams will appear here.</p>';
 }
 
-let openAtPerf = 0, last = null;
+let openAtPerf = 0, last = null, lastFromAdmin = 0;
+
+/* The host's admin tab (same laptop) already fetches the live state every second, so it hands it straight to this
+   screen through the browser. That means this page makes NO server requests while the admin Trivia tab is open.
+   If nothing arrives from the admin for 4 seconds, this page falls back to asking the server itself. */
+if ('BroadcastChannel' in window) {
+  const chan = new BroadcastChannel('asoc-trivia');
+  chan.onmessage = e => {
+    const m = e.data; if (!m || !m.state) return;
+    lastFromAdmin = Date.now();
+    last = m.state;
+    // the admin worked out "opens in" at time m.at, so the buzzers go live at m.at + opensInMs (same laptop, same clock)
+    openAtPerf = performance.now() + (m.at + m.state.opensInMs - Date.now());
+    render(last);
+  };
+}
+
 async function poll() {
-  try {
-    const t0 = performance.now();
-    const r = await fetch('/api/trivia?_=' + Date.now(), { cache: 'no-store' });
-    const t1 = performance.now();
-    if (r.ok) { last = await r.json(); openAtPerf = (t0 + t1) / 2 + last.opensInMs; render(last); }
-  } catch (e) {}
+  if (Date.now() - lastFromAdmin > 4000) {
+    try {
+      const t0 = performance.now();
+      const r = await fetch('/api/trivia?_=' + Date.now(), { cache: 'no-store' });
+      const t1 = performance.now();
+      if (r.ok) { last = await r.json(); openAtPerf = (t0 + t1) / 2 + last.opensInMs; render(last); }
+    } catch (e) {}
+  }
   setTimeout(poll, 800);
 }
 setInterval(() => { if (last && last.phase === 'open' && performance.now() < openAtPerf + 150) render(last); }, 100);

@@ -247,6 +247,7 @@ button.big:disabled{opacity:.35;cursor:not-allowed}
       <div class="top-actions">
         <span class="live"><i class="dot"></i> Live</span>
         <button class="ghost" id="soundBtn" title="Play a ping when someone registers">🔔 Sound on</button>
+        <button class="ghost" id="refreshBtn" title="Reload the list">↻ Refresh</button>
         <button class="ghost" id="teamBtn">＋ Add person</button>
         <button class="ghost" id="csvBtn">⬇ CSV</button>
         <button class="ghost" id="preBtn" title="Upload the pre-registration CSV (Email, Name columns)">⬆ Pre-reg list</button>
@@ -306,8 +307,8 @@ button.big:disabled{opacity:.35;cursor:not-allowed}
     <div id="viewTrivia" hidden>
       <div class="panel">
         <div class="panel__head">
-          <div><h2>🧠 Team Trivia</h2><p class="hint2">TV screen: <a id="tvLink" target="_blank" rel="noopener"></a> · Team phones: <a id="buzzLink" target="_blank" rel="noopener"></a></p></div>
-          <div class="panel__btns"><span class="pill" id="trState">…</span></div>
+          <div><h2>🧠 Team Trivia</h2><p class="hint2">Press <b>📺 Open TV screen</b> and drag that window onto the TV (F11 = fullscreen). Keep this tab open: it feeds the TV, so the TV makes no requests of its own. Team phones: <a id="buzzLink" target="_blank" rel="noopener"></a></p></div>
+          <div class="panel__btns"><button class="ghost" id="tvOpen" type="button" title="Opens the big-screen view in a new window. Drag it onto the TV and press F11.">📺 Open TV screen</button><span class="pill" id="trState">…</span></div>
         </div>
 
         <div class="trnow" id="trNow"></div>
@@ -461,7 +462,7 @@ function render() {
   $('#revenue').textContent = '€' + (nPre * PRICES.prereg + nEarly * PRICES.early + nRegular * PRICES.regular + nLate * PRICES.late + nTeamDisc * PRICES.teamdisc + nReferral * PRICES.referral + nTeam * PRICES.team);
   const nVegan = confirmed.filter(t => t.vegan === 'yes').length;
   $('#moneySplit').textContent = confirmed.length ? `(${nEarly} × €${PRICES.early} + ${nPre} × €${PRICES.prereg}${nRegular ? ` + ${nRegular} × €${PRICES.regular}` : ''}${nLate ? ` + ${nLate} × €${PRICES.late}` : ''}${nTeamDisc ? ` + ${nTeamDisc} × €${PRICES.teamdisc} team` : ''}${nReferral ? ` + ${nReferral} × €${PRICES.referral} referral` : ''}${nTeam ? ` + ${nTeam} team free` : ''}) · 🌱 ${nVegan} vegan food` : '';
-  $('#summary').textContent = `Updated ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · checks every 15s`;
+  $('#summary').textContent = `Updated ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · press ↻ Refresh for the latest`;
   bars($('#years'), confirmed.map(t => t.year));
   bars($('#tiers'), confirmed.map(t => TIER_LABEL[tierOf(t)]));
 
@@ -718,7 +719,6 @@ $('#list').onchange = e => {
 /* ===================== views: Tickets / Best Dressed / Trivia ===================== */
 let view = 'Tickets', trTimer = null, trState = null, voteTimer = null, voteIsOpen = true;
 $('#voteUrl').textContent = location.host + '/vote';
-$('#tvLink').href = '/tv'; $('#tvLink').textContent = location.host + '/tv';
 $('#buzzLink').href = '/buzzer'; $('#buzzLink').textContent = location.host + '/buzzer';
 
 function showView(v) {
@@ -726,7 +726,8 @@ function showView(v) {
   ['Tickets', 'Voting', 'Trivia'].forEach(n => { $('#view' + n).hidden = n !== v; });
   document.querySelectorAll('.vtab').forEach(b => b.classList.toggle('on', b.dataset.view === v));
   clearTimeout(trTimer); clearInterval(voteTimer);
-  if (v === 'Voting') { loadVotes(); voteTimer = setInterval(loadVotes, 10000); }
+  // Best Dressed does not refresh by itself: it loads once when you open the tab, then only when you press ↻ Refresh
+  if (v === 'Voting') loadVotes();
   if (v === 'Trivia') pollTrivia();
 }
 $('#views').onclick = e => { const b = e.target.closest('.vtab'); if (b) showView(b.dataset.view); };
@@ -759,19 +760,27 @@ $('#voteRefresh').onclick = loadVotes;
 $('#voteReset').onclick = () => { if (confirm('Delete ALL votes? This cannot be undone.')) votesAction('reset').then(() => toast('All votes cleared.')); };
 
 /* ---- trivia host ---- */
+// The TV screen (tv page, opened from the button below) is fed from here, so it needs no server requests of its own.
+const tvChannel = 'BroadcastChannel' in window ? new BroadcastChannel('asoc-trivia') : null;
+let trReceivedAt = 0;
+function pushToTv() { if (tvChannel && trState) tvChannel.postMessage({ state: trState, at: trReceivedAt || Date.now() }); }
+$('#tvOpen').onclick = () => { window.open('/tv', 'asoc_tv', 'popup,width=1280,height=720'); setTimeout(pushToTv, 800); };
+
 async function trCall(action, extra = {}) {
   const r = await api('/api/admin/trivia', { method: 'POST', body: JSON.stringify({ action, ...extra }) });
   const d = await r.json().catch(() => ({}));
   if (!r.ok) { toast(d.error || 'That did not work.', true); return null; }
-  trState = d; renderTrivia(); return d;
+  trState = d; trReceivedAt = Date.now(); renderTrivia(); return d;
 }
 async function pollTrivia() {
   if (view !== 'Trivia') return;
-  try { const r = await api('/api/admin/trivia'); if (r.ok) { trState = await r.json(); renderTrivia(); } } catch (e) {}
-  trTimer = setTimeout(pollTrivia, 1000);
+  try { const r = await api('/api/admin/trivia'); if (r.ok) { trState = await r.json(); trReceivedAt = Date.now(); renderTrivia(); } } catch (e) {}
+  // 1s while a question is live (a team can buzz at any moment), 2s while nothing is happening
+  trTimer = setTimeout(pollTrivia, trState && (trState.phase === 'open' || trState.phase === 'answering') ? 1000 : 2000);
 }
 function renderTrivia() {
   const s = trState; if (!s) return;
+  pushToTv();
   const now = $('#trNow');
   now.className = 'trnow ' + (s.phase === 'open' ? 'open' : s.phase === 'answering' ? 'answering' : '');
   let k = 'Buzzers closed', v = 'Press New question to start', e = '';
@@ -830,7 +839,9 @@ document.addEventListener('keydown', e => {
   else if (/^[1-9]$/.test(e.key)) { const b = $('#trPass').querySelectorAll('button')[Number(e.key) - 1]; if (b && !$('#trPassBox').hidden) trCall('pass', { team: Number(b.dataset.id) }); }
 });
 
-setInterval(() => { if (!$('#app').hidden) load().catch(() => {}); }, 15000);
+// Ticket sales are closed and one person checks guests in, so the list does NOT refresh by itself.
+// It updates whenever you press a button, and ↻ Refresh reloads it on demand.
+$('#refreshBtn').onclick = async () => { const b = $('#refreshBtn'); b.disabled = true; try { await load(); toast('Refreshed.'); } catch (e) { toast('Could not refresh.', true); } b.disabled = false; };
 
 /* stay signed in for this browser tab */
 try {

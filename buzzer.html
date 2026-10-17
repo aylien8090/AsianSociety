@@ -98,7 +98,8 @@ async function poll() {
     if (r.ok) { applyState(await r.json(), t0, t1); render(); }
   } catch (e) {}
   const fast = state && (state.phase === 'open' || state.phase === 'answering');
-  timer = setTimeout(poll, document.hidden ? 4000 : fast ? 700 : 1000);
+  // 700ms while a question is live; between questions 2s is plenty (the 3s get-ready countdown leaves every phone time to find out)
+  timer = setTimeout(poll, document.hidden ? 5000 : fast ? 700 : 2000);
 }
 // keeps the 3-2-1 countdown ticking smoothly
 setInterval(() => { if (state && state.phase === 'open' && performance.now() < openAtPerf + 150) render(); }, 100);
